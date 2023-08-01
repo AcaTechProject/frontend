@@ -25,7 +25,7 @@ const Nav = () => {
   return (
     <div>
       <NavParent>
-        <NavTitle>prama math</NavTitle>
+        <NavTitle>Prama Math</NavTitle>
         <NavUser>김하늘님</NavUser>
       </NavParent>
     </div>
