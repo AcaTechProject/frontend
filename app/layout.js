@@ -18,11 +18,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        <div style={{ display: "flex", position: "relative", width: "1219px" }}>
-          <Sidebar />
-          <Nav />
-          {children}
-        </div>
+        <Sidebar />
+        <Nav />
+        {children}
       </body>
     </html>
   );

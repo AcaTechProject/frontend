@@ -1,11 +1,12 @@
 import styled from "styled-components";
 import SidebarItems from "./SidebarItems";
 const SidebarParent = styled.div`
+  margin: 1px 4px 0 0;
   position: fixed;
-  width: 248px;
-  background: #eceafe78;
-  box-shadow: 0.5px 0.5px 3px;
+  box-shadow: 4px 0 0.5px 0 rgba(0, 0, 0, 0.07);
+  background-color: rgba(236, 234, 254, 0.47);
   height: 100%;
+  width: 248px;
 `;
 
 const Logo = styled.div`

@@ -38,3 +38,8 @@ body {
   margin: 0;
 }
 
+body {
+  position: relative;
+  display: flex;
+  height: 748px;
+}
