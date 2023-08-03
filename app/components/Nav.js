@@ -8,6 +8,13 @@ const NavParent = styled.div`
   background-color: rgba(236, 234, 254, 0.47);
   display: flex;
   align-items: center;
+<<<<<<< HEAD
+=======
+  height: 10vh;
+
+  padding: 0 20px;
+  margin-left: 248px;
+>>>>>>> 2784e142205d70ac8aa47a210c58150334d912bf
 `;
 const NavTitle = styled.h1`
   margin-left: 610px;
