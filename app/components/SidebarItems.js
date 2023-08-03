@@ -1,9 +1,10 @@
 const SidebarItems = [
   {
+    id: 0,
     name: "원생관리",
   },
   {
-    name: "일정 관리",
+    name: "스케줄 관리",
   },
 ];
 

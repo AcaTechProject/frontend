@@ -33,11 +33,6 @@ body {
   line-height: 0px;
 } */
 
-html,
-body {
-  margin: 0;
-}
-
 body {
   position: relative;
   display: flex;
