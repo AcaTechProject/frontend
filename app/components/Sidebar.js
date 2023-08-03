@@ -1,5 +1,7 @@
+import { useRouter } from "next/navigation";
 import styled from "styled-components";
 import SidebarItems from "./SidebarItems";
+
 const SidebarParent = styled.div`
   margin: 1px 4px 0 0;
   position: fixed;
@@ -28,6 +30,7 @@ const Menu = styled.div`
 
 const StyledSidebarItem = styled.p`
   margin-bottom: 40px;
+  cursor: pointer;
 `;
 
 const Logout = styled.div`
@@ -36,6 +39,14 @@ const Logout = styled.div`
   left: 50px;
 `;
 const Sidebar = () => {
+  const router = useRouter();
+
+  const handleMenuClick = (id) => {
+    if (id === 1) {
+      router.push("/schedule");
+    }
+  };
+
   return (
     <>
       <SidebarParent>
@@ -44,8 +55,10 @@ const Sidebar = () => {
           <Title>AcaTech</Title>
         </Logo>
         <Menu>
-          {SidebarItems.map((i) => (
-            <StyledSidebarItem key={i.name}>{i.name}</StyledSidebarItem>
+          {SidebarItems.map((i, id) => (
+            <StyledSidebarItem key={id} onClick={() => handleMenuClick(id)}>
+              {i.name}
+            </StyledSidebarItem>
           ))}
         </Menu>
         <Logout>
