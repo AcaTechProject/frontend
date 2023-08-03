@@ -14,7 +14,7 @@ const NavTitle = styled.h1`
 `;
 const NavUser = styled.span`
   color: blue;
-  margin-right: 30px;
+  margin-left: 500px;
 `;
 
 const Nav = () => {

@@ -10,10 +10,10 @@ const SidebarParent = styled.div`
 `;
 
 const Logo = styled.div`
-  padding: 20px 30px 0 30px;
-
+  padding: 30px 29px 0 47px;
+  flex-grow: 0;
   height: 50px;
-  width: 170px;
+  width: 172px;
   display: flex;
 `;
 const Title = styled.h2`
@@ -22,8 +22,7 @@ const Title = styled.h2`
   color: navy;
 `;
 const Menu = styled.div`
-  margin-top: 76px;
-
+  margin-top: 70px;
   padding: 0 40px 0 50px;
 `;
 
