@@ -5,7 +5,7 @@ const NavParent = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 73px;
+  height: 10vh;
 
   padding: 0 20px;
   margin-left: 248px;
@@ -23,12 +23,10 @@ const NavUser = styled.p`
 
 const Nav = () => {
   return (
-    <div>
-      <NavParent>
-        <NavTitle>Prama Math---</NavTitle>
-        <NavUser>김하늘님</NavUser>
-      </NavParent>
-    </div>
+    <NavParent>
+      <NavTitle>Prama Math---</NavTitle>
+      <NavUser>김하늘님</NavUser>
+    </NavParent>
   );
 };
 export default Nav;
