@@ -23,7 +23,7 @@ const Title = styled.h2`
 `;
 const Menu = styled.div`
   margin-top: 70px;
-  padding: 0 40px 0 50px;
+  padding: 0 85px 116px 100px;
 `;
 
 const StyledSidebarItem = styled.p`
@@ -32,8 +32,17 @@ const StyledSidebarItem = styled.p`
 
 const Logout = styled.div`
   position: absolute;
-  bottom: 0;
-  left: 50px;
+  top: 591px;
+  padding: 0 85px 116px 100px;
+  font-family: Poppins;
+  font-size: 14px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  text-align: left;
+  color: #655f5f;
 `;
 const Sidebar = () => {
   return (
