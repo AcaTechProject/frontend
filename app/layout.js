@@ -3,7 +3,7 @@ import React from "react";
 import "./globals.css";
 import { Inter } from "next/font/google";
 import Link from "next/link";
-
+import { usePathname, useRouter } from "next/navigation";
 import Sidebar from "./components/Sidebar";
 import Nav from "./components/Nav";
 const inter = `@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');`;
@@ -15,12 +15,16 @@ const metadata = {
 };
 
 export default function RootLayout({ children }) {
+  const pathname = usePathname();
+  const hideSidebar = pathname === "/Login" || pathname === "/Join";
   return (
     <html lang="en">
       <body>
-        <Sidebar />
-        <Nav />
-        {children}
+        {pathname !== "/Login" && <Sidebar />}
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <Nav />
+          <div style={{ flex: 1 }}>{children}</div>
+        </div>
       </body>
     </html>
   );
