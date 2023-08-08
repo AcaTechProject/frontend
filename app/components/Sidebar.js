@@ -22,16 +22,14 @@ const Logo = styled.div`
 `;
 const Title = styled.h2`
   position: relative;
-  bottom: 15px;
+  padding: 0 0px 50px 10px;
+  font-size: 19px;
   color: navy;
 `;
 const Menu = styled.div`
-  margin-top: 70px;
-  margin: 100px 20px 0 40px;
+  margin-top: 10px;
 `;
 const List = styled.div`
-  display: flex;
-  padding: 30px 29px 0 47px;
   text-align: center;
 `;
 
@@ -43,12 +41,20 @@ const Link = styled.p`
   color: ${(props) => (props.active ? "blue" : "black")};
   cursor: pointer;
 `;
+const Btn = styled.button`
+  border: 0;
+  background: rgba(236, 234, 254, 0.47);
+  font-size: 17px;
+`;
 
 const StyledSidebarItem = styled.li`
-  margin: 10px 0 30px 0;
-  margin-left: -20px;
+  margin: 10px;
   cursor: pointer;
   list-style: none;
+`;
+
+const First = styled.div`
+  display: flex;
 `;
 
 const Logout = styled.div`
@@ -62,28 +68,74 @@ const Logout = styled.div`
   gap: 10px;
 `;
 const MainMenu = styled.div`
-  display: flex;
+  padding: 60px 0 0 60px;
   align-items: center;
-  gap: 25px;
+  gap: 10px;
+  display: flex;
 `;
 const SubMenu = styled.ul`
-  margin-left: 30px;
+  padding: 0 0 0 80px;
 `;
+
+const menuData = [
+  {
+    icon: MdPerson,
+    title: "원생 관리",
+    route: "/login",
+    subItems: [
+      { title: "출결 관리", route: "/AcademyManagement/attendance" },
+      {
+        title: "학생 관리",
+        route: "/AcademyManagement/StudentManagement/acamember",
+      },
+      {
+        title: "수강생 관리",
+        route: "/AcademyManagement/StudentManagement/acamember",
+      },
+
+      {
+        title: "신규 상담",
+        route: "/AcademyManagement/StudentManagement/counsel",
+      },
+    ],
+  },
+  {
+    icon: MdCalendarMonth,
+    title: "일정 관리",
+    route: "/login",
+    subItems: [
+      { title: "전체 일정", route: "/ScheduleManagement/schedule" },
+      { title: "일정 등록", route: "/ScheduleManagement/register" },
+    ],
+  },
+  // Add more menu items as needed
+];
 
 const Sidebar = () => {
   const router = useRouter();
   const pathname = usePathname();
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [view, setView] = useState(false);
 
   const handleMenuClick = (route) => {
     router.push(route);
     setSidebarOpen(false); // 메뉴 클릭 시 사이드바가 자동으로 닫히도록 설정
   };
+
+  const handleDrop = () => {
+    setView(!view);
+  };
   return (
     <>
       <SidebarParent>
         <Logo>
-          <img src="" alt="logo"></img>
+          <img
+            src="/logo.png"
+            alt="logo"
+            width={45}
+            height={45}
+            style={{ borderRadius: "80px" }}
+          ></img>
+
           <Title>AcaTech</Title>
         </Logo>
 
@@ -91,52 +143,52 @@ const Sidebar = () => {
           <MainMenu>
             <MdPerson size="25" />
             <Link
-              href="/login"
-              active={pathname === "/Login"}
-              onClick={() => handleMenuClick("/Login")}
+              href={menuData[0].route}
+              active={router.pathname === menuData[0].route}
+              onClick={() => handleMenuClick(menuData[0].route)}
             >
-              원생 관리
+              {menuData[0].title}
             </Link>
+            <Btn onClick={handleDrop}>{view ? "⌄" : "^"}</Btn>
           </MainMenu>
+          {view && (
+            <SubMenu>
+              {menuData[0].subItems.map((subItem, subIndex) => (
+                <StyledSidebarItem
+                  key={subIndex}
+                  onClick={() => handleMenuClick(subItem.route)}
+                >
+                  -{subItem.title}
+                </StyledSidebarItem>
+              ))}
+            </SubMenu>
+          )}
 
-          <SubMenu>
-            <StyledSidebarItem onClick={() => handleMenuClick("/attendance")}>
-              -출결 관리
-            </StyledSidebarItem>
-            <StyledSidebarItem
-              onClick={() => handleMenuClick("/student-management")}
-            >
-              -학생 관리
-              <ul>
-                <StyledSidebarItem
-                  onClick={() => handleMenuClick("/enrolled-students")}
-                >
-                  수강생
-                </StyledSidebarItem>
-                <StyledSidebarItem
-                  onClick={() => handleMenuClick("/new-counseling")}
-                >
-                  신규 상담
-                </StyledSidebarItem>
-              </ul>
-            </StyledSidebarItem>
-          </SubMenu>
           <MainMenu>
             <MdCalendarMonth size="25" />
-            <Link href="/login">일정 관리</Link>
+            <Link
+              href={menuData[1].route}
+              active={router.pathname === menuData[1].route}
+              onClick={() => handleMenuClick(menuData[1].route)}
+            >
+              {menuData[1].title}
+            </Link>
+            <Btn onClick={handleDrop}>{view ? "⌄" : "^"}</Btn>
           </MainMenu>
-          <SubMenu>
-            <StyledSidebarItem
-              onClick={() => handleMenuClick("/ScheduleManagement/schedule")}
-            >
-              -전체 일정
-            </StyledSidebarItem>
-            <StyledSidebarItem
-              onClick={() => handleMenuClick("/ScheduleManagement/register")}
-            >
-              -일정 등록
-            </StyledSidebarItem>
-          </SubMenu>
+          {view && menuData[1].subItems.length > 0 && (
+            <SubMenu>
+              {menuData[1].subItems.map((subItem, subIndex) => (
+                <StyledSidebarItem
+                  key={subIndex}
+                  onClick={() => handleMenuClick(subItem.route)}
+                >
+                  -{subItem.title}
+                </StyledSidebarItem>
+              ))}
+            </SubMenu>
+          )}
+
+          {/* Add more main menu items here if needed */}
         </Menu>
 
         <Logout>
