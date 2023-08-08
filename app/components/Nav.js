@@ -12,6 +12,8 @@ const NavParent = styled.div`
 const NavTitle = styled.h1`
   flex-grow: 1;
   text-align: center;
+  padding: 20px 0 0 0;
+  position: relative;
 `;
 const NavUser = styled.span`
   color: blue;
