@@ -18,6 +18,7 @@ const NavTitle = styled.h1`
 const NavUser = styled.span`
   color: blue;
   cursor: pointer;
+  padding: 20px 0 0 0;
   margin-left: auto;
 `;
 
@@ -27,9 +28,6 @@ const Nav = () => {
   const handleLogin = () => {
     router.push("/Login");
   };
-  // const handleTitle = () => {
-  //   router.push("/");
-  // };
 
   return (
     <>
