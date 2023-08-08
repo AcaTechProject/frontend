@@ -22,11 +22,11 @@ const metadata = {
 
 export default function RootLayout({ children }) {
   const pathname = usePathname();
-  //const hideSidebar = pathname === "/Login" || pathname === "/Join";
+  const hideSidebar = pathname === "/Login" || pathname === "/join";
   return (
     <html lang="en">
       <body>
-        {pathname !== "/Login" && <Sidebar />}
+        {!hideSidebar && <Sidebar />}
         <Container>
           <Nav />
           <div style={{ flex: 1 }}>{children}</div>
