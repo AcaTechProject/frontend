@@ -1,9 +1,10 @@
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
-//import SidebarItems from "./SidebarItems";
 import { useState } from "react";
 import { MdPerson, MdCalendarMonth, MdLogout } from "react-icons/md";
 import { usePathname } from "next/navigation";
+
+//css
 const SidebarParent = styled.div`
   margin: 1px 4px 0 0;
   position: fixed;
@@ -29,9 +30,6 @@ const Title = styled.h2`
 const Menu = styled.div`
   margin-top: 10px;
 `;
-const List = styled.div`
-  text-align: center;
-`;
 
 const Link = styled.p`
   font-size: 20px;
@@ -51,10 +49,6 @@ const StyledSidebarItem = styled.li`
   margin: 10px;
   cursor: pointer;
   list-style: none;
-`;
-
-const First = styled.div`
-  display: flex;
 `;
 
 const Logout = styled.div`
@@ -77,6 +71,7 @@ const SubMenu = styled.ul`
   padding: 0 0 0 80px;
 `;
 
+//메뉴 data 배열
 const menuData = [
   {
     icon: MdPerson,
@@ -108,7 +103,6 @@ const menuData = [
       { title: "일정 등록", route: "/ScheduleManagement/register" },
     ],
   },
-  // Add more menu items as needed
 ];
 
 const Sidebar = () => {
@@ -118,7 +112,6 @@ const Sidebar = () => {
 
   const handleMenuClick = (route) => {
     router.push(route);
-    setSidebarOpen(false); // 메뉴 클릭 시 사이드바가 자동으로 닫히도록 설정
   };
 
   const handleDrop = () => {
@@ -135,11 +128,12 @@ const Sidebar = () => {
             height={45}
             style={{ borderRadius: "80px" }}
           ></img>
-
           <Title>AcaTech</Title>
         </Logo>
 
+        {/* 메뉴 시작 */}
         <Menu>
+          {/* 대표 메뉴: 원생관리 */}
           <MainMenu>
             <MdPerson size="25" />
             <Link
@@ -151,6 +145,7 @@ const Sidebar = () => {
             </Link>
             <Btn onClick={handleDrop}>{view ? "⌄" : "^"}</Btn>
           </MainMenu>
+
           {view && (
             <SubMenu>
               {menuData[0].subItems.map((subItem, subIndex) => (
@@ -163,7 +158,7 @@ const Sidebar = () => {
               ))}
             </SubMenu>
           )}
-
+          {/* 대표 메뉴: 일정 관리 */}
           <MainMenu>
             <MdCalendarMonth size="25" />
             <Link
@@ -175,6 +170,7 @@ const Sidebar = () => {
             </Link>
             <Btn onClick={handleDrop}>{view ? "⌄" : "^"}</Btn>
           </MainMenu>
+
           {view && menuData[1].subItems.length > 0 && (
             <SubMenu>
               {menuData[1].subItems.map((subItem, subIndex) => (
@@ -187,8 +183,6 @@ const Sidebar = () => {
               ))}
             </SubMenu>
           )}
-
-          {/* Add more main menu items here if needed */}
         </Menu>
 
         <Logout>
