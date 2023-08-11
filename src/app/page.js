@@ -1,5 +1,5 @@
-import Image from 'next/image'
-import styles from './page.module.css'
+import Image from "next/image";
+import styles from "./page.module.css";
 
 export default function Home() {
   return (
@@ -15,7 +15,7 @@ export default function Home() {
             target="_blank"
             rel="noopener noreferrer"
           >
-            By{' '}
+            By{" "}
             <Image
               src="/vercel.svg"
               alt="Vercel Logo"
@@ -37,6 +37,15 @@ export default function Home() {
           height={37}
           priority
         />
+        {/* list 스타일 확인용 */}
+        <ul>
+          <li>dkdkdk</li>
+          <li>dddd</li>
+          <li>dddd</li>
+          <li>dddd</li>
+          <li>dddd</li>
+          <li>dddd</li>
+        </ul>
       </div>
 
       <div className={styles.grid}>
@@ -91,5 +100,5 @@ export default function Home() {
         </a>
       </div>
     </main>
-  )
+  );
 }
