@@ -1,6 +1,6 @@
 "use client";
 import { Inter } from "next/font/google";
-import GlobalStyles from "./globalstyle";
+import GlobalStyle from "./globalstyle";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -12,7 +12,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <>
-      <GlobalStyles />
+      <GlobalStyle />
       <html lang="en">
         <body className={inter.className}>{children}</body>
       </html>
