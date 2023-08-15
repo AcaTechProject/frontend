@@ -1,6 +1,9 @@
 import styled from "styled-components";
 import { useRouter } from "next/navigation";
 import { Link } from "next/link";
+import Image from "next/image";
+import { useState } from "react";
+
 const NavParent = styled.div`
   flex-grow: 1;
   height: 70px;
@@ -8,22 +11,30 @@ const NavParent = styled.div`
   background-color: rgba(236, 234, 254, 0.47);
   display: flex;
   align-items: center;
+
+  width: 100%;
 `;
 const NavTitle = styled.h1`
   flex-grow: 1;
-  text-align: center;
+  margin-left: 45%;
   padding: 20px 0 0 0;
   position: relative;
 `;
 const NavUser = styled.span`
   color: blue;
   cursor: pointer;
-  padding: 20px 0 0 0;
-  margin-left: auto;
+  padding: 10px 0 0 0;
+  margin-right: 110px;
+`;
+const Container = styled.div`
+  display: flex;
+  margin: 10px 60px 0 0;
+  gap: 10px;
 `;
 
 const Nav = () => {
   const router = useRouter();
+  const [img, setImg] = useState("");
 
   const handleLogin = () => {
     router.push("/Login");
@@ -33,7 +44,18 @@ const Nav = () => {
     <>
       <NavParent>
         <NavTitle onClick={() => router.push("/")}>Prama Math</NavTitle>
-        <NavUser onClick={handleLogin}>김하늘님</NavUser>
+        <Container>
+          <Image
+            src={img ? img : `/default_profile.png`}
+            alt="프로필"
+            width={50}
+            height={50}
+            style={{ borderRadius: "50%" }}
+            onClick={() => router.push("/Mypage")}
+          />
+
+          <NavUser onClick={handleLogin}>김하늘님</NavUser>
+        </Container>
       </NavParent>
     </>
   );
