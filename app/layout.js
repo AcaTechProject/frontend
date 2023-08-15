@@ -7,6 +7,7 @@ import { usePathname, useRouter } from "next/navigation";
 import Sidebar from "./components/Sidebar";
 import Nav from "./components/Nav";
 import styled from "styled-components";
+import StyledComponentsRegistry from "./lib/register";
 
 const inter = `@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');`;
 
@@ -22,15 +23,17 @@ const metadata = {
 
 export default function RootLayout({ children }) {
   const pathname = usePathname();
-  const hideSidebar = pathname === "/Login" || pathname === "/join";
+  const hideSidebar = pathname === "/Login";
   return (
     <html lang="en">
       <body>
-        {!hideSidebar && <Sidebar />}
-        <Container>
-          <Nav />
-          <div style={{ flex: 1 }}>{children}</div>
-        </Container>
+        <StyledComponentsRegistry>
+          {!hideSidebar && <Sidebar />}
+          <Container>
+            <Nav />
+            <div style={{ flex: 1, marginLeft: 248 }}>{children}</div>
+          </Container>
+        </StyledComponentsRegistry>
       </body>
     </html>
   );
