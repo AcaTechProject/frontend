@@ -3,7 +3,7 @@ import styled from "styled-components";
 const TableContainer = styled.table`
   border: 1px solid #c4c4c4;
   border-collapse: collapse;
-  width: 506px;
+  width: 606px;
   height: 80px;
 `;
 const Tr = styled.tr`
@@ -12,8 +12,8 @@ const Tr = styled.tr`
 `;
 const FirstTd = styled.td`
   border: 1px solid #c4c4c4;
-  padding: 10px 5px;
-  width: 127px;
+  padding: 20px 5px;
+  width: 120px;
   background: #eceafe;
   text-align: center;
 `;
