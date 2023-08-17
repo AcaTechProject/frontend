@@ -46,6 +46,10 @@ const Input = styled.input`
   border: 1px solid #d3d2d2;
   border-radius: 10px;
 `;
+const P = styled.p`
+  font-size: 18px;
+  font-weight: 600;
+`;
 const Inputs = styled(Input)`
   margin: 10px 0 0 30px;
 `;
@@ -77,8 +81,8 @@ const ProfileEmpty = () => {
       <Image
         src={img ? img : `/default_profile.png`}
         alt="프로필"
-        width={200}
-        height={200}
+        width={250}
+        height={250}
         style={{ borderRadius: "50%" }}
       />
 
@@ -90,18 +94,18 @@ const ProfileEmpty = () => {
         onChange={handlePick}
         ref={imgRef}
       />
-      <p>이름</p>
+      <h2>이름 (여)</h2>
       <Row>
-        <p style={{ fontWeight: "500" }}>생년월일|</p>
-        <p>2000/00/00</p>
+        <P>생년월일 |</P>
+        <p style={{ lineHeight: "28px" }}>2000/00/00</p>
       </Row>
-      <Row>
-        <p style={{ fontWeight: "500" }}>학교 |</p>
-        <p>00초등학교</p>
+      <Row style={{ marginLeft: "15px" }}>
+        <P>학교 |</P>
+        <p style={{ lineHeight: "28px" }}>00초등학교</p>
       </Row>
-      <Row style={{ marginRight: "40px" }}>
-        <p style={{ fontWeight: "500" }}>학년 |</p>
-        <p>3학년</p>
+      <Row style={{ marginRight: "20px" }}>
+        <P>학년 |</P>
+        <p style={{ lineHeight: "28px" }}>3학년</p>
       </Row>
     </Container>
   );
