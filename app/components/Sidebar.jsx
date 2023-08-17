@@ -1,8 +1,10 @@
 import { useRouter } from "next/navigation";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { useState } from "react";
-import { MdPerson, MdCalendarMonth, MdLogout } from "react-icons/md";
-import { usePathname } from "next/navigation";
+import { MdLogout } from "react-icons/md";
+import { Menu, SubMenu, MenuItem, Sidebar } from "react-pro-sidebar";
+import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 
 //css
 const SidebarParent = styled.div`
@@ -27,29 +29,6 @@ const Title = styled.h2`
   font-size: 19px;
   color: navy;
 `;
-const Menu = styled.div`
-  margin-top: 10px;
-`;
-
-const Link = styled.p`
-  font-size: 20px;
-  height: 20px;
-  border: 0;
-  background: rgba(0, 0, 0, 0);
-  color: ${(props) => (props.active ? "blue" : "black")};
-  cursor: pointer;
-`;
-const Btn = styled.button`
-  border: 0;
-  background: rgba(236, 234, 254, 0.47);
-  font-size: 17px;
-`;
-
-const StyledSidebarItem = styled.li`
-  margin: 10px;
-  cursor: pointer;
-  list-style: none;
-`;
 
 const Logout = styled.div`
   display: flex;
@@ -61,62 +40,25 @@ const Logout = styled.div`
   color: #655f5f;
   gap: 10px;
 `;
-const MainMenu = styled.div`
-  padding: 60px 0 0 60px;
-  align-items: center;
-  gap: 10px;
-  display: flex;
-`;
-const SubMenu = styled.ul`
-  padding: 0 0 0 80px;
+
+const StyledMenuItem = styled(MenuItem)`
+  color: black;
+
+  ${({ active }) =>
+    active &&
+    css`
+      color: #3629b7;
+      font-weight: bold;
+    `}
 `;
 
 //메뉴 data 배열
-const menuData = [
-  {
-    icon: MdPerson,
-    title: "원생 관리",
-    route: "/login",
-    subItems: [
-      { title: "출결 관리", route: "/AcademyManagement/attendance" },
-      {
-        title: "학생 관리",
-        route: "/AcademyManagement/StudentManagement/acamember",
-      },
-      {
-        title: "수강생 관리",
-        route: "/AcademyManagement/StudentManagement/acamember",
-      },
 
-      {
-        title: "신규 상담",
-        route: "/AcademyManagement/StudentManagement/counsel",
-      },
-    ],
-  },
-  {
-    icon: MdCalendarMonth,
-    title: "일정 관리",
-    route: "/login",
-    subItems: [
-      { title: "전체 일정", route: "/ScheduleManagement/schedule" },
-      { title: "일정 등록", route: "/ScheduleManagement/register" },
-    ],
-  },
-];
-
-const Sidebar = () => {
+const sidebar = () => {
   const router = useRouter();
-  const pathname = usePathname();
-  const [view, setView] = useState(false);
 
-  const handleMenuClick = (route) => {
-    router.push(route);
-  };
+  const [selectedMenu, setSelectedMenu] = useState(null);
 
-  const handleDrop = () => {
-    setView(!view);
-  };
   return (
     <>
       <SidebarParent>
@@ -132,59 +74,85 @@ const Sidebar = () => {
         </Logo>
 
         {/* 메뉴 시작 */}
-        <Menu>
-          {/* 대표 메뉴: 원생관리 */}
-          <MainMenu>
-            <MdPerson size="25" />
-            <Link
-              href={menuData[0].route}
-              active={router.pathname === menuData[0].route}
-              onClick={() => handleMenuClick(menuData[0].route)}
-            >
-              {menuData[0].title}
-            </Link>
-            <Btn onClick={handleDrop}>{view ? "⌄" : "^"}</Btn>
-          </MainMenu>
-
-          {view && (
-            <SubMenu>
-              {menuData[0].subItems.map((subItem, subIndex) => (
-                <StyledSidebarItem
-                  key={subIndex}
-                  onClick={() => handleMenuClick(subItem.route)}
+        <Sidebar>
+          <Menu>
+            <MenuItem style={{ marginTop: "50px" }}></MenuItem>
+            <div style={{ padding: "20px" }}>
+              <SubMenu
+                label="원생관리"
+                icon={<AccountCircleRoundedIcon />}
+                style={{ fontSize: "20px" }}
+              >
+                <StyledMenuItem
+                  active={selectedMenu === "출결관리"}
+                  onClick={() => {
+                    setSelectedMenu("출결관리");
+                    router.push(
+                      "/AcademyManagement/StudentManagement/attendance"
+                    );
+                  }}
                 >
-                  -{subItem.title}
-                </StyledSidebarItem>
-              ))}
-            </SubMenu>
-          )}
-          {/* 대표 메뉴: 일정 관리 */}
-          <MainMenu>
-            <MdCalendarMonth size="25" />
-            <Link
-              href={menuData[1].route}
-              active={router.pathname === menuData[1].route}
-              onClick={() => handleMenuClick(menuData[1].route)}
-            >
-              {menuData[1].title}
-            </Link>
-            <Btn onClick={handleDrop}>{view ? "⌄" : "^"}</Btn>
-          </MainMenu>
-
-          {view && menuData[1].subItems.length > 0 && (
-            <SubMenu>
-              {menuData[1].subItems.map((subItem, subIndex) => (
-                <StyledSidebarItem
-                  key={subIndex}
-                  onClick={() => handleMenuClick(subItem.route)}
+                  출결관리
+                </StyledMenuItem>
+                <SubMenu label="학생 관리">
+                  <StyledMenuItem
+                    active={selectedMenu === "수강생 관리"}
+                    onClick={() => {
+                      setSelectedMenu("수강생 관리");
+                      router.push(
+                        "/AcademyManagement/StudentManagement/acamember"
+                      );
+                    }}
+                  >
+                    수강생 관리
+                  </StyledMenuItem>
+                  <StyledMenuItem
+                    active={selectedMenu === "상담 관리"}
+                    onClick={() => {
+                      setSelectedMenu("상담 관리");
+                      router.push(
+                        "/AcademyManagement/StudentManagement/counsel"
+                      );
+                    }}
+                  >
+                    상담 관리
+                  </StyledMenuItem>
+                </SubMenu>
+              </SubMenu>
+              <br />
+              <br />
+              <SubMenu
+                label="일정 관리"
+                icon={<CalendarMonthIcon />}
+                style={{ fontSize: "20px" }}
+                active={selectedMenu === "일정 관리"}
+                onClick={() => {
+                  setSelectedMenu("일정 관리");
+                  router.push("/ScheduleManagement/schedule");
+                }}
+              >
+                <StyledMenuItem
+                  active={selectedMenu === "일정 등록"}
+                  onClick={() => {
+                    setSelectedMenu("일정 등록");
+                    router.push("/ScheduleManagement/register");
+                  }}
                 >
-                  -{subItem.title}
-                </StyledSidebarItem>
-              ))}
-            </SubMenu>
-          )}
-        </Menu>
-
+                  일정 등록
+                </StyledMenuItem>
+                <StyledMenuItem
+                  active={selectedMenu === "전체 일정"}
+                  onClick={() => {
+                    setSelectedMenu("전체 일정");
+                    router.push("/ScheduleManagement/schedule");
+                  }}
+                >
+                  전체 일정
+                </StyledMenuItem>
+              </SubMenu>
+            </div>
+          </Menu>
+        </Sidebar>
         <Logout>
           <MdLogout size="20" />
           <p>로그아웃</p>
@@ -194,4 +162,4 @@ const Sidebar = () => {
   );
 };
 
-export default Sidebar;
+export default sidebar;
