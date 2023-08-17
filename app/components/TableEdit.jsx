@@ -6,7 +6,7 @@ import { useRef, useState } from "react";
 const TableContainer = styled.table`
   border: 1px solid #c4c4c4;
   border-collapse: collapse;
-  width: 506px;
+  width: 606px;
 `;
 const Tr = styled.tr`
   border: 1px solid #c4c4c4;
