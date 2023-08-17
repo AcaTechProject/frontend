@@ -5,7 +5,7 @@ import SelectBox from "../components/Select";
 const TableContainer = styled.table`
   border: 1px solid #c4c4c4;
   border-collapse: collapse;
-  width: 506px;
+  width: 606px;
 `;
 const Tr = styled.tr`
   border: 1px solid #c4c4c4;
@@ -13,23 +13,30 @@ const Tr = styled.tr`
 `;
 const FirstTd = styled.td`
   border: 1px solid #c4c4c4;
-  padding: 10px 5px;
+  padding: 20px 5px;
   width: 127px;
+
   background: #eceafe;
   text-align: center;
 `;
 const SecondTd = styled.td`
   border: 1px solid #C4C4C4
-  padding: 10px 5px;
+  padding: 10px 15px;
   width: 379px;
 `;
 const Input = styled.input`
   width: 50px;
-  margin-left: 10px;
+  height: 20px;
+  margin-left: 15px;
+  border: 1px solid #c4c4c4;
+  border-radius: 5px;
 `;
 const Inp = styled.input`
   width: 270px;
   margin-left: 10px;
+  font-size: 16px;
+  border: 1px solid #c4c4c4;
+  border-radius: 5px;
 `;
 const Button = styled.button`
   margin-left: 5px;
