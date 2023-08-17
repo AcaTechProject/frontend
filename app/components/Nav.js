@@ -11,7 +11,6 @@ const NavParent = styled.div`
   background-color: rgba(236, 234, 254, 0.47);
   display: flex;
   align-items: center;
-
   width: 100%;
 `;
 const NavTitle = styled.h1`
@@ -24,12 +23,12 @@ const NavUser = styled.span`
   color: blue;
   cursor: pointer;
   padding: 10px 0 0 0;
-  margin-right: 110px;
 `;
 const Container = styled.div`
   display: flex;
   margin: 10px 60px 0 0;
   gap: 10px;
+  margin-right: 150px;
 `;
 
 const Nav = () => {
