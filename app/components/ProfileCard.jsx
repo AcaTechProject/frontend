@@ -2,6 +2,8 @@
 
 import { useState, useRef, useEffect } from "react";
 import SelectBox from "../components/Select";
+import Select from "../components/LongSelect";
+
 //import { Image } from "next/image";
 // import React from "react";
 // import axios from "axios";
@@ -35,7 +37,7 @@ const InputName = styled.input`
 `;
 const Row = styled.div`
   display: flex;
-  gap: 20px;
+  gap: 30px;
   width: 350px;
 `;
 const Input = styled.input`
@@ -82,8 +84,8 @@ const ProfileCard = () => {
       <Image
         src={img ? img : `/default_profile.png`}
         alt="프로필"
-        width={200}
-        height={200}
+        width={250}
+        height={250}
         style={{ borderRadius: "50%" }}
       />
       <Label htmlFor="profileImg">이미지 추가</Label>
@@ -129,53 +131,27 @@ const ProfileCard = () => {
       </Row>
       <Row>
         <p style={{ fontWeight: "500" }}>학년 |</p>
-        <Inputs type="text" id="grade" />
+        <Select
+          options={[
+            { value: "ele", label: "1학년" },
+            { value: "ele", label: "2학년" },
+            { value: "ele", label: "3학년" },
+            { value: "ele", label: "4학년" },
+            { value: "ele", label: "5학년" },
+            { value: "ele", label: "6학년" },
+            { value: "mid", label: "중1" },
+            { value: "mid", label: "중2" },
+            { value: "mid", label: "중3" },
+            { value: "high", label: "고1" },
+            { value: "high", label: "고2" },
+            { value: "high", label: "고3" },
+          ]}
+          value={selectedValue}
+          onChange={(e) => setSelectedValue(e.target.value)}
+        />
       </Row>
     </Container>
   );
 };
-
-//일단 초기값은 사진이 없으니까 ""로.
-// const [img, setImg] = useState("");
-// const [file,setFile]=useState();
-// const handleImage = (e) => {
-//   console.log(e.target.files);
-//   setImg(e.target.files[0]);
-// };
-// const handlePick=async(event)=>{
-//   if(!event.currentTarget.files){
-//     return
-//   }
-
-// }
-// const handleApi = () => {
-//   const formData = new FormData();
-//   formData.append("image", img);
-//   axios.post("url", formData).then((res) => {
-//     console.log(res);
-//   });
-//   };
-//   return (
-//     <>
-//     {previewFile? (
-//       <ImageBox>
-//         <DefaultImage
-//           src={previewFile}
-//           alt="profil"
-//           onClick={handlepick}
-//           fill={true}/>
-//       </ImageBox>):(<ImageBox>
-//         <DefaultImage
-//         src={DefaultProfile}
-//         alt="기본"
-//         onClick={handlePick}
-//         fill={true}/>
-//       </ImageBox>
-//     )}
-//       <input type="file" name="file" onChange={handleImage}  style={{display:none}}/>
-//       <button onClick={handleApi}>제출</button>
-//     </>
-//   );
-// };
 
 export default ProfileCard;
