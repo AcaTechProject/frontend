@@ -3,7 +3,7 @@ import styled from "styled-components";
 const TableContainer = styled.table`
   border: 1px solid #c4c4c4;
   border-collapse: collapse;
-  width: 506px;
+  width: 606px;
   height: 80px;
 `;
 const Tr = styled.tr`
@@ -24,7 +24,7 @@ const SecondTd = styled.td`
   text-align: center;
 `;
 const Textarea = styled.textarea`
-  width: 300px;
+  width: 350px;
   height: 0 auto;
   border-radius: 10px;
   border: 1px solid #d3d2d2;
