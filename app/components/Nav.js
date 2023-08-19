@@ -7,11 +7,12 @@ import { useState } from "react";
 const NavParent = styled.div`
   flex-grow: 1;
   height: 70px;
-  box-shadow: 0 4px 0.5px 0 rgba(0, 0, 0, 0.07);
+  box-shadow: 0 3px 0.5px 0 rgba(0, 0, 0, 0.05);
   background-color: rgba(236, 234, 254, 0.47);
   display: flex;
   align-items: center;
   width: 100%;
+  position: fixed;
 `;
 const NavTitle = styled.h1`
   flex-grow: 1;
@@ -26,9 +27,8 @@ const NavUser = styled.span`
 `;
 const Container = styled.div`
   display: flex;
-  margin: 10px 60px 0 0;
+  margin: 10px 130px 0 0;
   gap: 10px;
-  margin-right: 150px;
 `;
 
 const Nav = () => {
