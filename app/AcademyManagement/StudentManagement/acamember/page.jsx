@@ -1,202 +1,119 @@
 "use client";
-import React from "react";
-import ProfileEmpty from "../../../components/ProfileEmpty";
-import styled from "styled-components";
-import { useState, useEffect } from "react";
-import TableInput from "../../../components/TableInput";
-import { useRouter } from "next/navigation";
-import AttendTable from "../../../components/AttendTable";
-import Table from "../../../components/Table";
-import SugangTable from "../../../components/SugangTable";
-import { FaPencilRuler } from "react-icons/Fa";
-import { TfiWrite } from "react-icons/Tfi";
 
-const Container = styled.div`
-  padding: 40px 70px 55px 85px;
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import styled from "styled-components";
+import Select from "../../../components/Select";
+import MessagePopup from "../../../components/MessagePopup";
+const Container = styled.section`
+  padding: 116px 70px 55px 85px;
 `;
-const Body = styled.section`
+const D = styled.div`
   display: flex;
+  gap: 23px;
 `;
-const Left = styled.div`
+const Div = styled.div`
+  margin-top: 15px;
   display: flex;
-  flex-direction: column;
-  margin: 110px 0 0 20px;
-  width: 45%;
+  position: relative;
+  align-items: center;
 `;
-const Right = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-top: -50px;
-  gap: 40px;
+const Total = styled.div`
+  border-radius: 50%;
+  width: 10px;
+  height: 10px;
+  background-color: #8146ff;
+  margin: 25px 0 0 5px;
 `;
-const Row = styled.div`
-  display: flex;
-  gap: 40px;
-`;
-const Tab1 = styled.button`
-  border-radius: 5px;
+const Button = styled.button`
+border-radius: 5px;
   width: 110px;
   height: 40px;
   border: 2px solid #8146ff;
   color: #8146ff;
   background: #fff;
   font-weight: bold;
+  font-size:14px;
   &:hover {
     color: white;
     background: #8146ff;
-  }
+   
 `;
-const Tab2 = styled(Tab1)``;
-const Button = styled.button`
+const Btn = styled.button`
   width: 95px;
   height: 34px;
   border-radius: 5px;
-  color: #fff;
-  background: #8146ff;
+  color: #8146ff;
+  background: #eceafe;
   border: 0;
-  font-size: 14px;
+  font-size: 15px;
+  font-weight: 700;
+  margin-left: 30px;
 `;
-const Row2 = styled(Row)`
-  justify-content: flex-end;
-  margin-top: 70px;
+const Tab = styled.button`
+  font-size: 18px;
+  font-weight: 700;
+  color: black;
+  margin-top: 15px;
+  border: none;
+  background: white;
+  &:hover {
+    color: #3629B7;
+    background: white;
+    border-bottom: 2px solid #3629b7;
 `;
 
-//이거 수정한거임!!!!!!!
-const Row3 = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  margin-top: 10px;
-`;
-
-const SubTable = styled.table`
-  border: 1px solid #d3d2d2;
-  border-collapse: collapse;
-  width: 273px;
-  margin-top: 20px;
-`;
-const Tr = styled.tr`
-  border: 1px solid #c4c4c4;
-  padding: 10px 5px;
-`;
-const Td = styled.td`
-  border: 1px solid #c4c4c4;
-  padding: 10px 5px;
-  width: 127px;
-  background: #6956e5;
-  color: white;
-  text-align: center;
-  height: 30px;
-  font-size: 16px;
-`;
-const SecondTd = styled.td`
-  border: 1px solid #c4c4c4;
-  padding: 10px 5px;
-  width: 127px;
-  height: 50px;
-  text-align: center;
-`;
-const Menu = styled.div`
-  display: flex;
-  gap: 60px;
-  margin-top: 20px;
-`;
-const Member = () => {
+const acamember = () => {
   const router = useRouter();
-  const [btn, setBtn] = useState("수강생 관리");
+  const [selectedValue, setSelectedValue] = useState("");
 
-  const tableData = [
-    {
-      title: "원생",
-      value: "010-0000-0000",
-    },
-    {
-      title: "학부모",
-      value: "부: 김지성 010-0000-0000, 모: 이지영 010-0000-000",
-    },
-    {
-      title: "가족관계",
-      value: "형: 00초등학교 5학년 기미리",
-    },
-  ];
-
+  const handleSelectChange = (e) => {
+    setSelectedValue(e.target.value);
+  };
   return (
     <Container>
-      <p>
-        원생관리 {">"} 학생관리 {">"} 수강생 관리 {">"} 이름
-      </p>
-      <Row>
-        <Tab1>출결 관리</Tab1>
-        <Tab2>학생 관리</Tab2>
-      </Row>
-      <Body>
-        <Left>
-          <ProfileEmpty />
-        </Left>
-        <Right>
-          <Row2>
-            <Button>메시지 발송</Button>
-            <Button onClick={() => router.push("acamember/MemberEdit")}>
-              정보 수정
-            </Button>
+      <p>원생관리 - 학생관리 - 신규상담</p>
+      <D>
+        <Button>출결관리</Button>
+        <Button>학생관리</Button>
+      </D>
+      <D>
+        <Tab>원생관리</Tab>
+        <Tab>신규상담</Tab>
+      </D>
+      <Div>
+        <Select
+          options={[
+            { value: "kor", label: "국어 김은진A" },
+            { value: "kor", label: "국어 김은진A" },
+            { value: "kor", label: "국어 김은진A" },
+          ]}
+          value={selectedValue}
+          onChange={handleSelectChange}
+        />
+        <div style={{ display: "flex" }}>
+          <Total />
+          <p style={{ fontSize: "13px", color: "#787486", marginTop: "22px" }}>
+            총 13명
+          </p>
+        </div>
 
-            <Button>학생 삭제</Button>
-          </Row2>
-          <Row3>
-            <Table data={tableData} />
-            <AttendTable />
-            <Menu>
-              <SubTable>
-                <tbody>
-                  <Tr>
-                    <Td>성적 관리</Td>
-                  </Tr>
-                  <Tr>
-                    <SecondTd>
-                      <FaPencilRuler
-                        size="25"
-                        onClick={() => router.push("/Login")}
-                      />
-                      <span onClick={() => router.push("/Login")}>
-                        성적 관리
-                      </span>
-                    </SecondTd>
-                  </Tr>
-                </tbody>
-              </SubTable>
-              <SubTable>
-                <tbody>
-                  <Tr>
-                    <Td>맞춤 관리</Td>
-                  </Tr>
-                  <Tr>
-                    <SecondTd>
-                      <TfiWrite
-                        size="25"
-                        onClick={() =>
-                          router.push(
-                            "/AcademyManagement/StudentManagement/counsel"
-                          )
-                        }
-                      />
-                      <span
-                        onClick={() =>
-                          router.push(
-                            "/AcademyManagement/StudentManagement/counsel"
-                          )
-                        }
-                      >
-                        맞춤 관리
-                      </span>
-                    </SecondTd>
-                  </Tr>
-                </tbody>
-              </SubTable>
-            </Menu>
-          </Row3>
-        </Right>
-      </Body>
+        <div style={{ marginLeft: "62%" }}>
+          <Btn>메시지 발송</Btn>
+          <Btn onClick={() => router.push("./acamember/register")}>
+            학생 등록
+          </Btn>
+        </div>
+      </Div>
+      <button
+        onClick={() =>
+          router.push(
+            "/AcademyManagement/StudentManagement/acamember/MemberEdit"
+          )
+        }
+      ></button>
+      {/* 표 넣을 곳 */}
     </Container>
   );
 };
-export default Member;
+export default acamember;
