@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 
 const Container = styled.div`
-  padding: 40px 0 0 80px;
+  padding: 116px 70px 55px 85px;
 `;
 const Title = styled.h2`
   font-size: 25px;
