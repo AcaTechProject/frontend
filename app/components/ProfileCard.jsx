@@ -55,15 +55,23 @@ const InputImg = styled.input`
   display: none;
 `;
 
-const ProfileCard = () => {
+const ProfileCard = ({ nameInputRef }) => {
   const [img, setImg] = useState("");
   const [name, setName] = useState("");
-
-  const nameInputRef = useRef(null);
+  const [birth, setBirth] = useState("");
+  const [school, setSchool] = useState("");
+  const [selectedValue, setSelectedValue] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const imgRef = useRef();
-  const [selectedValue, setSelectedValue] = useState("");
 
+  const handleSelectChange = (e) => {
+    setSelectedValue(e.target.value);
+    if (!e.target.value) {
+      setErrorMessage("학생의 성별을 선택해주세요");
+    }
+    setErrorMessage("");
+  };
   const handlePick = () => {
     const file = imgRef.current.files[0];
     const reader = new FileReader();
@@ -107,12 +115,13 @@ const ProfileCard = () => {
         />
         <SelectBox
           style
+          id="gender"
           options={[
             { value: "woman", label: "여" },
             { value: "man", label: "남" },
           ]}
           value={selectedValue}
-          onChange={(e) => setSelectedValue(e.target.value)}
+          onChange={handleSelectChange}
         ></SelectBox>
       </Row>
 
@@ -121,14 +130,35 @@ const ProfileCard = () => {
           이름을 입력해주세요
         </p>
       )}
+      {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
       <Row>
         <p style={{ fontWeight: "500" }}>생년월일|</p>
-        <Input type="text" id="birth" />
+        <Input
+          type="text"
+          id="birth"
+          value={birth}
+          onChange={(e) => setBirth(e.target.value)}
+        />
       </Row>
+      {birth === "" && (
+        <p style={{ fontSize: "12px", color: "red" }}>
+          학생의 생년월일을 입력해주세요
+        </p>
+      )}
       <Row>
         <p style={{ fontWeight: "500" }}>학교 |</p>
-        <Inputs type="text" id="school" />
+        <Inputs
+          type="text"
+          id="school"
+          value={school}
+          onChange={(e) => setSchool(e.target.value)}
+        />
       </Row>
+      {school === "" && (
+        <p style={{ fontSize: "12px", color: "red" }}>
+          학생의 학교를 입력해주세요
+        </p>
+      )}
       <Row>
         <p style={{ fontWeight: "500" }}>학년 |</p>
         <Select
