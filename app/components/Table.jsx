@@ -12,8 +12,8 @@ const Tr = styled.tr`
 `;
 const FirstTd = styled.td`
   border: 1px solid #c4c4c4;
-  padding: 20px 5px;
-  width: 120px;
+  padding: 10px 5px;
+  width: 127px;
   background: #eceafe;
   text-align: center;
 `;
