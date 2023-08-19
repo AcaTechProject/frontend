@@ -29,7 +29,9 @@ const Title = styled.h2`
   font-size: 19px;
   color: navy;
 `;
-
+const Body = styled.div`
+  margin-top: 20px;
+`;
 const Logout = styled.div`
   display: flex;
   align-items: center;
@@ -74,85 +76,85 @@ const sidebar = () => {
         </Logo>
 
         {/* 메뉴 시작 */}
-        <Sidebar>
-          <Menu>
-            <MenuItem style={{ marginTop: "50px" }}></MenuItem>
-            <div style={{ padding: "20px" }}>
-              <SubMenu
-                label="원생관리"
-                icon={<AccountCircleRoundedIcon />}
-                style={{ fontSize: "20px" }}
-              >
-                <StyledMenuItem
-                  active={selectedMenu === "출결관리"}
-                  onClick={() => {
-                    setSelectedMenu("출결관리");
-                    router.push(
-                      "/AcademyManagement/StudentManagement/attendance"
-                    );
-                  }}
+        <Body>
+          <Sidebar>
+            <Menu>
+              <MenuItem style={{ marginTop: "50px" }}></MenuItem>
+              <div style={{ padding: "20px" }}>
+                <SubMenu
+                  label="원생관리"
+                  icon={<AccountCircleRoundedIcon />}
+                  style={{ fontSize: "20px" }}
                 >
-                  출결관리
-                </StyledMenuItem>
-                <SubMenu label="학생 관리">
                   <StyledMenuItem
-                    active={selectedMenu === "수강생 관리"}
+                    active={selectedMenu === "출결관리"}
                     onClick={() => {
-                      setSelectedMenu("수강생 관리");
-                      router.push(
-                        "/AcademyManagement/StudentManagement/acamember"
-                      );
+                      setSelectedMenu("출결관리");
+                      router.push("/AcademyManagement/attendance");
                     }}
                   >
-                    수강생 관리
+                    출결관리
                   </StyledMenuItem>
-                  <StyledMenuItem
-                    active={selectedMenu === "상담 관리"}
-                    onClick={() => {
-                      setSelectedMenu("상담 관리");
-                      router.push(
-                        "/AcademyManagement/StudentManagement/counsel"
-                      );
-                    }}
-                  >
-                    상담 관리
-                  </StyledMenuItem>
+                  <SubMenu label="학생 관리">
+                    <StyledMenuItem
+                      active={selectedMenu === "수강생 관리"}
+                      onClick={() => {
+                        setSelectedMenu("수강생 관리");
+                        router.push(
+                          "/AcademyManagement/StudentManagement/acamember"
+                        );
+                      }}
+                    >
+                      수강생 관리
+                    </StyledMenuItem>
+                    <StyledMenuItem
+                      active={selectedMenu === "상담 관리"}
+                      onClick={() => {
+                        setSelectedMenu("상담 관리");
+                        router.push(
+                          "/AcademyManagement/StudentManagement/counsel"
+                        );
+                      }}
+                    >
+                      상담 관리
+                    </StyledMenuItem>
+                  </SubMenu>
                 </SubMenu>
-              </SubMenu>
-              <br />
-              <br />
-              <SubMenu
-                label="일정 관리"
-                icon={<CalendarMonthIcon />}
-                style={{ fontSize: "20px" }}
-                active={selectedMenu === "일정 관리"}
-                onClick={() => {
-                  setSelectedMenu("일정 관리");
-                  router.push("/ScheduleManagement/schedule");
-                }}
-              >
-                <StyledMenuItem
-                  active={selectedMenu === "일정 등록"}
+                <br />
+                <br />
+                <SubMenu
+                  label="일정 관리"
+                  icon={<CalendarMonthIcon />}
+                  style={{ fontSize: "20px" }}
+                  active={selectedMenu === "일정 관리"}
                   onClick={() => {
-                    setSelectedMenu("일정 등록");
-                    router.push("/ScheduleManagement/register");
-                  }}
-                >
-                  일정 등록
-                </StyledMenuItem>
-                <StyledMenuItem
-                  active={selectedMenu === "전체 일정"}
-                  onClick={() => {
-                    setSelectedMenu("전체 일정");
+                    setSelectedMenu("일정 관리");
                     router.push("/ScheduleManagement/schedule");
                   }}
                 >
-                  전체 일정
-                </StyledMenuItem>
-              </SubMenu>
-            </div>
-          </Menu>
-        </Sidebar>
+                  <StyledMenuItem
+                    active={selectedMenu === "일정 등록"}
+                    onClick={() => {
+                      setSelectedMenu("일정 등록");
+                      router.push("/ScheduleManagement/register");
+                    }}
+                  >
+                    일정 등록
+                  </StyledMenuItem>
+                  <StyledMenuItem
+                    active={selectedMenu === "전체 일정"}
+                    onClick={() => {
+                      setSelectedMenu("전체 일정");
+                      router.push("/ScheduleManagement/schedule");
+                    }}
+                  >
+                    전체 일정
+                  </StyledMenuItem>
+                </SubMenu>
+              </div>
+            </Menu>
+          </Sidebar>
+        </Body>
         <Logout>
           <MdLogout size="20" />
           <p>로그아웃</p>
