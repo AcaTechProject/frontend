@@ -6,6 +6,7 @@ import { useState, useRef } from "react";
 const Container = styled.div`
   width: 255px;
   text-align: center;
+  margin-left: 50px;
 `;
 const Label = styled.label`
   color: #0095f6;
@@ -37,8 +38,8 @@ const ProfileImage = () => {
       <Image
         src={img ? img : `/default_profile.png`}
         alt="프로필"
-        width={200}
-        height={200}
+        width={250}
+        height={250}
         style={{ borderRadius: "50%", textAlign: "center" }}
       />
       {/* <Label htmlFor="profileImg">이미지 추가</Label> */}
