@@ -1,40 +1,12 @@
-/* h4 {
-  text-align: center;
-}
 body {
-  background: rgb(203, 240, 255);
-}
-.list_1,
-.list_2 {
-  padding: 20px;
-  border: 1px solid red;
-  border-radius: 5px;
-  width: 200px;
-  margin: 20px auto;
-  color: black;
-}
-
-.navbar {
-  background: white;
-  padding: 20px;
-}
-.navbar a {
-  margin-right: 10px;
-  text-decoration: none;
-}
-.food-img {
-  width: 200px;
-}
-.cart-item {
-  padding: 10px;
+  position: relative;
   display: flex;
-  justify-content: space-around;
-  border-bottom: 1px solid grey;
-  line-height: 0px;
-} */
-
+  height: 748px;
+  flex-direction: column;
+}
 html,
 body {
   margin: 0;
+  height: 100%;
+  min-height: 730px;
 }
-
