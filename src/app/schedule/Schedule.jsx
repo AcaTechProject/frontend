@@ -2,12 +2,37 @@ import React, { useState } from "react";
 import { styled } from "styled-components";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
+import Button from "../components/Button";
 
 function Schedule(props) {
   const [value, onChange] = useState(new Date());
+  const [isClicked, setIsClicked] = useState(true);
+
+  const handleIsClicked = () => {
+    setIsClicked(!isClicked);
+  };
 
   return (
     <SchedulePageWrapper>
+      <ButtonWrapper style={{ marginBottom: 20 + "px" }}>
+        <StyledButton
+          onClick={() => handleIsClicked()}
+          $primary={isClicked}
+          $secondary={!isClicked}
+          $medium={true}
+          style={{ marginRight: 30 + "px" }}
+        >
+          {"전체 일정"}
+        </StyledButton>
+        <StyledButton
+          onClick={() => handleIsClicked()}
+          $primary={!isClicked}
+          $secondary={isClicked}
+          $medium={true}
+        >
+          {"일정 등록"}
+        </StyledButton>
+      </ButtonWrapper>
       <SectionWrapper>
         <StyledSection>
           <Calendar onChange={onChange} value={value} />
@@ -21,7 +46,9 @@ function Schedule(props) {
               <li>{"학원 시험 일정"}</li>
             </ScheduleCardContent>
           </ScheduleCard>
-          <ScheduleCard style={{ margin: 30 + "px" }}>
+          <ScheduleCard
+            style={{ marginTop: 30 + "px", marginBottom: 30 + "px" }}
+          >
             <ScheduleCardTitle>{"이번달 상담 스케줄"}</ScheduleCardTitle>
             <ScheduleCardContent></ScheduleCardContent>
           </ScheduleCard>
@@ -36,6 +63,13 @@ function Schedule(props) {
 }
 
 export default Schedule;
+
+const StyledButton = styled(Button)``;
+
+const ButtonWrapper = styled.div`
+  display: flex;
+  justify-content: flex-end;
+`;
 
 const SchedulePageWrapper = styled.div`
   border: 2px solid blue;
