@@ -1,7 +1,7 @@
 import { useRouter } from "next/navigation";
 import styled, { css } from "styled-components";
 import { useState } from "react";
-import { MdLogout } from "react-icons/md";
+//import { MdLogout } from "react-icons/md";
 import { Menu, SubMenu, MenuItem, Sidebar } from "react-pro-sidebar";
 import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
@@ -156,7 +156,7 @@ const sidebar = () => {
           </Sidebar>
         </Body>
         <Logout>
-          <MdLogout size="20" />
+          {/* <MdLogout size="20" /> */}
           <p>로그아웃</p>
         </Logout>
       </SidebarParent>
