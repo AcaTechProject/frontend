@@ -6,7 +6,6 @@ import Button from "../../components/Button";
 import ScheduleCalendar from "@/app/components/Calendar/Calendar";
 
 function Schedule(props) {
-  const [value, onChange] = useState(new Date());
   const [isClicked, setIsClicked] = useState(true);
 
   const handleIsClicked = () => {
