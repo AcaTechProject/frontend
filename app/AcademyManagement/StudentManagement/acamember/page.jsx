@@ -126,8 +126,20 @@ const acamember = () => {
         <SMBtn />
       </D>
       <D>
-        <Tab>수강생 관리</Tab>
-        <Tab>신규상담</Tab>
+        <Tab
+          onClick={() =>
+            router.push("/AcademyManagement/StudentManagement/acamember")
+          }
+        >
+          수강생 관리
+        </Tab>
+        <Tab
+          onClick={() =>
+            router.push("/AcademyManagement/StudentManagement/counsel")
+          }
+        >
+          신규상담
+        </Tab>
       </D>
       <Div>
         <Select
