@@ -4,19 +4,39 @@ import { styled } from "styled-components";
 import "react-calendar/dist/Calendar.css";
 import Button from "../../components/Button";
 import ScheduleCalendar from "@/app/components/Calendar/Calendar";
+import Popup from "@/app/components/Popup";
+import { useRouter } from "next/navigation";
 
 function Schedule(props) {
+  const router = useRouter();
   const [isClicked, setIsClicked] = useState(true);
+  const [isOpened, setIsOpened] = useState(false);
 
   const handleIsClicked = () => {
     setIsClicked(!isClicked);
+  };
+
+  const handleModalOpen = () => {
+    setIsOpened(!isOpened);
+    console.log(isOpened);
+  };
+
+  const handleSchedulePage = () => {
+    handleIsClicked();
+
+    router.push("/ScheduleManagement/schedule");
+  };
+
+  const handleRegisterPage = () => {
+    handleIsClicked();
+    router.push("/ScheduleManagement/register");
   };
 
   return (
     <SchedulePageContainer>
       <ButtonWrapper style={{ marginBottom: 20 + "px" }}>
         <StyledButton
-          onClick={() => handleIsClicked()}
+          onClick={handleSchedulePage}
           $primary={isClicked}
           $secondary={!isClicked}
           $medium={true}
@@ -25,7 +45,7 @@ function Schedule(props) {
           {"전체 일정"}
         </StyledButton>
         <StyledButton
-          onClick={() => handleIsClicked()}
+          onClick={handleRegisterPage}
           $primary={!isClicked}
           $secondary={isClicked}
           $medium={true}
@@ -35,8 +55,10 @@ function Schedule(props) {
       </ButtonWrapper>
       <SectionWrapper>
         <StyledSection>
-          <ScheduleCalendar />
+          <ScheduleCalendar handleModalOpen={handleModalOpen} />
+          {isOpened ? <Popup onClose={handleModalOpen} /> : null}
         </StyledSection>
+
         <StyledSection>
           <ScheduleCard>
             <ScheduleCardTitle>{"이번달 학원 스케줄"}</ScheduleCardTitle>
@@ -84,7 +106,7 @@ const StyledSection = styled.section`
   height: 100%;
 `;
 
-const ScheduleCard = styled.article`
+const ScheduleCard = styled.div`
   margin: 0 auto;
   width: 450px;
   height: 140px;
@@ -116,5 +138,3 @@ const ScheduleCardContent = styled.div`
   overflow: hidden;
   border-radius: 0 0 5px 5px;
 `;
-
-// padding: 15px 0 0 30px;
