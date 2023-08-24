@@ -12,6 +12,8 @@ import { FaPencilRuler } from "react-icons/Fa";
 import { TfiWrite } from "react-icons/Tfi";
 import MessagePopup from "@/app/components/MessagePopup";
 import Modal from "@/app/components/Modal";
+import SMBtn from "@/app/components/SMBtn";
+import AMBtn from "@/app/components/AMBtn";
 
 const Container = styled.div`
   padding: 116px 70px 55px 85px;
@@ -154,8 +156,8 @@ const StudentInfo = () => {
         원생관리 {">"} 학생관리 {">"} 수강생 관리 {">"} 이름
       </p>
       <Row>
-        <Tab1>출결관리</Tab1>
-        <Tab2>학생관리</Tab2>
+        <AMBtn />
+        <SMBtn />
       </Row>
       <Body>
         <Left>
@@ -234,7 +236,7 @@ const StudentInfo = () => {
                       <span
                         onClick={() =>
                           router.push(
-                            "/AcademyManagement/StudentManagement/counsel"
+                            "/AcademyManagement/StudentManagement/counsel/CounselEdit"
                           )
                         }
                       >
