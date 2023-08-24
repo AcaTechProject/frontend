@@ -115,27 +115,33 @@ const register = () => {
   const [school, setSchool] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [selectedValue, setSelectedValue] = useState("");
-  const nameInputRef = useRef(null);
+
+  //const nameInputRef = useRef(null);
+  const telInputRef = useRef(null);
+  const parentInputRef = useRef(null);
 
   const tel = useRecoilValue(telState);
   const parent = useRecoilValue(parentState);
   const value = useRecoilValue(valueState);
   const result = useRecoilValue(resultState);
+
   const handleSaveClick = () => {
     if (name === "") {
-      alert("학생의 이름을 입력해주세요");
-      nameInputRef.current.focus(); // 이름 입력 필드에 포커스를 이동시킴
+      alert("학생 정보를 입력해주세요");
+      // 이름 입력 필드에 포커스를 이동시킴
       return;
     } else if (birth === "") {
-      alert("학생의 생년월일을 입력해주세요");
+      alert("학생 정보를 입력해주세요");
     } else if (!selectedValue) {
-      alert("학생의 성별을 선택해주세요");
+      alert("학생 정보를 입력해주세요");
     } else if (school === "") {
-      alert("학생의 학교를 입력해주세요");
+      alert("학생 정보를 입력해주세요");
     } else if (tel === "") {
       alert("전화번호를 입력해주세요");
+      telInputRef.current.focus();
     } else if (parent === "") {
       alert("학부모 정보를 입력해주세요");
+      parentInputRef.current.focus();
     } else if (value.length === 0) {
       alert("가족관계 정보를 입력해주세요");
     } else if (result.length === 0) {
@@ -168,14 +174,13 @@ const register = () => {
 
           <Label htmlFor="profileImg">이미지 추가</Label>
           <br />
-          {/* <ProfileCard nameInputRef={nameInputRef} /> */}
+
           <Row4>
             <InputName
               type="text"
               id="name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              ref={nameInputRef}
             />
             <Select
               style
@@ -260,7 +265,10 @@ const register = () => {
             <Button onClick={handleSaveClick}>저장</Button>
           </Row2>
           <Row3>
-            <TableInput />
+            <TableInput
+              parentInputRef={parentInputRef}
+              telInputRef={telInputRef}
+            />
             <br />
             <br />
             <SugangTable />
