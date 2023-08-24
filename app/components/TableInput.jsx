@@ -56,7 +56,7 @@ const Li = styled.li`
   font-size: 15px;
   margin-left: 12px;
 `;
-const Table = ({ parentInputRef, telInputRef }) => {
+const TableInput = ({ parentInputRef, telInputRef }) => {
   //형제관계 입력칸
   const [value, setValue] = useState("");
   //형제관계 입력칸이 변할 배열들 다룸.
@@ -144,4 +144,4 @@ const Table = ({ parentInputRef, telInputRef }) => {
     </>
   );
 };
-export default Table;
+export default TableInput;
