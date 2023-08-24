@@ -77,13 +77,21 @@ const NewCounsel = () => {
 
   return (
     <Container>
-      <p>원생관리 - 학생관리 - 신규상담</p>
+      <p>
+        원생관리 {">"} 학생관리 {">"} 신규상담
+      </p>
       <D>
         <AMBtn />
         <SMBtn />
       </D>
       <D>
-        <Tab>수강생 관리</Tab>
+        <Tab
+          onClick={() =>
+            router.push("/AcademyManagement/StudentManagement/acamember")
+          }
+        >
+          수강생 관리
+        </Tab>
         <Tab
           onClick={() =>
             router.push("/AcademyManagement/StudentManagement/counsel")
