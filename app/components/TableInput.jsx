@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import SelectBox from "../components/Select";
 import { useRecoilState } from "recoil";
 import { telState, parentState, valueState } from "../recoil/atom";
@@ -56,7 +56,7 @@ const Li = styled.li`
   font-size: 15px;
   margin-left: 12px;
 `;
-const Table = () => {
+const Table = ({ parentInputRef, telInputRef }) => {
   //형제관계 입력칸
   const [value, setValue] = useState("");
   //형제관계 입력칸이 변할 배열들 다룸.
@@ -82,7 +82,9 @@ const Table = () => {
     setValues((currentArr) => [value, ...currentArr]);
     setValue("");
   };
+
   console.log(values);
+
   return (
     <>
       <TableContainer>
@@ -96,6 +98,7 @@ const Table = () => {
                 placeholder="010"
                 value={tel}
                 onChange={handleTel}
+                ref={telInputRef}
               ></Input>{" "}
               -<Input type="text" id="tel" maxLength={4}></Input> -
               <Input type="text" maxLength={4}></Input>
@@ -111,6 +114,7 @@ const Table = () => {
                 placeholder="010"
                 value={parent}
                 onChange={handleParent}
+                ref={parentInputRef}
               ></Input>{" "}
               -<Input type="text" maxLength={4}></Input> -
               <Input type="text" maxLength={4}></Input>
