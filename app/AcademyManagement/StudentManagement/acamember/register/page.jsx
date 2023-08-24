@@ -1,16 +1,23 @@
 "use client";
 import React from "react";
-import ProfileCard from "../../../../components/ProfileCard";
-import ProfileImage from "../../../../components/ProfileImage";
+import ProfileCard from "@/app/components/ProfileCard";
+import ProfileImage from "@/app/components/ProfileImage";
 import styled from "styled-components";
 import { useState, useEffect, useRef } from "react";
-import TableInput from "../../../../components/TableInput";
-import SugangTable from "../../../../components/SugangTable";
+import TableInput from "@/app/components/TableInput";
+import SugangTable from "@/app/components/SugangTable";
 import { useRouter } from "next/navigation";
 import { Link } from "react-router-dom";
-import SelectBox from "../../../../components/LongSelect";
-import Select from "../../../../components/Select";
-import { telState, parentState } from "../../../../recoil/atom";
+import SelectBox from "@/app/components/LongSelect";
+import Select from "@/app/components/Select";
+import SMBtn from "@/app/components/SMBtn";
+import AMBtn from "@/app/components/AMBtn";
+import {
+  telState,
+  parentState,
+  valueState,
+  resultState,
+} from "../../../../recoil/atom";
 import { useRecoilValue } from "recoil";
 const Container = styled.div`
   padding: 116px 70px 55px 85px;
@@ -33,7 +40,7 @@ const Right = styled.div`
 `;
 const Row = styled.div`
   display: flex;
-  gap: 40px;
+  gap: 23px;
 `;
 const Tab1 = styled.button`
   border-radius: 5px;
@@ -43,6 +50,7 @@ const Tab1 = styled.button`
   color: #8146ff;
   background: #fff;
   font-weight: bold;
+  font-size: 14px;
   &:hover {
     color: white;
     background: #8146ff;
@@ -111,10 +119,11 @@ const register = () => {
 
   const tel = useRecoilValue(telState);
   const parent = useRecoilValue(parentState);
-
+  const value = useRecoilValue(valueState);
+  const result = useRecoilValue(resultState);
   const handleSaveClick = () => {
     if (name === "") {
-      alert("이름을 입력해주세요");
+      alert("학생의 이름을 입력해주세요");
       nameInputRef.current.focus(); // 이름 입력 필드에 포커스를 이동시킴
       return;
     } else if (birth === "") {
@@ -127,6 +136,10 @@ const register = () => {
       alert("전화번호를 입력해주세요");
     } else if (parent === "") {
       alert("학부모 정보를 입력해주세요");
+    } else if (value.length === 0) {
+      alert("가족관계 정보를 입력해주세요");
+    } else if (result.length === 0) {
+      alert("학생의 수강과목 또는 분반을 선택해주세요");
     } else {
       // 유효성 검사를 모두 통과한 경우에만 다음 경로로 이동
       router.push("/AcademyManagement/StudentManagement/acamember");
@@ -146,10 +159,8 @@ const register = () => {
         원생관리 {">"} 학생관리 {">"} 수강생 관리 {">"} 이름
       </p>
       <Row>
-        <Tab1 onClick={() => router.push("/AcademyManagement/attendance")}>
-          출결 관리
-        </Tab1>
-        <Tab2>학생 관리</Tab2>
+        <AMBtn />
+        <SMBtn />
       </Row>
       <Body>
         <Left>

@@ -81,11 +81,11 @@ const ProfileCard = ({ nameInputRef }) => {
     };
   };
 
-  useEffect(() => {
-    if (name === "") {
-      nameInputRef.current.focus();
-    }
-  }, [name]);
+  // useEffect(() => {
+  //   if (name === "") {
+  //     nameInputRef.current.focus();
+  //   }
+  // }, [name]);
 
   return (
     <Container>

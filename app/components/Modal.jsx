@@ -58,16 +58,17 @@ const CancelButton = styled.button`
 `;
 const P = styled.p`
   text-align: center;
+  font-size: 14px;
 `;
 
-const Modal = ({ onClose, message }) => {
+const Modal = ({ onCheck, onClose, message }) => {
   return (
     <ModalOverlay>
       <ModalContent>
         <div style={{ marginTop: "30px" }}>
-          <p>{message}</p>
+          <P>{message}</P>
           <ModalButtons>
-            <CancelButton onClick={onClose}>확인</CancelButton>
+            <CancelButton onClick={onCheck}>확인</CancelButton>
             <ConfirmButton onClick={onClose}>취소</ConfirmButton>
           </ModalButtons>
         </div>

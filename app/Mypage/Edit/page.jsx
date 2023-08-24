@@ -1,11 +1,13 @@
 "use client";
 import ProfileImage from "@/app/components/ProfileImage";
+import ProfileCard from "@/app/components/ProfileCard";
 import Table from "../../components/Table";
 import styled from "styled-components";
 import TableEdit from "@/app/components/TableEdit";
 import TableText from "@/app/components/TableText";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
+import { telState } from "../../recoil/atom";
 
 const Container = styled.div`
   padding: 116px 70px 55px 85px;
@@ -47,10 +49,11 @@ const Label = styled.label`
   display: block;
   margin-top: 10px;
   margin-left: 100px;
+  margin-left: 150px;
 `;
 const Edit = () => {
   const router = useRouter();
-  const telInputRefs = [useRef(null), useRef(null), useRef(null)];
+  //const telInputRefs = [useRef(null), useRef(null), useRef(null)];
   const [telNum, setTelNum] = useState(["", "", ""]);
 
   const handleEditButtonClicked = () => {
@@ -67,6 +70,10 @@ const Edit = () => {
       value: "국어",
     },
   ];
+  const handleClick = () => {
+    alert("수정이 취소되었습니다");
+    router.push("/Mypage");
+  };
 
   return (
     <>
@@ -74,7 +81,7 @@ const Edit = () => {
         <Title>마이 페이지</Title>
         <Body>
           <Left>
-            <ProfileImage></ProfileImage>
+            <ProfileImage />
             <Label htmlFor="profileImg">이미지 추가</Label>
           </Left>
 
@@ -89,7 +96,10 @@ const Edit = () => {
             </div>
             <div>
               <h3>담당 수업</h3>
-              <TableText title="담당 수업"></TableText>
+              <TableText
+                title="담당 수업"
+                placeholder="ex) [국어 김oo A] 괄호 안의 내용과 같이 입력해주세요"
+              ></TableText>
             </div>
             <div>
               <h3>담당 학년</h3>
@@ -97,7 +107,7 @@ const Edit = () => {
               <TableText title="담당 학년"></TableText>
             </div>
             <div style={{ display: "flex", gap: "46px" }}>
-              <Button onClick={() => router.push("/Mypage")}>수정 취소</Button>
+              <Button onClick={handleClick}>수정 취소</Button>
               <Button onClick={handleEditButtonClicked}>수정 완료</Button>
             </div>
           </Right>

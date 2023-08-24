@@ -9,3 +9,17 @@ export const parentState = atom({
   key: "parentState",
   default: "",
 });
+
+export const valueState = atom({
+  key: "valueState",
+  default: [],
+});
+export const resultState = atom({
+  key: "resultState",
+  default: [],
+});
+
+export const inputAtom = atom({
+  key: "inputAtom",
+  default: "",
+});

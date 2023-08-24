@@ -1,18 +1,22 @@
 "use client";
 import React from "react";
-import ProfileEmpty from "@/app/components/ProfileEmpty";
+import ProfileCard from "../../../../components/ProfileCard";
+import ProfileImage from "../../../../components/ProfileImage";
 import styled from "styled-components";
-import { useState, useEffect } from "react";
-import TableInput from "@/app/components/TableInput";
-import { useRouter } from "next/navigation";
-import AttendTable from "@/app/components/AttendTable";
-import Table from "@/app/components/Table";
+import { useState, useEffect, useRef } from "react";
+import TableInput from "../../../../components/TableInput";
 import SugangTable from "../../../../components/SugangTable";
-import { FaPencilRuler } from "react-icons/Fa";
-import { TfiWrite } from "react-icons/Tfi";
-import MessagePopup from "@/app/components/MessagePopup";
-import Modal from "@/app/components/Modal";
-
+import { useRouter } from "next/navigation";
+import { Link } from "react-router-dom";
+import SelectBox from "../../../../components/LongSelect";
+import Select from "../../../../components/Select";
+import {
+  telState,
+  parentState,
+  valueState,
+  resultState,
+} from "../../../../recoil/atom";
+import { useRecoilValue } from "recoil";
 const Container = styled.div`
   padding: 116px 70px 55px 85px;
 `;
@@ -24,16 +28,17 @@ const Left = styled.div`
   flex-direction: column;
   margin: 110px 0 0 20px;
   width: 45%;
+  max-height: 400px;
 `;
 const Right = styled.div`
   display: flex;
   flex-direction: column;
-  margin-top: -50px;
+  margin-top: -70px;
   gap: 40px;
 `;
 const Row = styled.div`
   display: flex;
-  gap: 40px;
+  gap: 23px;
 `;
 const Tab1 = styled.button`
   border-radius: 5px;
@@ -43,6 +48,7 @@ const Tab1 = styled.button`
   color: #8146ff;
   background: #fff;
   font-weight: bold;
+  font-size: 14px;
   &:hover {
     color: white;
     background: #8146ff;
@@ -53,185 +59,209 @@ const Button = styled.button`
   width: 95px;
   height: 34px;
   border-radius: 5px;
-  color: #fff;
-  background: #8146ff;
+  color: #8146ff;
+  background: #eceafe;
   border: 0;
-  font-size: 14px;
+  font-size: 15px;
+  font-weight: 500;
 `;
 const Row2 = styled(Row)`
   justify-content: flex-end;
-  margin-top: 70px;
+  margin-top: 85px;
 `;
-
-//이거 수정한거임!!!!!!!
 const Row3 = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
+  margin-top: 20px;
+`;
+const Label = styled.label`
+  color: #0095f6;
+  font-weight: bold;
+  font-size: 13px;
+  cursor: pointer;
+  display: block;
   margin-top: 10px;
+  margin-left: 150px;
+`;
+const InputName = styled.input`
+  width: 180px;
+  height: 30px;
+  border-radius: 5px;
+  border: 1px solid #d3d2d2;
+`;
+const Row4 = styled.div`
+  display: flex;
+  gap: 30px;
+  width: 350px;
+`;
+const Input = styled.input`
+  width: 230px;
+  height: 30px;
+  margin: 10px 0 0 5px;
+  border: 1px solid #d3d2d2;
+  border-radius: 10px;
+`;
+const Inputs = styled(Input)`
+  margin: 10px 0 0 30px;
+`;
+const S = styled.div`
+  margin-top: 30px;
 `;
 
-const SubTable = styled.table`
-  border: 1px solid #d3d2d2;
-  border-collapse: collapse;
-  width: 273px;
-  margin-top: 20px;
-`;
-const Tr = styled.tr`
-  border: 1px solid #c4c4c4;
-  padding: 10px 5px;
-`;
-const Td = styled.td`
-  border: 1px solid #c4c4c4;
-  padding: 10px 5px;
-  width: 127px;
-  background: #6956e5;
-  color: white;
-  text-align: center;
-  height: 30px;
-  font-size: 16px;
-`;
-const SecondTd = styled.td`
-  border: 1px solid #c4c4c4;
-  padding: 10px 5px;
-  width: 127px;
-  height: 50px;
-  text-align: center;
-`;
-const Menu = styled.div`
-  display: flex;
-  gap: 60px;
-  margin-top: 20px;
-`;
 const MemberEdit = () => {
   const router = useRouter();
-  const [btn, setBtn] = useState("수강생 관리");
-  const [isMessageOpen, setMessageOpen] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalMessage, setModalMessage] = useState("");
+  const [name, setName] = useState("");
+  const [birth, setBirth] = useState("");
+  const [school, setSchool] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [selectedValue, setSelectedValue] = useState("");
+  const nameInputRef = useRef(null);
 
-  const handleModal = (message) => {
-    setModalMessage(message);
-    setIsModalOpen(true);
+  const tel = useRecoilValue(telState);
+  const parent = useRecoilValue(parentState);
+  const value = useRecoilValue(valueState);
+  const result = useRecoilValue(resultState);
+  const handleSaveClick = () => {
+    if (name === "") {
+      alert("학생의 이름을 입력해주세요");
+      nameInputRef.current.focus(); // 이름 입력 필드에 포커스를 이동시킴
+      return;
+    } else if (birth === "") {
+      alert("학생의 생년월일을 입력해주세요");
+    } else if (!selectedValue) {
+      alert("학생의 성별을 선택해주세요");
+    } else if (school === "") {
+      alert("학생의 학교를 입력해주세요");
+    } else if (tel === "") {
+      alert("전화번호를 입력해주세요");
+    } else if (parent === "") {
+      alert("학부모 정보를 입력해주세요");
+    } else if (value.length === 0) {
+      alert("가족관계 정보를 입력해주세요");
+    } else if (result.length === 0) {
+      alert("학생의 수강과목 또는 분반을 선택해주세요");
+    } else {
+      // 유효성 검사를 모두 통과한 경우에만 다음 경로로 이동
+      router.push("/AcademyManagement/StudentManagement/acamember");
+    }
   };
-  // const openModal = () => {
-  //   setIsModalOpen(true);
-  // };
+  const handleSelectChange = (e) => {
+    setSelectedValue(e.target.value);
+    if (!e.target.value) {
+      setErrorMessage("학생의 성별을 선택해주세요");
+    }
+    setErrorMessage("");
+  };
 
-  const closeModal = () => {
-    setIsModalOpen(false);
+  const handleCancel = () => {
+    alert("수정이 취소되었습니다");
+    router.push("/AcademyManagement/StudentManagement/acamember/StudentInfo");
   };
-
-  const openMessagePopup = () => {
-    setMessageOpen(true);
-  };
-  const closeMessagePopup = () => {
-    setMessageOpen(false);
-  };
-  const handleSendMessage = (message) => {
-    console.log("sending", message);
-  };
-
-  const tableData = [
-    {
-      title: "원생",
-      value: "010-0000-0000",
-    },
-    {
-      title: "학부모",
-      value: "부: 김지성 010-0000-0000, 모: 이지영 010-0000-000",
-    },
-    {
-      title: "가족관계",
-      value: "형: 00초등학교 5학년 기미리",
-    },
-  ];
-
   return (
     <Container>
       <p>
         원생관리 {">"} 학생관리 {">"} 수강생 관리 {">"} 이름
       </p>
       <Row>
-        <Tab1>출결 관리</Tab1>
-        <Tab2>학생 관리</Tab2>
+        <Tab1 onClick={() => router.push("/AcademyManagement/attendance")}>
+          출결관리
+        </Tab1>
+        <Tab2>학생관리</Tab2>
       </Row>
       <Body>
         <Left>
-          <ProfileEmpty />
+          <ProfileImage />
+
+          <Label htmlFor="profileImg">이미지 추가</Label>
+          <br />
+          {/* <ProfileCard nameInputRef={nameInputRef} /> */}
+          <Row4>
+            <InputName
+              type="text"
+              id="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              ref={nameInputRef}
+            />
+            <Select
+              style
+              id="gender"
+              options={[
+                { value: "woman", label: "여" },
+                { value: "man", label: "남" },
+              ]}
+              value={selectedValue}
+              onChange={handleSelectChange}
+            ></Select>
+          </Row4>
+
+          {name === "" && (
+            <p style={{ fontSize: "12px", color: "red", marginRight: "180px" }}>
+              이름을 입력해주세요
+            </p>
+          )}
+
+          <Row4>
+            <p style={{ fontWeight: "500" }}>생년월일|</p>
+            <Input
+              type="text"
+              id="birth"
+              value={birth}
+              onChange={(e) => setBirth(e.target.value)}
+            />
+          </Row4>
+          {birth === "" && (
+            <p style={{ fontSize: "12px", color: "red" }}>
+              학생의 생년월일을 입력해주세요
+            </p>
+          )}
+
+          <Row4>
+            <p style={{ fontWeight: "500" }}>학교 |</p>
+            <Inputs
+              type="text"
+              id="school"
+              value={school}
+              onChange={(e) => setSchool(e.target.value)}
+            />
+          </Row4>
+          {school === "" && (
+            <p style={{ fontSize: "12px", color: "red" }}>
+              학생의 학교를 입력해주세요
+            </p>
+          )}
+
+          <Row4>
+            <p style={{ fontWeight: "500" }}>학년 |</p>
+            <SelectBox
+              options={[
+                { value: "ele", label: "1학년" },
+                { value: "ele", label: "2학년" },
+                { value: "ele", label: "3학년" },
+                { value: "ele", label: "4학년" },
+                { value: "ele", label: "5학년" },
+                { value: "ele", label: "6학년" },
+                { value: "mid", label: "중1" },
+                { value: "mid", label: "중2" },
+                { value: "mid", label: "중3" },
+                { value: "high", label: "고1" },
+                { value: "high", label: "고2" },
+                { value: "high", label: "고3" },
+              ]}
+              value={selectedValue}
+              onChange={(e) => setSelectedValue(e.target.value)}
+            />
+          </Row4>
         </Left>
+
         <Right>
           <Row2>
-            <Button onClick={openMessagePopup}>메시지 발송</Button>
-            {isMessageOpen && (
-              <MessagePopup
-                onClose={closeMessagePopup}
-                onSend={handleSendMessage}
-              />
-            )}
-
-            <Button onClick={() => router.push("./MemberEdit")}>
-              정보 수정
-            </Button>
-
-            <Button onClick={() => handleModal("정말 삭제하시겠습니까?")}>
-              학생 삭제
-            </Button>
-            {isModalOpen && (
-              <Modal onClose={closeModal} message={modalMessage} />
-            )}
+            <Button onClick={handleCancel}>취소</Button>
+            <Button onClick={handleSaveClick}>저장</Button>
           </Row2>
           <Row3>
-            <Table data={tableData} />
-            <AttendTable />
-            <Menu>
-              <SubTable>
-                <tbody>
-                  <Tr>
-                    <Td>성적 관리</Td>
-                  </Tr>
-                  <Tr>
-                    <SecondTd>
-                      <FaPencilRuler
-                        size="25"
-                        onClick={() => router.push("/Login")}
-                      />
-                      <span onClick={() => router.push("/Login")}>
-                        성적 관리
-                      </span>
-                    </SecondTd>
-                  </Tr>
-                </tbody>
-              </SubTable>
-              <SubTable>
-                <tbody>
-                  <Tr>
-                    <Td>맞춤 관리</Td>
-                  </Tr>
-                  <Tr>
-                    <SecondTd>
-                      <TfiWrite
-                        size="25"
-                        onClick={() =>
-                          router.push(
-                            "/AcademyManagement/StudentManagement/counsel"
-                          )
-                        }
-                      />
-                      <span
-                        onClick={() =>
-                          router.push(
-                            "/AcademyManagement/StudentManagement/counsel"
-                          )
-                        }
-                      >
-                        맞춤 관리
-                      </span>
-                    </SecondTd>
-                  </Tr>
-                </tbody>
-              </SubTable>
-            </Menu>
+            <TableInput />
+            <br />
+            <br />
+            <SugangTable />
           </Row3>
         </Right>
       </Body>

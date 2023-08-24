@@ -24,12 +24,12 @@ const SecondTd = styled.td`
   text-align: center;
 `;
 const Textarea = styled.textarea`
-  width: 350px;
+  width: 400px;
   height: 0 auto;
-  border-radius: 10px;
+  border-radius: 5px;
   border: 1px solid #d3d2d2;
 `;
-const TableText = ({ title }) => {
+const TableText = ({ title, placeholder }) => {
   return (
     <>
       <TableContainer>
@@ -37,7 +37,7 @@ const TableText = ({ title }) => {
           <Tr>
             <FirstTd>{title}</FirstTd>
             <SecondTd>
-              <Textarea />
+              <Textarea placeholder={placeholder} />
             </SecondTd>
           </Tr>
         </tbody>

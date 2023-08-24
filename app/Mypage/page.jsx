@@ -3,6 +3,7 @@ import ProfileImage from "../components/ProfileImage";
 import styled from "styled-components";
 import Table from "../components/Table";
 import { useRouter } from "next/navigation";
+import ProfileEmpty from "../components/ProfileEmpty";
 
 const Container = styled.div`
   padding: 116px 70px 55px 85px;
@@ -41,6 +42,11 @@ const Button = styled.button`
   height: 33px;
   border: 0;
 `;
+const Name = styled.p`
+  margin-left: 150px;
+  font-size: 18px;
+  font-weight: 700;
+`;
 const MyPage = () => {
   const router = useRouter();
   const tableData1 = [
@@ -77,8 +83,8 @@ const MyPage = () => {
         <Title>마이 페이지</Title>
         <Body>
           <Left>
-            <ProfileImage></ProfileImage>
-            <P>학생명</P>
+            <ProfileImage />
+            <Name>학생명</Name>
           </Left>
 
           <Right>

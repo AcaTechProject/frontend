@@ -1,11 +1,11 @@
-"use client";
 import React, { useState } from "react";
 import { styled } from "styled-components";
+import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
-import Button from "../../components/Button";
-//import ScheduleCalendar from "@/app/components/Calendar/Calendar";
+import Button from "../components/Button";
 
 function Schedule(props) {
+  const [value, onChange] = useState(new Date());
   const [isClicked, setIsClicked] = useState(true);
 
   const handleIsClicked = () => {
@@ -13,7 +13,7 @@ function Schedule(props) {
   };
 
   return (
-    <SchedulePageContainer>
+    <SchedulePageWrapper>
       <ButtonWrapper style={{ marginBottom: 20 + "px" }}>
         <StyledButton
           onClick={() => handleIsClicked()}
@@ -34,7 +34,9 @@ function Schedule(props) {
         </StyledButton>
       </ButtonWrapper>
       <SectionWrapper>
-        <StyledSection>{/* <ScheduleCalendar /> */}</StyledSection>
+        <StyledSection>
+          <Calendar onChange={onChange} value={value} />
+        </StyledSection>
         <StyledSection>
           <ScheduleCard>
             <ScheduleCardTitle>{"이번달 학원 스케줄"}</ScheduleCardTitle>
@@ -47,16 +49,16 @@ function Schedule(props) {
           <ScheduleCard
             style={{ marginTop: 30 + "px", marginBottom: 30 + "px" }}
           >
-            <ScheduleCardTitle>{"오늘의 학원 일정"}</ScheduleCardTitle>
+            <ScheduleCardTitle>{"이번달 상담 스케줄"}</ScheduleCardTitle>
             <ScheduleCardContent></ScheduleCardContent>
           </ScheduleCard>
           <ScheduleCard>
-            <ScheduleCardTitle>{"오늘의 상담 일정"}</ScheduleCardTitle>
+            <ScheduleCardTitle>{"이번달 학원 스케줄"}</ScheduleCardTitle>
             <ScheduleCardContent></ScheduleCardContent>
           </ScheduleCard>
         </StyledSection>
       </SectionWrapper>
-    </SchedulePageContainer>
+    </SchedulePageWrapper>
   );
 }
 
@@ -69,50 +71,42 @@ const ButtonWrapper = styled.div`
   justify-content: flex-end;
 `;
 
-const SchedulePageContainer = styled.div`
-  padding: 116px 68px 62px 311px;
+const SchedulePageWrapper = styled.div`
+  border: 2px solid blue;
+  padding: 50px 50px;
 `;
 
 const SectionWrapper = styled.div`
+  border: 2px solid limegreen;
   display: flex;
 `;
 
 const StyledSection = styled.section`
   width: 100%;
   height: 100%;
+  border: 1px solid red;
 `;
 
 const ScheduleCard = styled.article`
   margin: 0 auto;
   width: 450px;
   height: 140px;
+  background-color: pink;
 `;
 
 const ScheduleCardTitle = styled.div`
-  width: 100%;
+  width: 450px;
   height: 48px;
-  background-color: #eceafe;
-  border-top: 1px solid #d9d9d9;
-  border-left: 1px solid #d9d9d9;
-  border-right: 1px solid #d9d9d9;
+  background-color: skyblue;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-weight: 700;
-  color: #6956e5;
-  border-radius: 5px 5px 0 0;
 `;
 
 const ScheduleCardContent = styled.div`
-  box-sizing: border-box;
-  width: 100%;
+  width: 450px;
   height: 92px;
   padding: 15px 0 0 30px;
-
-  background-color: #ffffff;
-  border: 1px solid #d9d9d9;
+  background-color: #dddddd;
   overflow: hidden;
-  border-radius: 0 0 5px 5px;
 `;
-
-// padding: 15px 0 0 30px;

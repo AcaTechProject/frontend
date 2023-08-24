@@ -1,5 +1,7 @@
 //가로 표
 import styled from "styled-components";
+import { useState } from "react";
+import Popup from "./Popup";
 
 const TableContainer = styled.table`
   border: 1px solid #d3d2d2;
@@ -36,6 +38,21 @@ const Row = styled.div`
   gap: 40px;
 `;
 const attendTable = () => {
+  //const [isMessagePopupOpen, setMessagePopupOpen] = useState(false);
+  const [isPopupOpen, setPopupOpen] = useState(false);
+
+  const openPopup = () => {
+    setPopupOpen(true);
+  };
+
+  const closePopup = () => {
+    setPopupOpen(false);
+  };
+
+  const handleSendMessage = (message) => {
+    console.log("Sending message:", message);
+    // 여기에서 실제
+  };
   const tableData = [
     {
       title: "수강 과목 및 분반",
@@ -56,13 +73,16 @@ const attendTable = () => {
             <FirstTd>결석</FirstTd>
             <FirstTd>기타</FirstTd>
           </Tr>
-          <Tr>
+          <Tr onClick={openPopup}>
             <SecondTd>00 / 30</SecondTd>
             <SecondTd>00 / 30</SecondTd>
             <SecondTd>00 / 30</SecondTd>
             <SecondTd>00 / 30</SecondTd>
           </Tr>
         </tbody>
+        {isPopupOpen && (
+          <Popup onClose={closePopup} onSend={handleSendMessage} />
+        )}
       </TableContainer>
       <TableContainer>
         <tbody>

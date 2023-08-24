@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { useState } from "react";
 import SelectBox from "../components/Select";
 import { useRecoilState } from "recoil";
-import { telState, parentState } from "../recoil/atom";
+import { telState, parentState, valueState } from "../recoil/atom";
 const TableContainer = styled.table`
   border: 1px solid #c4c4c4;
   border-collapse: collapse;
@@ -60,7 +60,7 @@ const Table = () => {
   //형제관계 입력칸
   const [value, setValue] = useState("");
   //형제관계 입력칸이 변할 배열들 다룸.
-  const [values, setValues] = useState([]);
+  const [values, setValues] = useRecoilState(valueState);
   const [tel, setTel] = useRecoilState(telState);
   const [parent, setParent] = useRecoilState(parentState);
 
