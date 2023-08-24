@@ -1,15 +1,17 @@
 "use client";
 import React from "react";
-import ProfileCard from "../../../../components/ProfileCard";
-import ProfileImage from "../../../../components/ProfileImage";
+import ProfileCard from "@/app/components/ProfileCard";
+import ProfileImage from "@/app/components/ProfileImage";
 import styled from "styled-components";
 import { useState, useEffect, useRef } from "react";
-import TableInput from "../../../../components/TableInput";
-import SugangTable from "../../../../components/SugangTable";
+import TableInput from "@/app/components/TableInput";
+import SugangTable from "@/app/components/SugangTable";
 import { useRouter } from "next/navigation";
 import { Link } from "react-router-dom";
-import SelectBox from "../../../../components/LongSelect";
-import Select from "../../../../components/Select";
+import SelectBox from "@/app/components/LongSelect";
+import Select from "@/app/components/Select";
+import AMBtn from "@/app/components/AMBtn";
+import SMBtn from "@/app/components/SMBtn";
 import {
   telState,
   parentState,
@@ -161,10 +163,9 @@ const MemberEdit = () => {
         원생관리 {">"} 학생관리 {">"} 수강생 관리 {">"} 이름
       </p>
       <Row>
-        <Tab1 onClick={() => router.push("/AcademyManagement/attendance")}>
-          출결관리
-        </Tab1>
-        <Tab2>학생관리</Tab2>
+        <AMBtn />
+
+        <SMBtn />
       </Row>
       <Body>
         <Left>
