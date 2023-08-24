@@ -8,8 +8,10 @@ import { useRouter } from "next/navigation";
 import LongSelect from "@/app/components/LongSelect";
 import Modal from "@/app/components/Modal";
 import Table from "@/app/components/Table";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { teacherState, subjectState } from "@/app/recoil/atom";
 import { inputAtom } from "@/app/recoil/atom";
+import { textState } from "@/app/recoil/atom";
 
 const Container = styled.div`
   padding: 116px 70px 55px 85px;
@@ -71,11 +73,13 @@ const CounselRegister = () => {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
-  const [selectedValue, setSelectedValue] = useState("");
-  const [selectValue, setSelectValue] = useState("");
+  const [subjectValue, setSubjectValue] = useRecoilState(subjectState);
+  const [teacherValue, setTeacherValue] = useRecoilState(teacherState);
+
+  const text = useRecoilValue(textState);
   const handleModal = (message) => {
-    setModalMessage(message);
     setIsModalOpen(true);
+    setModalMessage(message);
   };
   // const openModal = () => {
   //   setIsModalOpen(true);
@@ -84,10 +88,25 @@ const CounselRegister = () => {
   const closeModal = () => {
     setIsModalOpen(false);
   };
+  const handleCheck = () => {
+    router.push("/AcademyManagement/StudentManagement/counsel/CounselHistory");
+  };
   const handleInput = (e) => {
     setInput(e.target.value);
   };
-  const [input, setInput] = useRecoilState(inputAtom);
+  const handleRegister = () => {
+    if (!subjectValue) {
+      alert("상담과목을 선택해주세요");
+    } else if (!teacherValue) {
+      alert("상담대상을 선택해주세요");
+    } else if (text === "") {
+      alert("상담내용을 입력해주세요");
+    } else {
+      router.push("/AcademyManagement/StudentManagement/counsel/CounselDetail");
+    }
+  };
+
+  //const [input, setInput] = useRecoilState(inputAtom);
   return (
     <Container>
       <p>
@@ -97,13 +116,29 @@ const CounselRegister = () => {
 
       <Body>
         <Left>
-          <input type="text" value={input} onChange={handleInput}></input>
+          {/* <input type="text" value={input} onChange={handleInput}></input> */}
           <ProfileEmpty />
         </Left>
         <Right>
           <Row2>
-            <Button>취소</Button>
-            <Button>등록</Button>
+            <Button
+              closeModal={closeModal}
+              onClick={() =>
+                handleModal(
+                  "작성중이던 정보는 저장되지 않습니다.취소하시겠습니까?"
+                )
+              }
+            >
+              취소
+            </Button>
+            {isModalOpen && (
+              <Modal
+                onCheck={handleCheck}
+                onClose={closeModal}
+                message={modalMessage}
+              />
+            )}
+            <Button onClick={handleRegister}>등록</Button>
           </Row2>
           <p>상담 과목</p>
           <LongSelect
@@ -113,8 +148,8 @@ const CounselRegister = () => {
               { value: "eng", label: "영어" },
               { value: "math", label: "수학" },
             ]}
-            value={selectedValue}
-            onChange={(e) => setSelectedValue(e.target.value)}
+            value={subjectValue}
+            onChange={(e) => setSubjectValue(e.target.value)}
           />
           <p>상담 대상</p>
           <LongSelect
@@ -125,11 +160,11 @@ const CounselRegister = () => {
               { value: "math", label: "수학" },
             ]}
             placeholder="선택해주세요"
-            value={selectValue}
-            onChange={(e) => setSelectValue(e.target.value)}
+            value={teacherValue}
+            onChange={(e) => setTeacherValue(e.target.value)}
           />
           <p>상담 대상</p>
-          <Textarea />
+          <Textarea value={textValue} />
         </Right>
       </Body>
     </Container>
