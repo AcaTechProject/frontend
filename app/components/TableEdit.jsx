@@ -2,6 +2,8 @@ import Select from "./Select";
 import styled from "styled-components";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
+import { useRecoilState } from "recoil";
+import { telState, emailState } from "../../recoil/atom";
 
 const TableContainer = styled.table`
   border: 1px solid #c4c4c4;
@@ -34,12 +36,18 @@ const Input = styled.input`
 const Inp = styled.input`
   width: 270px;
 `;
-const TableEdit = ({ onEditButtonClicked }) => {
+const TableEdit = ({ telInput, emailInput }) => {
   const router = useRouter();
-  const telInputRefs = [useRef(null), useRef(null), useRef(null)];
 
-  const [telNum, setTelNum] = useState(["", "", ""]);
+  const [num, setNum] = useRecoilState(telState);
+  const [email, setEmail] = useRecoilState(emailState);
 
+  const handleTel = (e) => {
+    setNum(e.target.value);
+  };
+  const handleEmail = (e) => {
+    setEmail(e.target.value);
+  };
   return (
     <>
       <TableContainer>
@@ -50,20 +58,25 @@ const TableEdit = ({ onEditButtonClicked }) => {
               <Input
                 type="text"
                 maxLength={3}
-                ref={telInputRefs[0]}
-                value={telNum[0]}
-                onChange={(e) =>
-                  setTelNum([e.target.value, telNum[1], telNum[2]])
-                }
+                ref={telInput}
+                value={num}
+                onChange={handleTel}
               ></Input>{" "}
-              -<Input type="text" maxLength={4} ref={telInputRefs[1]}></Input> -{" "}
-              <Input type="text" maxLength={4} ref={telInputRefs[2]}></Input>
+              -<Input type="text" maxLength={4}></Input> -{" "}
+              <Input type="text" maxLength={4}></Input>
             </SecondTd>
           </Tr>
           <Tr>
             <FirstTd>이메일</FirstTd>
             <SecondTd>
-              <Input type="text" placeholder="id"></Input> @{" "}
+              <Input
+                type="text"
+                placeholder="id"
+                ref={emailInput}
+                value={email}
+                onChange={handleEmail}
+              ></Input>{" "}
+              @{" "}
               <Select
                 options={[
                   { value: "naver", label: "naver.com" },
