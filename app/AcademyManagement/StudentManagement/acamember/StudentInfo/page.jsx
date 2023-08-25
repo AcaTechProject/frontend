@@ -236,7 +236,7 @@ const StudentInfo = () => {
                       <span
                         onClick={() =>
                           router.push(
-                            "/AcademyManagement/StudentManagement/counsel/CounselEdit"
+                            "/AcademyManagement/StudentManagement/counsel/CounselHistory"
                           )
                         }
                       >
