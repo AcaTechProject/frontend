@@ -1,4 +1,6 @@
 import styled from "styled-components";
+import { useRecoilState } from "recoil";
+import { textState } from "../../recoil/atom";
 
 const TableContainer = styled.table`
   border: 1px solid #c4c4c4;
@@ -29,7 +31,11 @@ const Textarea = styled.textarea`
   border-radius: 5px;
   border: 1px solid #d3d2d2;
 `;
-const TableText = ({ title, placeholder }) => {
+const TableText = ({ title, placeholder, textRef }) => {
+  const [text, setText] = useRecoilState(textState);
+  const handleText = (e) => {
+    setText(e.target.value);
+  };
   return (
     <>
       <TableContainer>
@@ -37,7 +43,12 @@ const TableText = ({ title, placeholder }) => {
           <Tr>
             <FirstTd>{title}</FirstTd>
             <SecondTd>
-              <Textarea placeholder={placeholder} />
+              <Textarea
+                placeholder={placeholder}
+                value={text}
+                ref={textRef}
+                onChange={handleText}
+              />
             </SecondTd>
           </Tr>
         </tbody>
