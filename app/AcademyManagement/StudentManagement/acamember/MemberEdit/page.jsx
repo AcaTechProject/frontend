@@ -12,12 +12,7 @@ import SelectBox from "@/app/components/LongSelect";
 import Select from "@/app/components/Select";
 import AMBtn from "@/app/components/AMBtn";
 import SMBtn from "@/app/components/SMBtn";
-import {
-  telState,
-  parentState,
-  valueState,
-  resultState,
-} from "../../../../recoil/atom";
+import { telState, parentState, valueState, resultState } from "@/recoil/atom";
 import { useRecoilValue } from "recoil";
 const Container = styled.div`
   padding: 116px 70px 55px 85px;
@@ -115,29 +110,37 @@ const MemberEdit = () => {
   const [school, setSchool] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [selectedValue, setSelectedValue] = useState("");
+
   const nameInputRef = useRef(null);
+  const parentInputRef = useRef(null);
+  const telInputRef = useRef(null);
+  const familyInputRef = useRef(null);
 
   const tel = useRecoilValue(telState);
   const parent = useRecoilValue(parentState);
   const value = useRecoilValue(valueState);
   const result = useRecoilValue(resultState);
+
   const handleSaveClick = () => {
     if (name === "") {
-      alert("학생의 이름을 입력해주세요");
+      alert("학생의 정보를 입력해주세요");
       nameInputRef.current.focus(); // 이름 입력 필드에 포커스를 이동시킴
       return;
     } else if (birth === "") {
-      alert("학생의 생년월일을 입력해주세요");
+      alert("학생의 정보를 입력해주세요");
     } else if (!selectedValue) {
-      alert("학생의 성별을 선택해주세요");
+      alert("학생의 정보를 입력해주세요");
     } else if (school === "") {
-      alert("학생의 학교를 입력해주세요");
+      alert("학생의 정보를 입력해주세요");
     } else if (tel === "") {
       alert("전화번호를 입력해주세요");
+      telInputRef.current.focus();
     } else if (parent === "") {
       alert("학부모 정보를 입력해주세요");
+      parentInputRef.current.focus();
     } else if (value.length === 0) {
       alert("가족관계 정보를 입력해주세요");
+      familyInputRef.current.focus();
     } else if (result.length === 0) {
       alert("학생의 수강과목 또는 분반을 선택해주세요");
     } else {
@@ -157,6 +160,11 @@ const MemberEdit = () => {
     alert("수정이 취소되었습니다");
     router.push("/AcademyManagement/StudentManagement/acamember/StudentInfo");
   };
+  useEffect(() => {
+    if (telInputRef.current) {
+      telInputRef.current.focus();
+    }
+  }, []);
   return (
     <Container>
       <p>
@@ -259,7 +267,11 @@ const MemberEdit = () => {
             <Button onClick={handleSaveClick}>저장</Button>
           </Row2>
           <Row3>
-            <TableInput />
+            <TableInput
+              parentInputRef={parentInputRef}
+              telInputRef={telInputRef}
+              familyInputRef={familyInputRef}
+            />
             <br />
             <br />
             <SugangTable />
