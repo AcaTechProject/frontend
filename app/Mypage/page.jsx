@@ -3,8 +3,8 @@ import ProfileImage from "../components/ProfileImage";
 import styled from "styled-components";
 import Table from "../components/Table";
 import { useRouter } from "next/navigation";
-import ProfileEmpty from "../components/ProfileEmpty";
-
+//import ProfileImage from "../components/ProfileImage";
+import Button from "../components/Button";
 const Container = styled.div`
   padding: 116px 70px 55px 85px;
 `;
@@ -34,14 +34,7 @@ const P = styled.p`
   font-size: 18px;
 `;
 const Row = styled.div``;
-const Button = styled.button`
-  border-radius: 5px;
-  color: white;
-  background: #6956e5;
-  width: 110px;
-  height: 33px;
-  border: 0;
-`;
+
 const Name = styled.p`
   margin-left: 150px;
   font-size: 18px;
@@ -104,7 +97,7 @@ const MyPage = () => {
               <h3>담당 학년</h3>
               <Table data={tableData4}></Table>
             </Row>
-            <Button onClick={() => router.push("/Mypage/Edit")}>
+            <Button $large $primary onClick={() => router.push("/Mypage/Edit")}>
               정보수정
             </Button>
           </Right>
