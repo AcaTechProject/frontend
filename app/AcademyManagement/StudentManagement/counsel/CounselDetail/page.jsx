@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 
 import Modal from "@/app/components/Modal";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { inputAtom } from "@/app/recoil/atom";
+import { inputAtom } from "@/recoil/atom";
 
 const Container = styled.div`
   padding: 116px 70px 55px 85px;
