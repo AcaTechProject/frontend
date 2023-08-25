@@ -2,7 +2,12 @@ import styled from "styled-components";
 import { useState, useRef, useEffect } from "react";
 import SelectBox from "../components/Select";
 import { useRecoilState } from "recoil";
-import { telState, parentState, valueState } from "../recoil/atom";
+import {
+  telState,
+  parentState,
+  valueState,
+  familyState,
+} from "../../recoil/atom";
 const TableContainer = styled.table`
   border: 1px solid #c4c4c4;
   border-collapse: collapse;
@@ -56,9 +61,9 @@ const Li = styled.li`
   font-size: 15px;
   margin-left: 12px;
 `;
-const TableInput = ({ parentInputRef, telInputRef }) => {
+const TableInput = ({ parentInputRef, telInputRef, familyInputRef }) => {
   //형제관계 입력칸
-  const [value, setValue] = useState("");
+  const [value, setValue] = useRecoilState(familyState);
   //형제관계 입력칸이 변할 배열들 다룸.
   const [values, setValues] = useRecoilState(valueState);
   const [tel, setTel] = useRecoilState(telState);
@@ -129,6 +134,7 @@ const TableInput = ({ parentInputRef, telInputRef }) => {
                   placeholder="형제 자매 정보를 입력해주세요"
                   onChange={checkValue}
                   value={value}
+                  ref={familyInputRef}
                 />
                 <Button>+</Button>
                 <p>
