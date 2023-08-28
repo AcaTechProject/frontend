@@ -3,7 +3,7 @@ import styled from "styled-components";
 import Select from "./Select";
 import { useState } from "react";
 import { useRecoilState } from "recoil";
-import { resultState } from "../recoil/atom";
+import { resultState } from "@/recoil/atom";
 
 const TableContainer = styled.table`
   border: 1px solid #d3d2d2;
