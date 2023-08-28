@@ -120,7 +120,9 @@ const acamember = () => {
   };
   return (
     <Container>
-      <p>원생관리 - 학생관리 - 신규상담</p>
+      <p>
+        원생관리 {">"} 학생관리 {">"} 수강생관리
+      </p>
       <D>
         <AMBtn />
         <SMBtn />
@@ -159,13 +161,15 @@ const acamember = () => {
         </div>
 
         <div style={{ marginLeft: "62%" }}>
-          <Btn onClick={openMessagePopup}>메시지 발송</Btn>
-          {isMessagePopupOpen && (
-            <MessagePopup
-              onClose={closeMessagePopup}
-              onSend={handleSendMessage}
-            />
-          )}
+          <Btn
+            onClick={() =>
+              router.push(
+                "/AcademyManagement/StudentManagement/acamember/Message/Manage"
+              )
+            }
+          >
+            메시지 발송
+          </Btn>
 
           <Btn
             onClick={() =>
