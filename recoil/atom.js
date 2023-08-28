@@ -4,8 +4,16 @@ export const telState = atom({
   key: "telState",
   default: "",
 });
-export const numState = atom({
-  key: "numState",
+export const numStateA = atom({
+  key: "numStateA",
+  default: "",
+});
+export const numStateB = atom({
+  key: "numStateB",
+  default: "",
+});
+export const numStateC = atom({
+  key: "numStateC",
   default: "",
 });
 export const emailState = atom({
@@ -32,9 +40,9 @@ export const inputAtom = atom({
   default: "",
 });
 
-export const subjectState = atom({
-  key: "subjectState",
-  defalut: "",
+export const sangdamState = atom({
+  key: "sangdamState",
+  default: "",
 });
 export const subjectStateA = atom({
   key: "subjectStateA",
@@ -44,16 +52,36 @@ export const teacherState = atom({
   key: "teacherState",
   defalut: "",
 });
-export const textState = atom({
-  key: "textState",
+
+export const daesangState = atom({
+  key: "daesangState",
+  default: "",
+});
+
+export const textareaState = atom({
+  key: "textareaState",
   defalut: "",
 });
-export const contentState = atom({
-  key: "contentState",
-  defalut: "",
+export const clsState = atom({
+  key: "clsState",
+  default: "",
+});
+export const gradeState = atom({
+  key: "gradeState",
+  default: "",
 });
 
 export const familyState = atom({
   key: "familyState",
+  default: "",
+});
+
+export const formDataState = atom({
+  key: "formDataState",
+  default: {},
+});
+
+export const selectedSubjectState = atom({
+  key: "selectedSubjectState",
   default: "",
 });
