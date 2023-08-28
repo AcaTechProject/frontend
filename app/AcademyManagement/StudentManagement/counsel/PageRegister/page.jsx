@@ -9,13 +9,16 @@ import LongSelect from "@/app/components/LongSelect";
 import Modal from "@/app/components/Modal";
 import Table from "@/app/components/Table";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { teacherState, subjectState } from "@/app/recoil/atom";
-import { inputAtom } from "@/app/recoil/atom";
-import { textState } from "@/app/recoil/atom";
+import { daesangState, sangdamState } from "@/recoil/atom";
 
+import Button from "@/app/components/Button";
 const Container = styled.div`
   padding: 116px 70px 55px 85px;
 `;
+// const Container = styled.div`
+//   padding: 116px 70px 55px 85px;
+// `;
+
 const Body = styled.section`
   display: flex;
 `;
@@ -36,54 +39,30 @@ const Row = styled.div`
   display: flex;
   gap: 23px;
 `;
-const Tab1 = styled.button`
-  border-radius: 5px;
-  width: 110px;
-  height: 40px;
-  border: 2px solid #8146ff;
-  color: #8146ff;
-  background: #fff;
-  font-weight: bold;
-  font-size: 14px;
-  &:hover {
-    color: white;
-    background: #8146ff;
-  }
-`;
-const Tab2 = styled(Tab1)``;
-const Button = styled.button`
-  width: 95px;
-  height: 34px;
-  border-radius: 5px;
-  color: #fff;
-  background: #8146ff;
-  border: 0;
-  font-size: 14px;
-`;
 const Row2 = styled(Row)`
   justify-content: flex-end;
   margin-top: 70px;
 `;
+
 const Textarea = styled.textarea`
   width: 600px;
   height: 200px;
 `;
 
-const CounselRegister = () => {
+const PageRegister = () => {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
-  const [subjectValue, setSubjectValue] = useRecoilState(subjectState);
-  const [teacherValue, setTeacherValue] = useRecoilState(teacherState);
+  const [sangdam, setSangdam] = useRecoilState(sangdamState);
+  const [daesang, setDaesang] = useRecoilState(daesangState);
 
-  const text = useRecoilValue(textState);
   const handleModal = (message) => {
     setIsModalOpen(true);
     setModalMessage(message);
   };
-  // const openModal = () => {
-  //   setIsModalOpen(true);
-  // };
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -91,22 +70,20 @@ const CounselRegister = () => {
   const handleCheck = () => {
     router.push("/AcademyManagement/StudentManagement/counsel/CounselHistory");
   };
-  const handleInput = (e) => {
-    setInput(e.target.value);
-  };
+
   const handleRegister = () => {
-    if (!subjectValue) {
-      alert("상담과목을 선택해주세요");
-    } else if (!teacherValue) {
-      alert("상담대상을 선택해주세요");
-    } else if (text === "") {
-      alert("상담내용을 입력해주세요");
-    } else {
-      router.push("/AcademyManagement/StudentManagement/counsel/CounselDetail");
-    }
+    router.push("/AcademyManagement/StudentManagement/counsel/CounselDetail");
   };
 
-  //const [input, setInput] = useRecoilState(inputAtom);
+  const handleSubject = (e) => {
+    setSangdam(e.target.value);
+  };
+
+  const handleDaesang = (e) => {
+    setDaesang(e.target.value);
+  };
+
+  useEffect(() => {}, []);
   return (
     <Container>
       <p>
@@ -122,6 +99,8 @@ const CounselRegister = () => {
         <Right>
           <Row2>
             <Button
+              $medium
+              $primary
               closeModal={closeModal}
               onClick={() =>
                 handleModal(
@@ -138,36 +117,36 @@ const CounselRegister = () => {
                 message={modalMessage}
               />
             )}
-            <Button onClick={handleRegister}>등록</Button>
+            <Button $medium $primary onClick={handleRegister}>
+              등록
+            </Button>
           </Row2>
           <p>상담 과목</p>
           <LongSelect
             options={[
               { value: "none", label: "상담 과목을 선택해주세요" },
-              { value: "kor", label: "국어" },
-              { value: "eng", label: "영어" },
-              { value: "math", label: "수학" },
+              { value: "국어", label: "국어" },
+              { value: "영어", label: "영어" },
+              { value: "수학", label: "수학" },
             ]}
-            value={subjectValue}
-            onChange={(e) => setSubjectValue(e.target.value)}
+            value={sangdam}
+            onChange={handleSubject}
           />
           <p>상담 대상</p>
           <LongSelect
             options={[
               { value: "non", label: "상담 대상을 선택해주세요" },
-              { value: "kor", label: "국어" },
-              { value: "eng", label: "영어" },
-              { value: "math", label: "수학" },
+              { value: "학생", label: "학생" },
+              { value: "학부모", label: "학부모" },
             ]}
-            placeholder="선택해주세요"
-            value={teacherValue}
-            onChange={(e) => setTeacherValue(e.target.value)}
+            value={daesang}
+            onChange={handleDaesang}
           />
-          <p>상담 대상</p>
-          <Textarea value={textValue} />
+          <p>상담 내용</p>
+          <Textarea />
         </Right>
       </Body>
     </Container>
   );
 };
-export default CounselRegister;
+export default PageRegister;
