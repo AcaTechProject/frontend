@@ -85,3 +85,14 @@ export const selectedSubjectState = atom({
   key: "selectedSubjectState",
   default: "",
 });
+
+//counselEdit 페이지에서 쓰이는 state
+export const selectedSubState = atom({
+  key: "selectedSubState",
+  default: "",
+});
+
+export const selectedDaeState = atom({
+  key: "selectedDaeState",
+  default: "",
+});
