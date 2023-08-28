@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 
 import Modal from "@/app/components/Modal";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { inputAtom } from "@/recoil/atom";
+import { inputAtom, sangdamState, daesangState } from "@/recoil/atom";
 
 const Container = styled.div`
   padding: 116px 70px 55px 85px;
@@ -74,6 +74,10 @@ const CounselDetail = () => {
   const [modalMessage, setModalMessage] = useState("");
 
   const content = useRecoilValue(inputAtom);
+
+  const selectSubject = useRecoilValue(sangdamState);
+  const selectDaesang = useRecoilValue(daesangState);
+  // const selectTarget = useRecoilValue(targetState);
   //const [input, setInput] = useRecoilState(inputAtom);
 
   const handleModal = (message) => {
@@ -91,6 +95,7 @@ const CounselDetail = () => {
   //     setContent(e.target.value);
   //   };
   const handleSaveClick = () => {};
+  useEffect(() => {}, [selectSubject]);
 
   return (
     <Container>
@@ -113,16 +118,24 @@ const CounselDetail = () => {
                 message={modalMessage}
               />
             )}
-            <Button>목록</Button>
+            <Button
+              onClick={() =>
+                router.push(
+                  "/AcademyManagement/StudentManagement/counsel/CounselHistory"
+                )
+              }
+            >
+              목록
+            </Button>
           </Row2>
           <Row>
             <p style={{ fontSize: "20px" }}>상담 과목</p>
-            <p style={{ color: "#6B7280" }}>dd</p>
+            <p style={{ color: "#6B7280" }}>{selectSubject}</p>
           </Row>
           <Row>
             {" "}
             <p style={{ fontSize: "20px" }}>상담 대상</p>
-            <p style={{ color: "#6B7280" }}>dd</p>
+            <p style={{ color: "#6B7280" }}>{selectDaesang}</p>
           </Row>
 
           <p style={{ fontSize: "20px" }}>상담 내용</p>
