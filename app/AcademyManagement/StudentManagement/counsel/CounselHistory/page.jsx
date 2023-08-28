@@ -5,6 +5,7 @@ import styled from "styled-components";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import StudentList from "@/app/components/StudentList";
+import Link from "next/link";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import Modal from "@/app/components/Modal";
 const Container = styled.div`
@@ -21,10 +22,6 @@ const CounselHistory = () => {
   const data = [{ 상담과목: "국어", 일시: "2월", 담당교사: "김은진" }];
   const headers = ["No", "상담과목", "일시", "담당교사"];
 
-  const handleMove = () => {
-    console.log("dfdf");
-    router.push("/AcademyManagement/StudentManagement/counsel/CounselRegister");
-  };
   return (
     <Container>
       <p>
@@ -37,14 +34,23 @@ const CounselHistory = () => {
           $primary
           onClick={() =>
             router.push(
-              "/AcademyManagement/StudentManagement/counsel/CounselEdit"
+              "/AcademyManagement/StudentManagement/counsel/HistoryManage"
             )
           }
         >
           상담내역 관리
         </Button>
-        <Button $medium $primary onClick={handleMove}>
-          상담 등록
+
+        <Button
+          $medium
+          $primary
+          onClick={() =>
+            router.push(
+              "/AcademyManagement/StudentManagement/counsel/PageRegister"
+            )
+          }
+        >
+          등록
         </Button>
       </Row>
       <StudentList data={data} headers={headers} />
