@@ -3,6 +3,8 @@ import SelectBox from "../components/Select";
 import styled from "styled-components";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useRecoilState } from "recoil";
+import { formDataState, selectedSubjectState } from "@/recoil/atom";
 //import Select from "../components/Select";
 const JoinBody = styled.div`
   display: flex;
@@ -84,6 +86,9 @@ const P = styled.p`
 `;
 const JoinPage = () => {
   const [selectedValue, setSelectedValue] = useState("");
+  const [selectedSubject, setSelectedSubject] =
+    useRecoilState(selectedSubjectState);
+  const [formData, setFormData] = useRecoilState(formDataState);
 
   const {
     register,
@@ -91,13 +96,14 @@ const JoinPage = () => {
     formState: { errors },
     setError,
   } = useForm();
+
   const handleAuth = (e) => {
     alert("이메일 인증이 완료되었습니다");
   };
 
   const onSubmitHandler = async (data) => {
-    const { name, email, pwd, confirm } = data;
-
+    const { name, email, pwd, confirm, sub, tel1, tel2, tel3 } = data;
+    const tel = `${tel1} ${tel2} ${tel3}`;
     if (pwd !== confirm) {
       setError("confirm", {
         message: "비밀번호가 일치하지 않습니다.",
@@ -105,7 +111,15 @@ const JoinPage = () => {
       return;
     }
 
-    console.log(data);
+    //폼 데이터를 recoil에 저장
+    setFormData({
+      name,
+      email,
+      pwd,
+      confirm,
+      tel,
+      sub,
+    });
   };
   const onErrorHandler = (error) => {
     console.log(error, "error");
@@ -199,21 +213,65 @@ const JoinPage = () => {
           <P>{errors?.confirm?.message}</P>
           <Row>
             <Label htmlFor="tel">전화번호 </Label>
-            <Tel type="text" id="tel" maxLength={3}></Tel> --{" "}
-            <Tel type="text" id="tel" maxLength={4}></Tel> --{" "}
-            <Tel type="text" id="tel" maxLength={4}></Tel>
+            <Tel
+              type="text"
+              id="tel1"
+              maxLength={3}
+              {...register("tel1", {
+                required: {
+                  value: true,
+                  message: "전화번호 입력해주세요",
+                },
+              })}
+            ></Tel>{" "}
+            --{" "}
+            <Tel
+              type="text"
+              id="tel2"
+              maxLength={4}
+              {...register("tel2", {
+                required: {
+                  value: true,
+                  message: "전화번호 입력해주세요",
+                },
+                maxLength: {
+                  value: 4,
+                },
+              })}
+            ></Tel>{" "}
+            --{" "}
+            <Tel
+              type="text"
+              id="tel3"
+              maxLength={4}
+              {...register("tel3", {
+                required: {
+                  value: true,
+                  message: "전화번호 입력해주세요",
+                },
+                maxLength: {
+                  value: 4,
+                },
+              })}
+            ></Tel>
           </Row>
+          <P>{errors?.tel1?.message}</P>
           <Row>
             <Label htmlFor="sub">담당과목</Label>
             <SelectBox
+              id="sub"
               placeholder="담당과목을 선택해주세요"
               options={[
-                { value: "kor", label: "국어A" },
-                { value: "kore", label: "국어B" },
-                { value: "math", label: "수학" },
+                { value: "국어", label: "국어A" },
+                { value: "국어", label: "국어B" },
+                { value: "수학", label: "수학" },
               ]}
-              value={selectedValue}
-              onChange={(e) => setSelectedValue(e.target.value)}
+              // value={selectedValue}
+              value={selectedSubject}
+              onChange={(e) => {
+                setSelectedValue(e.target.value);
+                setSelectedSubject(e.target.value);
+              }}
             ></SelectBox>
           </Row>
           <Row>
