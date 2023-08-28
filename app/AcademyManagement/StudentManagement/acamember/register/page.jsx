@@ -12,12 +12,7 @@ import SelectBox from "@/app/components/LongSelect";
 import Select from "@/app/components/Select";
 import SMBtn from "@/app/components/SMBtn";
 import AMBtn from "@/app/components/AMBtn";
-import {
-  telState,
-  parentState,
-  valueState,
-  resultState,
-} from "../../../../recoil/atom";
+import { telState, parentState, valueState, resultState } from "@/recoil/atom";
 import { useRecoilValue } from "recoil";
 const Container = styled.div`
   padding: 116px 70px 55px 85px;
@@ -162,7 +157,7 @@ const register = () => {
   return (
     <Container>
       <p>
-        원생관리 {">"} 학생관리 {">"} 수강생 관리 {">"} 이름
+        원생관리 {">"} 학생관리 {">"} 수강생 관리 {">"} 학생등록
       </p>
       <Row>
         <AMBtn />
