@@ -155,6 +155,9 @@ const MemberEdit = () => {
     }
     setErrorMessage("");
   };
+  const handleSelect = (e) => {
+    setSelectedValue(e.target.value);
+  };
 
   const handleCancel = () => {
     alert("수정이 취소되었습니다");
@@ -242,21 +245,22 @@ const MemberEdit = () => {
             <p style={{ fontWeight: "500" }}>학년 |</p>
             <SelectBox
               options={[
-                { value: "ele", label: "1학년" },
-                { value: "ele", label: "2학년" },
-                { value: "ele", label: "3학년" },
-                { value: "ele", label: "4학년" },
-                { value: "ele", label: "5학년" },
-                { value: "ele", label: "6학년" },
-                { value: "mid", label: "중1" },
-                { value: "mid", label: "중2" },
-                { value: "mid", label: "중3" },
-                { value: "high", label: "고1" },
-                { value: "high", label: "고2" },
-                { value: "high", label: "고3" },
+                { value: "ele1", label: "1학년" },
+                { value: "ele2", label: "2학년" },
+                { value: "ele3", label: "3학년" },
+                { value: "ele4", label: "4학년" },
+                { value: "ele5", label: "5학년" },
+                { value: "ele6", label: "6학년" },
+                { value: "mid1", label: "중1" },
+                { value: "mid2", label: "중2" },
+                { value: "mid3", label: "중3" },
+                { value: "high1", label: "고1" },
+                { value: "high2", label: "고2" },
+                { value: "high3", label: "고3" },
               ]}
               value={selectedValue}
-              onChange={(e) => setSelectedValue(e.target.value)}
+              onChange={handleSelect}
+              //onChange={(e) => setSelectedValue(e.target.value)}
             />
           </Row4>
         </Left>
