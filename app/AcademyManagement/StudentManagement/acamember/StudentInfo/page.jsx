@@ -1,8 +1,8 @@
 "use client";
 import React from "react";
-import ProfileEmpty from "@/app/components/ProfileEmpty";
+//import ProfileEmpty from "@/app/components/ProfileEmpty";
 import styled from "styled-components";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import TableInput from "@/app/components/TableInput";
 import { useRouter } from "next/navigation";
 import AttendTable from "@/app/components/AttendTable";
@@ -14,6 +14,62 @@ import MessagePopup from "@/app/components/MessagePopup";
 import Modal from "@/app/components/Modal";
 import SMBtn from "@/app/components/SMBtn";
 import AMBtn from "@/app/components/AMBtn";
+import { useRecoilValue, useRecoilState, useSetRecoilState } from "recoil";
+
+import {
+  valueState,
+  studentNameState,
+  tel1State,
+  tel2State,
+  tel3State,
+  studentTel1State,
+  studentTel2State,
+  studentTel3State,
+  parentTel1State,
+  parentTel2State,
+  parentTel3State,
+  studentListState,
+  studentFamilyState,
+  studentArrState,
+  studentBirthState,
+  studentSchoolState,
+  studentGradeState,
+} from "@/recoil/atom";
+
+import Image from "next/image";
+
+const Containe = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 500px;
+  width: 350px;
+  align-items: center;
+  justify-content: center;
+`;
+const Row = styled.div`
+  display: flex;
+  gap: 20px;
+  width: 350px;
+  justify-content: center;
+`;
+const Input = styled.input`
+  width: 230px;
+  height: 30px;
+  margin: 10px 0 0 5px;
+  border: 1px solid #d3d2d2;
+  border-radius: 10px;
+`;
+const P = styled.p`
+  font-size: 18px;
+  font-weight: 600;
+`;
+const Inputs = styled(Input)`
+  margin: 10px 0 0 30px;
+`;
+//인보이게
+const InputImg = styled.input`
+  display: none;
+`;
 
 const Container = styled.div`
   padding: 116px 70px 55px 85px;
@@ -33,7 +89,7 @@ const Right = styled.div`
   margin-top: -50px;
   gap: 40px;
 `;
-const Row = styled.div`
+const Rows = styled.div`
   display: flex;
   gap: 23px;
 `;
@@ -107,11 +163,32 @@ const Menu = styled.div`
   margin-top: 20px;
 `;
 const StudentInfo = () => {
+  //studentId 파라미터 가져오기
+
   const router = useRouter();
+
+  const studentList = useRecoilValue(studentListState);
+  const [id, setId] = useState("");
+  const [matchData, setMatchData] = useState();
+
+  //const [studentName, setStudentName] = useRecoilState(studentNameState);
+
   const [btn, setBtn] = useState("수강생 관리");
   const [isMessagePopupOpen, setMessagePopupOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
+  const tel1 = useRecoilValue(studentTel1State);
+  const tel2 = useRecoilValue(studentTel2State);
+  const tel3 = useRecoilValue(studentTel3State);
+  const parent1 = useRecoilValue(parentTel1State);
+  const parent2 = useRecoilValue(parentTel2State);
+  const parent3 = useRecoilValue(parentTel3State);
+  const family = useRecoilValue(studentFamilyState);
+  const arr = useRecoilValue(studentArrState);
+  const setStudentName = useSetRecoilState(studentNameState);
+  //const result = useRecoilValue(resultState);
+  //console.log("tel1", tel1);
+  //const studentName = useRecoilValue(studentNameState);
 
   const handleModal = (message) => {
     setModalMessage(message);
@@ -135,33 +212,109 @@ const StudentInfo = () => {
     console.log("sending", message);
   };
 
+  useEffect(() => {
+    const params = window.location.search;
+
+    if (typeof params !== "undefined") {
+      const result = params.replace("?id=", "");
+      const matchedData = studentList.find(
+        (data) => data.id === Number(result)
+      );
+      setId(result);
+      setMatchData(matchedData);
+    }
+  }, [id, matchData, studentList]);
+
+  // console.log("id", id);
+  //console.log("다시한번", matchData?.이름);
+  //console.log("이값임???", setStudentName);
+  //console.log("studentList", studentList);
+
+  const formattedPhoneNumber = `${matchData?.원생}`;
+  const formattedParentNumber = `${matchData?.학부모}`;
   const tableData = [
     {
       title: "원생",
-      value: "010-0000-0000",
+      value: formattedPhoneNumber,
     },
     {
       title: "학부모",
-      value: "부: 김지성 010-0000-0000, 모: 이지영 010-0000-000",
+      value: formattedParentNumber,
     },
     {
       title: "가족관계",
-      value: "형: 00초등학교 5학년 기미리",
+      value: matchData?.가족관계,
     },
   ];
+
+  const [img, setImg] = useState("");
+
+  //const nameInputRef = useRef(null);
+
+  const imgRef = useRef();
+
+  const studentName = useRecoilValue(studentNameState);
+  const studentBirth = useRecoilValue(studentBirthState);
+  const studentSchool = useRecoilValue(studentSchoolState);
+  const studentGrade = useRecoilValue(studentGradeState);
+
+  const handlePick = () => {
+    const file = imgRef.current.files[0];
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      setImg(reader.result);
+    };
+  };
+  //console.log("원생", formattedParentNumber);
+  //console.log("name", studentName);
+  // console.log("match", matchData);
+  // console.log("stu".studentList);
 
   return (
     <Container>
       <p>
-        원생관리 {">"} 학생관리 {">"} 수강생 관리 {">"} 이름
+        원생관리 {">"} 학생관리 {">"} 수강생 관리 {">"} {matchData?.이름}
       </p>
-      <Row>
+      <Rows>
         <AMBtn />
         <SMBtn />
-      </Row>
+      </Rows>
       <Body>
         <Left>
-          <ProfileEmpty />
+          {/* <ProfileEmpty matchData={matchData} /> */}
+          <Containe>
+            <Image
+              src={img ? img : `/default_profile.png`}
+              alt="프로필"
+              width={250}
+              height={250}
+              style={{ borderRadius: "50%" }}
+            />
+
+            <InputImg
+              type="file"
+              accept="image/*"
+              id="profileImg"
+              alt="프로필"
+              onChange={handlePick}
+              ref={imgRef}
+            />
+            <h2>{matchData?.이름}</h2>
+
+            <Row>
+              <P>생년월일 |</P>
+              <p style={{ lineHeight: "28px" }}>{matchData?.생년월일}</p>
+            </Row>
+            <Row style={{ marginRight: "10px" }}>
+              <P>학교 |</P>
+              <p style={{ lineHeight: "28px" }}>{matchData?.학교}</p>
+            </Row>
+            <Row style={{ marginLeft: "8px" }}>
+              <P>학년 |</P>
+              <p style={{ lineHeight: "28px" }}>{matchData?.학년}</p>
+            </Row>
+          </Containe>
         </Left>
         <Right>
           <Row2>
@@ -176,7 +329,7 @@ const StudentInfo = () => {
             <Button
               onClick={() =>
                 router.push(
-                  "/AcademyManagement/StudentManagement/acamember/MemberEdit"
+                  `/AcademyManagement/StudentManagement/acamember/MemberEdit?id=${id}`
                 )
               }
             >
@@ -192,7 +345,7 @@ const StudentInfo = () => {
           </Row2>
           <Row3>
             <Table data={tableData} />
-            <AttendTable />
+            <AttendTable matchData={matchData} />
             <Menu>
               <SubTable>
                 <tbody>
@@ -229,7 +382,7 @@ const StudentInfo = () => {
                         size="25"
                         onClick={() =>
                           router.push(
-                            "/AcademyManagement/StudentManagement/counsel"
+                            `/AcademyManagement/StudentManagement/counsel/CounselHistory?id=${id}`
                           )
                         }
                       />
