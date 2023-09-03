@@ -2,14 +2,19 @@
 import React from "react";
 import ProfileEmpty from "@/app/components/ProfileEmpty";
 import styled from "styled-components";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import { useRouter } from "next/navigation";
 import LongSelect from "@/app/components/LongSelect";
 import Modal from "@/app/components/Modal";
 import Table from "@/app/components/Table";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { daesangState, sangdamState } from "@/recoil/atom";
+import {
+  daesangState,
+  sangdamState,
+  contentState,
+  counselListState,
+} from "@/recoil/atom";
 
 import Button from "@/app/components/Button";
 const Container = styled.div`
@@ -55,6 +60,13 @@ const PageRegister = () => {
   const [modalMessage, setModalMessage] = useState("");
   const [sangdam, setSangdam] = useRecoilState(sangdamState);
   const [daesang, setDaesang] = useRecoilState(daesangState);
+  const [content, setContent] = useRecoilState(contentState);
+  //const [counsel, setCounsel] = useRecoilState(counselListState);
+  //const [content, setContent] = useRecoilState(contentState);
+
+  // const sangdamRef = useRef(null);
+  // const daesangRef = useRef(null);
+  // const contentRef = useRef(null);
 
   const handleModal = (message) => {
     setIsModalOpen(true);
@@ -72,9 +84,19 @@ const PageRegister = () => {
   };
 
   const handleRegister = () => {
-    router.push("/AcademyManagement/StudentManagement/counsel/CounselDetail");
-  };
+    if (sangdam === "") {
+      alert("상담과목을 선택해주세요");
 
+      return;
+    } else if (daesang === "") {
+      alert("상담대상을 선택해주세요");
+    } else if (content === "") {
+      alert("상담 내용을 입력해주세요");
+      // contentRef.current.focus();
+    } else {
+      router.push("/AcademyManagement/StudentManagement/counsel/CounselDetail");
+    }
+  };
   const handleSubject = (e) => {
     setSangdam(e.target.value);
   };
@@ -82,8 +104,22 @@ const PageRegister = () => {
   const handleDaesang = (e) => {
     setDaesang(e.target.value);
   };
+  const handleContent = (e) => {
+    setContent(e.target.value);
+  };
 
-  useEffect(() => {}, []);
+  // useEffect(() => {
+  //   const params = window.location.search;
+
+  //   if (typeof params !== "undefined") {
+  //     const result = params.replace("?id=", "");
+  //     const matchedData = studentList.find(
+  //       (data) => data.id === Number(result)
+  //     );
+  //     setId(result);
+  //     setMatchData(matchedData);
+  //   }
+  // }, [id, matchData, studentList]);
   return (
     <Container>
       <p>
@@ -130,6 +166,7 @@ const PageRegister = () => {
               { value: "수학", label: "수학" },
             ]}
             value={sangdam}
+            // ref={sangdamRef}
             onChange={handleSubject}
           />
           <p>상담 대상</p>
@@ -140,10 +177,11 @@ const PageRegister = () => {
               { value: "학부모", label: "학부모" },
             ]}
             value={daesang}
+            // ref={daesangRef}
             onChange={handleDaesang}
           />
           <p>상담 내용</p>
-          <Textarea />
+          <Textarea value={content} onChange={handleContent} />
         </Right>
       </Body>
     </Container>
