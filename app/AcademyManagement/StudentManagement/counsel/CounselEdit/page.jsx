@@ -14,6 +14,7 @@ import {
   selectedDaeState,
   sangdamState,
   daesangState,
+  contentState,
 } from "@/recoil/atom";
 
 import Button from "@/app/components/Button";
@@ -59,12 +60,15 @@ const CounselEdit = () => {
 
   const [changeSub, setChangeSub] = useRecoilState(selectedSubState);
   const [changeDae, setChangeDae] = useRecoilState(selectedDaeState);
+  //const [changContent,setChangContent]=useRecoilState()
   const selectSubject = useRecoilValue(sangdamState);
   const selectDaesang = useRecoilValue(daesangState);
+  const selectContent = useRecoilValue(contentState);
 
   //PageRegister 페이지에서 daesangState를 사용했듯이
   const setSangdam = useSetRecoilState(sangdamState); // setSangdam 추가
   const setDaesang = useSetRecoilState(daesangState);
+  const setContent = useSetRecoilState(contentState);
 
   const handleSub = (e) => {
     const newValue = e.target.value;
@@ -78,6 +82,7 @@ const CounselEdit = () => {
     // 이전 페이지에서 사용한 daesangState도 업데이트
     setDaesang(newValue);
   };
+  const handleContent = (e) => {};
   const handleCancel = () => {
     alert("수정이 취소되었습니다");
     router.push("/AcademyManagement/StudentManagement/counsel/CounselDetail");
@@ -132,7 +137,7 @@ const CounselEdit = () => {
             onChange={handleDae}
           />
           <p>상담 내용</p>
-          <Textarea />
+          <Textarea value={selectContent} onChange={handleContent} />
         </Right>
       </Body>
     </Container>
