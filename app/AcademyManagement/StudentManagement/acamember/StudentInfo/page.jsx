@@ -118,8 +118,8 @@ const Button = styled.button`
   font-size: 14px;
 `;
 const Row2 = styled(Row)`
+  margin: 70px 0 0 255px;
   justify-content: flex-end;
-  margin-top: 70px;
 `;
 
 //이거 수정한거임!!!!!!!
@@ -173,7 +173,7 @@ const StudentInfo = () => {
 
   //const [studentName, setStudentName] = useRecoilState(studentNameState);
 
-  const [btn, setBtn] = useState("수강생 관리");
+  //const [btn, setBtn] = useState("수강생 관리");
   const [isMessagePopupOpen, setMessagePopupOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
@@ -230,8 +230,8 @@ const StudentInfo = () => {
   //console.log("이값임???", setStudentName);
   //console.log("studentList", studentList);
 
-  const formattedPhoneNumber = `${matchData?.원생}`;
-  const formattedParentNumber = `${matchData?.학부모}`;
+  const formattedPhoneNumber = `${matchData?.원생.tel1}-${matchData?.원생.tel2}-${matchData?.원생.tel3}`;
+  const formattedParentNumber = `${matchData?.학부모.parent1}-${matchData?.학부모.parent2}-${matchData?.학부모.parent3}`;
   const tableData = [
     {
       title: "원생",
