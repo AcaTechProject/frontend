@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
 import Select from "../../../components/Select";
@@ -8,6 +8,16 @@ import MessagePopup from "@/app/components/MessagePopup";
 import StudentList from "@/app/components/StudentList";
 import AMBtn from "@/app/components/AMBtn";
 import SMBtn from "@/app/components/SMBtn";
+import { studentListState } from "@/recoil/atom";
+//api 호출
+import axios from "axios";
+
+import {
+  resultState,
+  studentNameState,
+  studentSchoolState,
+} from "@/recoil/atom";
+import { useRecoilValue } from "recoil";
 
 const Container = styled.section`
   padding: 116px 70px 55px 85px;
@@ -71,36 +81,38 @@ const acamember = () => {
   const router = useRouter();
   const [selectedValue, setSelectedValue] = useState("");
   const [isMessagePopupOpen, setMessagePopupOpen] = useState(false);
+  const result = useRecoilValue(resultState);
+  const studentName = useRecoilValue(studentNameState);
+  const studentSchool = useRecoilValue(studentSchoolState);
 
-  const data = [
-    { 이름: "김길동", 분반: "국어 김은진A", 학교: "코딩초" },
-    { 이름: "김동", 분반: "국어 김은진A", 학교: "코딩초" },
-    { 이름: "길동", 분반: "국어 김은진A", 학교: "코딩초" },
-    { 이름: "김길동", 분반: "국어 김은진A", 학교: "코딩초" },
-    { 이름: "김동", 분반: "국어 김은진A", 학교: "코딩초" },
-    { 이름: "길동", 분반: "국어 김은진A", 학교: "코딩초" },
-    { 이름: "김길동", 분반: "국어 김은진A", 학교: "코딩초" },
-    { 이름: "김동", 분반: "국어 김은진A", 학교: "코딩초" },
-    { 이름: "길동", 분반: "국어 김은진A", 학교: "코딩초" },
-    { 이름: "김길동", 분반: "국어 김은진A", 학교: "코딩초" },
-    { 이름: "김동", 분반: "국어 김은진A", 학교: "코딩초" },
-    { 이름: "길동", 분반: "국어 김은진A", 학교: "코딩초" },
-    { 이름: "김길동", 분반: "국어 김은진A", 학교: "코딩초" },
-    { 이름: "김동", 분반: "국어 김은진A", 학교: "코딩초" },
-    { 이름: "길동", 분반: "국어 김은진A", 학교: "코딩초" },
-    { 이름: "김길동", 분반: "국어 김은진A", 학교: "코딩초" },
-    { 이름: "김동", 분반: "국어 김은진A", 학교: "코딩초" },
-    { 이름: "길동", 분반: "국어 김은진A", 학교: "코딩초" },
-    { 이름: "김길동", 분반: "국어 김은진A", 학교: "코딩초" },
-    { 이름: "김동", 분반: "국어 김은진A", 학교: "코딩초" },
-    { 이름: "길동", 분반: "국어 김은진A", 학교: "코딩초" },
-    { 이름: "김길동", 분반: "국어 김은진A", 학교: "코딩초" },
-    { 이름: "김동", 분반: "국어 김은진A", 학교: "코딩초" },
-    { 이름: "길동", 분반: "국어 김은진A", 학교: "코딩초" },
-    { 이름: "김길동", 분반: "국어 김은진A", 학교: "코딩초" },
-    { 이름: "김동", 분반: "국어 김은진A", 학교: "코딩초" },
-    { 이름: "길동", 분반: "국어 김은진A", 학교: "코딩초" },
-  ];
+  const studentList = useRecoilValue(studentListState);
+  // 학생 정보를 추가하는 함수
+
+  const data = studentList.map((student) => ({
+    id: studentList.id,
+    이름: studentList.studentName,
+    분반: studentList.result,
+    학교: studentList.studentSchool,
+  }));
+
+  //console.log("data", data);
+  //console.log("스튜던트", studentList);
+  // const [jsonData, setJsonData] = useState(null);
+
+  // const getJsonData = async () => {
+  //   const resp = await axios.get("http://localhost:8080/student/1");
+  //   setJsonData(resp.data);
+  //   console.log(jsonData);
+  // };
+
+  //useEffect(() => {
+
+  //   getJsonData();
+  // }, []);
+  // useEffect(() => {
+  //   console.log(jsonData);
+  // }, [jsonData]);
+
   const headers = ["No", "이름", "분반", "학교"];
 
   const openMessagePopup = () => {
@@ -118,10 +130,15 @@ const acamember = () => {
   const handleSelectChange = (e) => {
     setSelectedValue(e.target.value);
   };
+  const handleStudentInfo = () => {
+    router.push("/AcademyManagement/StudentManagement/acamember/StudentInfo");
+    //console.log("id", id);
+  };
+
   return (
     <Container>
       <p>
-        원생관리 {">"} 학생관리 {">"} 수강생관리
+        원생관리 {">"} 학생관리 {">"} 수강생 관리
       </p>
       <D>
         <AMBtn />
@@ -182,15 +199,13 @@ const acamember = () => {
           </Btn>
         </div>
       </Div>
-      <button
-        onClick={() =>
-          router.push(
-            "/AcademyManagement/StudentManagement/acamember/StudentInfo"
-          )
-        }
-      ></button>
+
       {/* 표 넣을 곳 */}
-      <StudentList data={data} headers={headers}></StudentList>
+      <StudentList
+        data={studentList}
+        headers={headers}
+        onTdClick={handleStudentInfo}
+      ></StudentList>
     </Container>
   );
 };
