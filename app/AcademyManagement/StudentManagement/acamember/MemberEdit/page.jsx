@@ -228,52 +228,6 @@ const MemberEdit = () => {
 
   const [studentList, setStudentList] = useRecoilState(studentListState);
 
-  const handleSaveClick = () => {
-    if (name !== "") {
-      setStudentName(name);
-    }
-    if (school !== "") {
-      setStudentSchool(school);
-    }
-    if (birth !== "") {
-      setStudentBirth(birth);
-    }
-    if (grade !== "") {
-      setStudentGrade(grade);
-    }
-    if (tel1 !== "") {
-      setStudentTel1(tel1);
-    }
-    if (tel2 !== "") {
-      setStudentTel2(tel2);
-    }
-    if (tel3 !== "") {
-      setStudentTel3(tel3);
-    }
-    if (parent1 !== "") {
-      setStudentParent1(parent1);
-    }
-    if (parent2 !== "") {
-      setStudentParent2(parent2);
-    }
-    if (parent3 !== "") {
-      setStudentParent3(parent3);
-    }
-    if (family !== "") {
-      setStudentFamily(family);
-    }
-    if (arr !== []) {
-      setStudentArr(arr);
-    }
-    if (result !== []) {
-      setStudentResult(result);
-    }
-    if (note !== "") {
-      setStudentNote(note);
-    }
-    //router.push("/AcademyManagement/StudentManagement/acamember");
-  };
-  //console.log("st", studentList);
   const newStudent = {
     id: Number(id), //일단 등록한 시간으로 학생 정보 구분해놓음.
     이름: name,
@@ -327,12 +281,54 @@ const MemberEdit = () => {
 
       기타특이사항: note !== "" ? note : studentList[index].기타특이사항,
     };
-    console.log("이건가??", result);
+
     const updatedList = [...studentList];
     updatedList[index] = updatedStudent;
 
     setStudentList(updatedList);
 
+    if (name !== "") {
+      setStudentName(name);
+    }
+    if (school !== "") {
+      setStudentSchool(school);
+    }
+    if (birth !== "") {
+      setStudentBirth(birth);
+    }
+    if (grade !== "") {
+      setStudentGrade(grade);
+    }
+    if (tel1 !== "") {
+      setStudentTel1(tel1);
+    }
+    if (tel2 !== "") {
+      setStudentTel2(tel2);
+    }
+    if (tel3 !== "") {
+      setStudentTel3(tel3);
+    }
+    if (parent1 !== "") {
+      setStudentParent1(parent1);
+    }
+    if (parent2 !== "") {
+      setStudentParent2(parent2);
+    }
+    if (parent3 !== "") {
+      setStudentParent3(parent3);
+    }
+    if (family !== "") {
+      setStudentFamily(family);
+    }
+    if (arr !== []) {
+      setStudentArr(arr);
+    }
+    if (result !== []) {
+      setStudentResult(result);
+    }
+    if (note !== "") {
+      setStudentNote(note);
+    }
     router.push("/AcademyManagement/StudentManagement/acamember");
   };
 
@@ -349,7 +345,9 @@ const MemberEdit = () => {
 
   const handleCancel = () => {
     alert("수정이 취소되었습니다");
-    router.push("/AcademyManagement/StudentManagement/acamember/StudentInfo");
+    router.push(
+      `/AcademyManagement/StudentManagement/acamember/StudentInfo?id=${matchData.id}`
+    );
   };
 
   const handleTel1 = (event) => {
@@ -411,12 +409,13 @@ const MemberEdit = () => {
     }
   }, [id, matchData, studentList]);
 
-  console.log("수정하고있는", name);
+  //console.log("수정하고있는", name);
   // -> 현재 수정하고 있는 값이 그대로.
 
-  console.log("studentList", studentList);
+  //console.log("studentList", studentList);
 
   //console.log("무슨값이지?", matchData?.이름); -> 최신 수정값
+  //console.log("일단 tel1", matchData?.원생.tel1);
 
   return (
     <Container>
@@ -523,14 +522,14 @@ const MemberEdit = () => {
                       type="text"
                       id="tel"
                       maxLength={4}
-                      value={tel2 !== "" ? tel2 : studentTel2}
+                      value={tel2 !== "" ? tel2 : matchData?.원생.tel2}
                       onChange={handleTel2}
                     ></Input>{" "}
                     -
                     <Input
                       type="text"
                       maxLength={4}
-                      value={tel3 !== "" ? tel3 : studentTel3}
+                      value={tel3 !== "" ? tel3 : matchData?.원생.tel3}
                       onChange={handleTel3}
                     ></Input>
                   </SecondTd>
@@ -543,7 +542,9 @@ const MemberEdit = () => {
                       type="text"
                       maxLength={3}
                       placeholder="010"
-                      value={parent1 !== "" ? parent1 : studentParent1}
+                      value={
+                        parent1 !== "" ? parent1 : matchData?.학부모.parent1
+                      }
                       onChange={handleParent1}
                       ref={parentInputRef}
                     ></Input>{" "}
@@ -551,14 +552,18 @@ const MemberEdit = () => {
                     <Input
                       type="text"
                       maxLength={4}
-                      value={parent2 !== "" ? parent2 : studentParent2}
+                      value={
+                        parent2 !== "" ? parent2 : matchData?.학부모.parent2
+                      }
                       onChange={handleParent2}
                     ></Input>{" "}
                     -
                     <Input
                       type="text"
                       maxLength={4}
-                      value={parent3 !== "" ? parent3 : studentParent3}
+                      value={
+                        parent3 !== "" ? parent3 : matchData?.학부모.parent3
+                      }
                       onChange={handleParent3}
                     ></Input>
                   </SecondTd>
