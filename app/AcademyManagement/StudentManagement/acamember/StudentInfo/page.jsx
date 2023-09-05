@@ -389,7 +389,7 @@ const StudentInfo = () => {
                       <span
                         onClick={() =>
                           router.push(
-                            "/AcademyManagement/StudentManagement/counsel/CounselHistory"
+                            `/AcademyManagement/StudentManagement/counsel/CounselHistory?id=${id}`
                           )
                         }
                       >
