@@ -95,23 +95,32 @@ const acamember = () => {
     학교: studentList.studentSchool,
   }));
 
-  //console.log("data", data);
-  //console.log("스튜던트", studentList);
-  // const [jsonData, setJsonData] = useState(null);
+  const [jsonData, setJsonData] = useState(null);
+  //class_name"을 저장하는 배열을 나타내는 상태
+  const [classList, setClassList] = useState([]);
 
-  // const getJsonData = async () => {
-  //   const resp = await axios.get("http://localhost:8080/student/1");
-  //   setJsonData(resp.data);
-  //   console.log(jsonData);
-  // };
+  const getJsonData = async () => {
+    try {
+      const resp = await axios.get("http://localhost:8080/student/byClass/5");
+      setJsonData(resp.data);
+    } catch (error) {
+      console.error("Error", error);
+    }
+  };
 
-  //useEffect(() => {
-
-  //   getJsonData();
-  // }, []);
-  // useEffect(() => {
-  //   console.log(jsonData);
-  // }, [jsonData]);
+  useEffect(() => {
+    getJsonData();
+  }, []);
+  useEffect(() => {
+    //jsonData가 변경될때마다 렌더링.
+    if (jsonData) {
+      const classNames = jsonData
+        .map((student) => student.classInfos.map((info) => info.class_name))
+        .flat();
+      setClassList(classNames);
+    }
+    //console.log(jsonData);
+  }, [jsonData]);
 
   const headers = ["No", "이름", "분반", "학교"];
 
@@ -130,7 +139,7 @@ const acamember = () => {
   const handleSelectChange = (e) => {
     setSelectedValue(e.target.value);
   };
-  const handleStudentInfo = () => {
+  const handleStudentInfo = (id) => {
     router.push("/AcademyManagement/StudentManagement/acamember/StudentInfo");
     //console.log("id", id);
   };
@@ -162,11 +171,10 @@ const acamember = () => {
       </D>
       <Div>
         <Select
-          options={[
-            { value: "kor", label: "국어 김은진A" },
-            { value: "kor", label: "국어 김은진A" },
-            { value: "kor", label: "국어 김은진A" },
-          ]}
+          options={classList.map((className) => ({
+            value: className,
+            label: className,
+          }))}
           value={selectedValue}
           onChange={handleSelectChange}
         />
@@ -181,7 +189,7 @@ const acamember = () => {
           <Btn
             onClick={() =>
               router.push(
-                "/AcademyManagement/StudentManagement/acamember/Message/Manage"
+                "/AcademyManagement/StudentManagement/acamember/Message/Send"
               )
             }
           >
