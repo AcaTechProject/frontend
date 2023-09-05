@@ -5,23 +5,16 @@ import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import dayjs from "dayjs";
 
-function ScheduleCalendar({ handleModalOpen }) {
-  const [value, onChange] = useState(new Date());
-
-  const updateLocale = require("dayjs/plugin/updateLocale");
-
-  dayjs.extend(updateLocale);
-
-  dayjs.updateLocale("en", {
-    weekdays: ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"],
-  });
-
+function ScheduleCalendar({ handleDayClick, selectedDate, handleDateChange }) {
   return (
     <StyledCalender
-      onClickDay={(prev) => handleModalOpen(!prev)}
-      onChange={onChange}
-      value={value}
+      locale="ko"
+      onClickDay={handleDayClick}
+      onChange={handleDateChange}
+      value={selectedDate}
       formatDay={(value, date) => dayjs(date).format("D")}
+      next2Label={null}
+      prev2Label={null}
     ></StyledCalender>
   );
 }
