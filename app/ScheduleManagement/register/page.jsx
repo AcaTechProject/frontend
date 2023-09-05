@@ -4,21 +4,21 @@ import { styled } from "styled-components";
 import "react-calendar/dist/Calendar.css";
 import Button from "../../components/Button";
 import ScheduleCalendar from "@/app/components/Calendar/Calendar";
-import Popup from "@/app/components/Popup";
 import { useRouter } from "next/navigation";
+import { selectedDateState } from "@/app/recoil/atom";
+import { useRecoilState } from "recoil";
 
-function page(props) {
+function page() {
   const router = useRouter();
   const [isClicked, setIsClicked] = useState(true);
-  const [isOpened, setIsOpened] = useState(false);
+  const [selectedDate, setSelectedDate] = useRecoilState(selectedDateState);
+
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+  };
 
   const handleIsClicked = () => {
     setIsClicked(!isClicked);
-  };
-
-  const handleModalOpen = () => {
-    setIsOpened(!isOpened);
-    console.log(isOpened);
   };
 
   const handleSchedulePage = () => {
@@ -29,6 +29,10 @@ function page(props) {
   const handleRegisterPage = () => {
     handleIsClicked();
     router.push("/ScheduleManagement/register");
+  };
+
+  const handleDayClick = (date) => {
+    setSelectedDate(date);
   };
 
   return (
@@ -54,25 +58,38 @@ function page(props) {
       </ButtonWrapper>
       <SectionWrapper>
         <StyledSection>
-          <ScheduleCalendar handleModalOpen={handleModalOpen} />
-          {isOpened ? <Popup onClose={handleModalOpen} /> : null}
+          {/* 일정 등록 페이지의 캘린더 */}
+          <ScheduleCalendar
+            handleDayClick={handleDayClick}
+            selectedDate={selectedDate}
+            handleDateChange={handleDateChange}
+          />
         </StyledSection>
 
         <StyledSection>
           <ScheduleRegisterWrapper>
-            <h3>{"2023년 8월 24일"}</h3>
+            {/* 일정 등록일 */}
+            {selectedDate ? (
+              <h3>
+                {selectedDate.toLocaleDateString("ko-KR", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
+              </h3>
+            ) : null}
 
-            <Checkbox />
-            <span>기간 설정</span>
-
-            <Title placeholder="일정 제목을 입력해주세요" />
-            <Checkbox />
+            <Title placeholder="일정 제목을 입력해주세요" name="sch_title" />
+            <Checkbox name="today_edu_schedule" />
             <span>학원일정</span>
 
-            <Checkbox />
+            <Checkbox name="today_cons_schedule" />
             <span>상담일정</span>
             <TextareaWrapper>
-              <Textarea placeholder="일정에 대한 메모를 남겨주세요"></Textarea>
+              <Textarea
+                placeholder="일정에 대한 메모를 남겨주세요"
+                name="sch_content"
+              ></Textarea>
               <RegisterBtn $primary>일정 등록</RegisterBtn>
             </TextareaWrapper>
           </ScheduleRegisterWrapper>

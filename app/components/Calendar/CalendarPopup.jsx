@@ -1,8 +1,13 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { styled } from "styled-components";
 
-function CalendarPopup({ onClose }) {
+function CalendarPopup({ onClose, scheduleData, selectedDate }) {
+  const [isShowing, setIsShowing] = useState(false);
+
+  const options = { year: "numeric", month: "long", day: "numeric" };
+  const koreanDate = selectedDate.toLocaleDateString("ko-KR", options);
+
   return (
     <PopupPageContainer>
       <CalendarPopupContaniner>
@@ -24,20 +29,45 @@ function CalendarPopup({ onClose }) {
               />
             </svg>
           </div>
-          {/* </CloseButton> */}
           <p
             style={{
               margin: "27px 0 0 127px",
               fontSize: "1.25em",
             }}
           >
-            {"9월 1일 일정"}
+            {/* 클릭한 날짜 */}
+            {koreanDate}
           </p>
         </CalendarPopupHeader>
         <div style={{ margin: "15px 50px" }}>
-          <ManageButton>{"일정관리"}</ManageButton>
+          {!isShowing ? (
+            <ManageButton onClick={() => setIsShowing(true)}>
+              {"일정관리"}
+            </ManageButton>
+          ) : (
+            <DeleteButton onClick={() => setIsShowing(false)}>
+              {"삭제"}
+            </DeleteButton>
+          )}
         </div>
-        <ScheduleContent></ScheduleContent>
+
+        <ScheduleContent>
+          {/* 그날의 일정 보여주기 */}
+          {/* today_edu_schedule에 날짜가 있어야하나? */}
+          {!isShowing ? (
+            <>
+              <li>{scheduleData.this_month_schedule[0].sch_title}</li>
+              <br />
+            </>
+          ) : (
+            <>
+              <p>
+                <input type="checkbox" />
+                {scheduleData.this_month_schedule[0].sch_title}
+              </p>
+            </>
+          )}
+        </ScheduleContent>
       </CalendarPopupContaniner>
     </PopupPageContainer>
   );
@@ -90,9 +120,18 @@ const ManageButton = styled.a`
   border-bottom: 1px solid #4154ff;
   cursor: pointer;
 `;
+const DeleteButton = styled.a`
+  width: 72px;
+  height: 21px;
+  color: red;
+  border-bottom: 1px solid red;
+  cursor: pointer;
+`;
 
 const ScheduleContent = styled.div`
+  box-sizing: border-box;
   margin: 0 auto;
+  padding: 30px 20px;
   width: 396px;
   height: 284px;
   border: 6px solid #eceafe;
