@@ -67,7 +67,7 @@ const attendTable = ({ matchData }) => {
   //     title: "기타 특이 사항 ",
   //     value: note,
   //   },
-  // ];
+
   return (
     <>
       <TableContainer>
@@ -95,7 +95,7 @@ const attendTable = ({ matchData }) => {
             <FirstTd>수강과목 및 분반</FirstTd>
           </Tr>
           <Tr>
-            <SecondTd>{matchData?.수강과목분반}</SecondTd>
+            <SecondTd>{matchData?.분반}</SecondTd>
           </Tr>
           <Tr>
             <FirstTd>기타 특이 사항</FirstTd>
