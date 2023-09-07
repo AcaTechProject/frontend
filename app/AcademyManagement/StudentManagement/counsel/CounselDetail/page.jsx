@@ -8,7 +8,13 @@ import { useRouter } from "next/navigation";
 
 import Modal from "@/app/components/Modal";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { inputAtom, sangdamState, daesangState } from "@/recoil/atom";
+import {
+  inputAtom,
+  sangdamState,
+  daesangState,
+  contentState,
+  studentListState,
+} from "@/recoil/atom";
 
 const Container = styled.div`
   padding: 116px 70px 55px 85px;
@@ -58,6 +64,10 @@ const Button = styled.button`
   border: 0;
   font-size: 14px;
 `;
+const P = styled.p`
+  font-size: 20px;
+  font-weight: 700;
+`;
 const Row2 = styled(Row)`
   justify-content: flex-end;
   margin-top: 70px;
@@ -70,6 +80,9 @@ const Content = styled.div`
 
 const CounselDetail = () => {
   const router = useRouter();
+  const [id, setId] = useState("");
+  const [matchData, setMatchData] = useState("");
+  const [studentList, setStudentList] = useRecoilState(studentListState);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
 
@@ -77,7 +90,8 @@ const CounselDetail = () => {
 
   const selectSubject = useRecoilValue(sangdamState);
   const selectDaesang = useRecoilValue(daesangState);
-  // const selectTarget = useRecoilValue(targetState);
+
+  const selectContent = useRecoilValue(contentState);
   //const [input, setInput] = useRecoilState(inputAtom);
 
   const handleModal = (message) => {
@@ -96,21 +110,41 @@ const CounselDetail = () => {
   //   };
   const handleSaveClick = () => {};
   useEffect(() => {}, [selectSubject]);
+  useEffect(() => {
+    const params = window.location.search;
+
+    if (typeof params !== "undefined") {
+      const result = params.replace("?id=", "");
+      const matchedData = studentList.find(
+        (data) => data.id === Number(result)
+      );
+      setId(result);
+      setMatchData(matchedData);
+    }
+  }, [id, matchData, studentList]);
 
   return (
     <Container>
       <p>
-        원생관리 {">"} 학생관리 {">"} 수강생 관리 {">"} 이름 {">"} 상담관리{" "}
-        {">"} 상담내역
+        원생관리 {">"} 학생관리 {">"} 수강생 관리 {">"}
+        {matchData?.이름} {">"} 상담관리 {">"} 상담내역
       </p>
 
       <Body>
         <Left>
-          <ProfileEmpty />
+          <ProfileEmpty matchData={matchData} />
         </Left>
         <Right>
           <Row2>
-            <Button>수정</Button>
+            <Button
+              onClick={() =>
+                router.push(
+                  `/AcademyManagement/StudentManagement/counsel/CounselEdit?id=${id}`
+                )
+              }
+            >
+              수정
+            </Button>
             {isModalOpen && (
               <Modal
                 onCheck={handleCheck}
@@ -121,7 +155,7 @@ const CounselDetail = () => {
             <Button
               onClick={() =>
                 router.push(
-                  "/AcademyManagement/StudentManagement/counsel/CounselHistory"
+                  `/AcademyManagement/StudentManagement/counsel/CounselHistory?id=${id}`
                 )
               }
             >
@@ -129,17 +163,17 @@ const CounselDetail = () => {
             </Button>
           </Row2>
           <Row>
-            <p style={{ fontSize: "20px" }}>상담 과목</p>
+            <P>상담 과목</P>
             <p style={{ color: "#6B7280" }}>{selectSubject}</p>
           </Row>
           <Row>
             {" "}
-            <p style={{ fontSize: "20px" }}>상담 대상</p>
+            <P>상담 대상</P>
             <p style={{ color: "#6B7280" }}>{selectDaesang}</p>
           </Row>
 
-          <p style={{ fontSize: "20px" }}>상담 내용</p>
-          <Content>{content}</Content>
+          <P>상담 내용</P>
+          <Content>{selectContent}</Content>
         </Right>
       </Body>
     </Container>
