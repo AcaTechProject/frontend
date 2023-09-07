@@ -70,7 +70,7 @@ const ProfileEmpty = ({ matchData }) => {
   };
 
   //console.log("name", studentName);
-  console.log("이거임", matchData?.이름);
+
   //console.log("설마", studentName);
   //console.log("matchdata", matchData);
   return (
