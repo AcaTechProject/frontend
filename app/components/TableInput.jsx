@@ -3,8 +3,12 @@ import { useState, useRef, useEffect } from "react";
 import SelectBox from "../components/Select";
 import { useRecoilState } from "recoil";
 import {
-  telState,
-  parentState,
+  studentTel1State,
+  studentTel2State,
+  studentTel3State,
+  parentTel1State,
+  parentTel2State,
+  parentTel3State,
   valueState,
   familyState,
 } from "../../recoil/atom";
@@ -62,33 +66,62 @@ const Li = styled.li`
   margin-left: 12px;
 `;
 const TableInput = ({ parentInputRef, telInputRef, familyInputRef }) => {
+  const [tel1, setTel1] = useState("");
+  const [tel2, setTel2] = useState("");
+  const [tel3, setTel3] = useState("");
+
+  const [parent1, setParent1] = useState("");
+  const [parent2, setParent2] = useState("");
+  const [parent3, setParent3] = useState("");
+
   //형제관계 입력칸
-  const [value, setValue] = useRecoilState(familyState);
+  const [family, setFamily] = useRecoilState(familyState);
   //형제관계 입력칸이 변할 배열들 다룸.
-  const [values, setValues] = useRecoilState(valueState);
-  const [tel, setTel] = useRecoilState(telState);
-  const [parent, setParent] = useRecoilState(parentState);
+  const [arr, setArr] = useRecoilState(valueState);
+  const [studentTel1, setStudentTel1] = useRecoilState(studentTel1State);
+  const [studentTel2, setStudentTel2] = useRecoilState(studentTel2State);
+  const [studentTel3, setStudentTel3] = useRecoilState(studentTel3State);
+
+  const handleTel1 = (event) => {
+    setTel1(event.target.value);
+  };
+
+  const handleTel2 = (event) => {
+    setTel2(event.target.value);
+  };
+
+  const handleTel3 = (event) => {
+    setTel3(event.target.value);
+  };
+
+  const [studentParent1, setStudentParent1] = useRecoilState(parentTel1State);
+  const [studentParent2, setStudentParent2] = useRecoilState(parentTel2State);
+  const [studentParent3, setStudentParent3] = useRecoilState(parentTel3State);
 
   const checkValue = (e) => {
-    console.log(value);
-    setValue(e.target.value);
+    console.log(family);
+    setFamily(e.target.value);
   };
-  const handleTel = (e) => {
-    setTel(e.target.value);
+
+  const handleParent1 = (e) => {
+    setParent1(e.target.value);
   };
-  const handleParent = (e) => {
-    setParent(e.target.value);
+  const handleParent2 = (e) => {
+    setParent2(e.target.value);
+  };
+  const handleParent3 = (e) => {
+    setParent3(e.target.value);
   };
   const onSubmit = (e) => {
     e.preventDefault();
-    if (value === "") {
+    if (family === "") {
       return;
     }
-    setValues((currentArr) => [value, ...currentArr]);
-    setValue("");
+    setArr((currentArr) => [family, ...currentArr]);
+    setFamily("");
   };
 
-  console.log(values);
+  console.log(arr);
 
   return (
     <>
@@ -101,12 +134,25 @@ const TableInput = ({ parentInputRef, telInputRef, familyInputRef }) => {
                 type="text"
                 maxLength={3}
                 placeholder="010"
-                value={tel}
-                onChange={handleTel}
+                value={tel1 !== "" ? tel1 : studentTel1}
+                onChange={handleTel1}
                 ref={telInputRef}
               ></Input>{" "}
-              -<Input type="text" id="tel" maxLength={4}></Input> -
-              <Input type="text" maxLength={4}></Input>
+              -
+              <Input
+                type="text"
+                id="tel"
+                maxLength={4}
+                value={tel2 !== "" ? tel2 : studentTel2}
+                onChange={handleTel2}
+              ></Input>{" "}
+              -
+              <Input
+                type="text"
+                maxLength={4}
+                value={tel3 !== "" ? tel3 : studentTel3}
+                onChange={handleTel3}
+              ></Input>
             </SecondTd>
           </Tr>
 
@@ -117,12 +163,24 @@ const TableInput = ({ parentInputRef, telInputRef, familyInputRef }) => {
                 type="text"
                 maxLength={3}
                 placeholder="010"
-                value={parent}
-                onChange={handleParent}
+                value={parent1 !== "" ? parent1 : studentParent1}
+                onChange={handleParent1}
                 ref={parentInputRef}
               ></Input>{" "}
-              -<Input type="text" maxLength={4}></Input> -
-              <Input type="text" maxLength={4}></Input>
+              -
+              <Input
+                type="text"
+                maxLength={4}
+                value={parent2 !== "" ? parent2 : studentParent2}
+                onChange={handleParent2}
+              ></Input>{" "}
+              -
+              <Input
+                type="text"
+                maxLength={4}
+                value={parent3 !== "" ? parent3 : studentParent3}
+                onChange={handleParent3}
+              ></Input>
             </SecondTd>
           </Tr>
           <Tr>
@@ -133,12 +191,12 @@ const TableInput = ({ parentInputRef, telInputRef, familyInputRef }) => {
                   type="text"
                   placeholder="형제 자매 정보를 입력해주세요"
                   onChange={checkValue}
-                  value={value}
+                  value={family}
                   ref={familyInputRef}
                 />
                 <Button>+</Button>
                 <p>
-                  {values.map((item, index) => (
+                  {arr.map((item, index) => (
                     <Li key={index}>{item}</Li>
                   ))}
                 </p>
