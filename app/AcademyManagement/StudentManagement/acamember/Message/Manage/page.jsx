@@ -68,7 +68,15 @@ const Manage = () => {
         <SMBtn />
       </D>
       <D>
-        <Tab>메시지 발송</Tab>
+        <Tab
+          onClick={() =>
+            router.push(
+              "/AcademyManagement/StudentManagement/acamember/Message/Send"
+            )
+          }
+        >
+          메시지 발송
+        </Tab>
         <Tab>메시지관리</Tab>
       </D>
       <Div>
@@ -77,7 +85,11 @@ const Manage = () => {
         </Button>
       </Div>
       {/* 표 넣을 곳 */}
-      <StudentList data={data} headers={headers}></StudentList>
+      <StudentList
+        data={data}
+        headers={headers}
+        onTdClick={() => {}}
+      ></StudentList>
     </Container>
   );
 };
