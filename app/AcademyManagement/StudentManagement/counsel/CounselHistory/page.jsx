@@ -2,9 +2,12 @@
 "use client";
 import Button from "@/app/components/Button";
 import styled from "styled-components";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import StudentList from "@/app/components/StudentList";
+import { useRecoilState } from "recoil";
+import { studentListState } from "@/recoil/atom";
+
 import Link from "next/link";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import Modal from "@/app/components/Modal";
@@ -19,15 +22,45 @@ const Row = styled.div`
 
 const CounselHistory = () => {
   const router = useRouter();
-  const data = [{ 상담과목: "국어", 일시: "2월", 담당교사: "김은진" }];
+  const [id, setId] = useState("");
+  const [matchData, setMatchData] = useState();
+  const [studentList, setStudentList] = useRecoilState(studentListState);
+  const data = [
+    {
+      상담과목: "안녕",
+      일시: "1월",
+      담당교사: "누구",
+    },
+  ];
+  useEffect(() => {
+    const params = window.location.search;
+
+    if (typeof params !== "undefined") {
+      const result = params.replace("?id=", "");
+      const matchedData = studentList.find(
+        (data) => data.id === Number(result)
+      );
+      setId(result);
+      setMatchData(matchedData);
+      console.log("match", matchedData);
+    }
+  }, [id, matchData, studentList]);
+
+  // const data = studentList.map((student) => ({
+  //   id: studentList.id,
+  //   이름: studentList.studentName,
+  //   분반: studentList.result,
+  //   학교: studentList.studentSchool,
+  // }));
+
   const headers = ["No", "상담과목", "일시", "담당교사"];
 
   return (
     <Container>
       <p>
-        원생관리 {">"} 학생관리 {">"} 수강생 관리 {">"} 이름
+        원생관리 {">"} 학생관리 {">"} 수강생 관리 {">"} {matchData?.이름}
       </p>
-      <h2>김지수 학생 상담내역</h2>
+      <h2>{matchData?.이름} 학생 상담내역</h2>
       <Row>
         <Button
           $medium
@@ -46,7 +79,7 @@ const CounselHistory = () => {
           $primary
           onClick={() =>
             router.push(
-              "/AcademyManagement/StudentManagement/counsel/PageRegister"
+              `/AcademyManagement/StudentManagement/counsel/PageRegister?id=${id}`
             )
           }
         >
