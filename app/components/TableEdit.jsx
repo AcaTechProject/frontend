@@ -3,7 +3,8 @@ import styled from "styled-components";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { useRecoilState } from "recoil";
-import { telState, emailState } from "../../recoil/atom";
+//import { formDataState } from "@/recoil/atom";
+import { numState, emailState } from "@/recoil/atom";
 
 const TableContainer = styled.table`
   border: 1px solid #c4c4c4;
@@ -36,18 +37,47 @@ const Input = styled.input`
 const Inp = styled.input`
   width: 270px;
 `;
-const TableEdit = ({ telInput, emailInput }) => {
+const TableEdit = ({
+  formData,
+  setFormData,
+  telInputRef,
+  num1,
+  num2,
+  num3,
+  setNum1,
+  setNum2,
+  setNum3,
+}) => {
   const router = useRouter();
 
-  const [num, setNum] = useRecoilState(telState);
-  const [email, setEmail] = useRecoilState(emailState);
+  // const [formData, setFormData] = useRecoilState(formDataState);
 
-  const handleTel = (e) => {
-    setNum(e.target.value);
+  // const [num, setNum] = useRecoilState(numState);
+  // const [email, setEmail] = useRecoilState(emailState);
+
+  //const [telnum, setTelNum] = useRecoilState(numState);
+  // const [emailValue, setEmailValue] = useRecoilState(emailState);
+
+  const handleTel1Change = (e) => {
+    setNum1(e.target.value);
+    //formData.tel1(e.target.value);
+    //setTelNum(e.target.value);
   };
+  // const handleTel2Change = (e) => {
+  //   const updateFormData = { ...formData, tel2: e.target.value };
+  //   setFormData(updateFormData);
+  //   //setTelNum(e.target.value);
+  // };
+  // const handleTel3Change = (e) => {
+  //   const updateFormData = { ...formData, tel3: e.target.value };
+  //   setFormData(updateFormData);
+  //   //setTelNum(e.target.value);
+  // };
   const handleEmail = (e) => {
-    setEmail(e.target.value);
+    const updateFormData = { ...formData, email: e.target.value };
+    setFormData(updateFormData);
   };
+
   return (
     <>
       <TableContainer>
@@ -58,12 +88,24 @@ const TableEdit = ({ telInput, emailInput }) => {
               <Input
                 type="text"
                 maxLength={3}
-                ref={telInput}
-                value={num}
-                onChange={handleTel}
+                ref={telInputRef}
+                value={num1}
+                onChange={handleTel1Change}
               ></Input>{" "}
-              -<Input type="text" maxLength={4}></Input> -{" "}
-              <Input type="text" maxLength={4}></Input>
+              -
+              <Input
+                type="text"
+                maxLength={4}
+                value={num2}
+                onChange={(e) => setNum2(e.target.value)}
+              ></Input>{" "}
+              -{" "}
+              <Input
+                type="text"
+                maxLength={4}
+                value={num3}
+                onChange={(e) => setNum3(e.target.value)}
+              ></Input>
             </SecondTd>
           </Tr>
           <Tr>
@@ -72,8 +114,8 @@ const TableEdit = ({ telInput, emailInput }) => {
               <Input
                 type="text"
                 placeholder="id"
-                ref={emailInput}
-                value={email}
+                // ref={emailInput}
+                value={formData.email}
                 onChange={handleEmail}
               ></Input>{" "}
               @{" "}
