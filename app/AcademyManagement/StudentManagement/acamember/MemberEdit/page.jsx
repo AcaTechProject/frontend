@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import axios from "axios";
 import ProfileCard from "@/app/components/ProfileCard";
 import ProfileImage from "@/app/components/ProfileImage";
 import styled from "styled-components";
@@ -281,6 +282,40 @@ const MemberEdit = () => {
 
       기타특이사항: note !== "" ? note : studentList[index].기타특이사항,
     };
+
+    const updatedStudentInfo = {
+      studentId: id,
+      name: name,
+      birth: birth,
+      gender: gender,
+      school: school,
+      grade: grade,
+      phone: `${tel1}-${tel2}-${tel3}`,
+      etc: note,
+      image: "image_url",
+      teacher: family,
+      parentPhone: `${parent1}-${parent2}-${parent3}`,
+      st_write: "첫번째",
+      st_update_write: "두번째",
+      familyInfos: arr.map((familyName) => ({
+        fa_name: familyName,
+        fa_memo: "가족 메모",
+      })),
+      classInfos: [
+        {
+          class_name: result[0],
+        },
+      ],
+    };
+
+    axios
+      .put(`http://localhost:8080/student/${studentId}`, updatedStudentInfo)
+      .then(function (response) {
+        console.log("정보 수정 성공!!!", response.data);
+      })
+      .catch(function (error) {
+        console.log("정보 수정 error", error);
+      });
 
     const updatedList = [...studentList];
     updatedList[index] = updatedStudent;
