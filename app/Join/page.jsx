@@ -1,10 +1,12 @@
 "use client";
 import SelectBox from "../components/Select";
 import styled from "styled-components";
+import axios from "axios";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRecoilState } from "recoil";
 import { formDataState, selectedSubjectState } from "@/recoil/atom";
+import { useRouter } from "next/navigation";
 //import Select from "../components/Select";
 const JoinBody = styled.div`
   display: flex;
@@ -85,10 +87,12 @@ const P = styled.p`
   margin-left: 120px;
 `;
 const JoinPage = () => {
+  const router = useRouter();
   const [selectedValue, setSelectedValue] = useState("");
   const [selectedSubject, setSelectedSubject] =
     useRecoilState(selectedSubjectState);
   const [formData, setFormData] = useRecoilState(formDataState);
+  const [code, setCode] = useState("");
 
   const {
     register,
@@ -103,6 +107,7 @@ const JoinPage = () => {
 
   const onSubmitHandler = async (data) => {
     const { name, email, pwd, confirm, sub, tel1, tel2, tel3 } = data;
+
     const tel = `${tel1} ${tel2} ${tel3}`;
     if (pwd !== confirm) {
       setError("confirm", {
@@ -120,9 +125,30 @@ const JoinPage = () => {
       tel,
       sub,
     });
+    const JoinStudent = {
+      user_name: name, // name을 바로 사용
+      user_email: email, // email을 바로 사용
+      user_pwd: pwd, // pwd를 바로 사용
+      user_phone: tel, // tel을 사용
+      user_major: selectedSubject, // sub를 사용
+      user_code: code,
+    };
+    axios
+      .post(`http://localhost:8080/user/signup`, JoinStudent)
+      .then(function (response) {
+        console.log("회원가입 성공", response.data);
+        router.push("/AcademyManagement/StudentManagement/acamember");
+      })
+      .catch(function (error) {
+        console.log("정보 수정 error", error);
+      });
   };
   const onErrorHandler = (error) => {
     console.log(error, "error");
+  };
+
+  const handleCode = (event) => {
+    setCode(event.target.value);
   };
 
   return (
@@ -263,8 +289,8 @@ const JoinPage = () => {
               placeholder="담당과목을 선택해주세요"
               options={[
                 { value: "국어", label: "국어A" },
-                { value: "국어", label: "국어B" },
-                { value: "수학", label: "수학" },
+                { value: "수학", label: "수학A" },
+                { value: "영어", label: "영어A" },
               ]}
               // value={selectedValue}
               value={selectedSubject}
@@ -279,6 +305,8 @@ const JoinPage = () => {
             <Input
               type="text"
               id="code"
+              value={code}
+              onChange={handleCode}
               placeholder="학원코드를 입력해주세요"
             ></Input>
           </Row>
