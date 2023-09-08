@@ -40,3 +40,8 @@ export const textState = atom({
   key: "textState",
   defalut: "",
 });
+
+export const selectedDateState = atom({
+  key: "selectedDate",
+  default: new Date(),
+});
