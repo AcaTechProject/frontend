@@ -3,7 +3,7 @@ import styled from "styled-components";
 import Select from "./Select";
 import { useState } from "react";
 import { useRecoilState } from "recoil";
-import { resultState } from "../recoil/atom";
+import { resultState, noteState, studentFamilyState } from "@/recoil/atom";
 
 const TableContainer = styled.table`
   border: 1px solid #d3d2d2;
@@ -55,7 +55,11 @@ const Result = styled.div`
 const SugangTable = () => {
   const [choice, setChoice] = useState("");
   const [teacher, setTeacher] = useState("");
-  const [result, setResult] = useRecoilState(resultState);
+
+  const [note, setNote] = useState("");
+  const [studentNote, setStudentNote] = useRecoilState(noteState);
+  const [arr, setArr] = useState([]);
+  const [studentArr, setStudentArr] = useRecoilState(resultState);
 
   const handleSubjectChange = (e) => {
     setChoice(e.target.value);
@@ -64,14 +68,20 @@ const SugangTable = () => {
     setTeacher(e.target.value);
   };
 
+  const handleNote = (e) => {
+    setNote(e.target.value);
+  };
+
   const onSubmit = (e) => {
     e.preventDefault();
     if (choice && teacher) {
-      setResult((currentArr) => [`${choice},${teacher}`, ...currentArr]);
+      setArr((currentArr) => [`${choice},${teacher}`, ...currentArr]);
       setChoice("");
       setTeacher("");
+      setNote("");
     }
   };
+
   return (
     <>
       <TableContainer>
@@ -93,7 +103,7 @@ const SugangTable = () => {
                         value: "영어",
                         label: "영어",
                       },
-                      { value: "math", label: "수학" },
+                      { value: "수학", label: "수학" },
                     ]}
                     onChange={handleSubjectChange}
                   />{" "}
@@ -107,15 +117,16 @@ const SugangTable = () => {
                         value: "영어 김무무A",
                         label: "영어 김무무A",
                       },
-                      { value: "수학 김아개", label: "수학 김아개B" },
+                      { value: "수학 김아개", label: "수학 김아개" },
                     ]}
                     onChange={handleTeacherChange}
+                    value={arr !== [] ? arr : studentArr}
                   />
                   <Button> + </Button>
                 </form>
               </Row>
               <Result>
-                {result.map((item, index) => (
+                {arr.map((item, index) => (
                   <li key={index}>{item}</li>
                 ))}
               </Result>
@@ -126,7 +137,10 @@ const SugangTable = () => {
           </Tr>
           <Tr>
             <SecondTd>
-              <Textarea></Textarea>
+              <Textarea
+                value={note !== "" ? note : studentNote}
+                onChange={handleNote}
+              />
             </SecondTd>
           </Tr>
         </tbody>

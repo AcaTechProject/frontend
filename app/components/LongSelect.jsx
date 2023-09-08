@@ -11,15 +11,9 @@ const Select = styled.select`
   margin: 10px 0 0 30px;
 `;
 export default function LongSelect({ value, onChange, options }) {
-  const [grade, setGrade] = useState("");
-
-  const handleChange = (event) => {
-    setGrade(event.target.value);
-  };
-
   return (
     <>
-      <Select value={value} onChange={handleChange}>
+      <Select value={value} onChange={onChange}>
         {options.map((option) => (
           <option key={option.value} value={option.value}>
             {option.label}

@@ -13,6 +13,7 @@ const NavParent = styled.div`
   align-items: center;
   width: 100%;
   position: fixed;
+  z-index: 2;
 `;
 const NavTitle = styled.h1`
   flex-grow: 1;

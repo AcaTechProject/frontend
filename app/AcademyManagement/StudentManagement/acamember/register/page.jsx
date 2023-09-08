@@ -1,22 +1,33 @@
 "use client";
 import React from "react";
-import ProfileCard from "@/app/components/ProfileCard";
 import ProfileImage from "@/app/components/ProfileImage";
 import styled from "styled-components";
 import { useState, useEffect, useRef } from "react";
-import TableInput from "@/app/components/TableInput";
 import SugangTable from "@/app/components/SugangTable";
 import { useRouter } from "next/navigation";
-import { Link } from "react-router-dom";
 import SelectBox from "@/app/components/LongSelect";
 import Select from "@/app/components/Select";
+import SMBtn from "@/app/components/SMBtn";
+import AMBtn from "@/app/components/AMBtn";
 import {
-  telState,
-  parentState,
-  valueState,
+  studentNameState,
+  studentBirthState,
+  studentSchoolState,
+  studentGradeState,
+  studentListState,
+  studentTel1State,
+  studentTel2State,
+  studentTel3State,
+  parentTel1State,
+  parentTel2State,
+  parentTel3State,
+  studentFamilyState,
+  studentArrState,
+  familyState,
   resultState,
-} from "../../../../recoil/atom";
-import { useRecoilValue } from "recoil";
+  noteState,
+} from "@/recoil/atom";
+import { useRecoilValue, useRecoilState } from "recoil";
 const Container = styled.div`
   padding: 116px 70px 55px 85px;
 `;
@@ -105,62 +116,286 @@ const Inputs = styled(Input)`
 const S = styled.div`
   margin-top: 30px;
 `;
+const Row5 = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+`;
 
+//표 css
+const TableContainer = styled.table`
+  border: 1px solid #c4c4c4;
+  border-collapse: collapse;
+  width: 606px;
+  height: 80px;
+  border-radius: 20px;
+`;
+const Tr = styled.tr`
+  border: 1px solid #c4c4c4;
+  padding: 10px 5px;
+`;
+const FirstTd = styled.td`
+  border: 1px solid #c4c4c4;
+  padding: 20px 5px;
+  width: 127px;
+  background: #eceafe;
+  text-align: center;
+`;
+const SecondTd = styled.td`
+  border: 1px solid #C4C4C4
+  padding: 10px 15px;
+  width: 379px;
+`;
+const TelInput = styled.input`
+  width: 50px;
+  height: 20px;
+  margin-left: 15px;
+  border: 1px solid #c4c4c4;
+
+  border-radius: 5px;
+`;
+const Inp = styled.input`
+  width: 270px;
+  margin: 4px 0 0 15px;
+  font-size: 13px;
+  border: 1px solid #c4c4c4;
+  border-radius: 5px;
+`;
+const Btn = styled.button`
+  margin-left: 5px;
+  color: white;
+  background: black;
+  font-size: 10px;
+`;
+
+const Li = styled.li`
+  font-size: 15px;
+  margin-left: 12px;
+`;
+const Result = styled.div`
+  margin-top: 15px;
+`;
+
+const Textarea = styled.textarea`
+  width: 500px;
+  border: 1px solid #c4c4c4;
+  height: auto;
+`;
+const TableContainer2 = styled.table`
+  border: 1px solid #d3d2d2;
+  border-collapse: collapse;
+  width: 606px;
+  height: 80px;
+  border-radius: 20px;
+`;
+const ThirdTd = styled.td`
+  border: 1px solid #c4c4c4;
+  padding: 10px 5px;
+  width: 379px;
+  text-align: center;
+  height: 80px;
+`;
 const register = () => {
   const router = useRouter();
   const [name, setName] = useState("");
   const [birth, setBirth] = useState("");
   const [school, setSchool] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [selectedValue, setSelectedValue] = useState("");
-  const nameInputRef = useRef(null);
+  const [gender, setGender] = useState("");
+  const [grade, setGrade] = useState("");
 
-  const tel = useRecoilValue(telState);
-  const parent = useRecoilValue(parentState);
-  const value = useRecoilValue(valueState);
-  const result = useRecoilValue(resultState);
+  const [tel1, setTel1] = useState("");
+  const [tel2, setTel2] = useState("");
+  const [tel3, setTel3] = useState("");
+  const [parent1, setParent1] = useState("");
+  const [parent2, setParent2] = useState("");
+  const [parent3, setParent3] = useState("");
+  const [family, setFamily] = useState("");
+  const [arr, setArr] = useState([]);
+
+  const [choice, setChoice] = useState("");
+  const [teacher, setTeacher] = useState("");
+  const [note, setNote] = useState("");
+  const [result, setResult] = useState([]);
+
+  //recoil 상태 사용하기!
+  const [studentName, setStudentName] = useRecoilState(studentNameState);
+  const [studentBirth, setStudentBirth] = useRecoilState(studentBirthState);
+  const [studentSchool, setStudentSchool] = useRecoilState(studentSchoolState);
+  const [studentGrade, setStudentGrade] = useRecoilState(studentGradeState);
+  const [studentList, setStudentList] = useRecoilState(studentListState);
+  const [studentTel1, setStudentTel1] = useRecoilState(studentTel1State);
+  const [studentTel2, setStudentTel2] = useRecoilState(studentTel2State);
+  const [studentTel3, setStudentTel3] = useRecoilState(studentTel3State);
+  const [parentTel1, setParentTel1] = useRecoilState(parentTel1State);
+  const [parentTel2, setParentTel2] = useRecoilState(parentTel2State);
+  const [parentTel3, setParentTel3] = useRecoilState(parentTel3State);
+  const [studentFamily, setStudentFamily] = useRecoilState(studentFamilyState);
+  const [studentArr, setStudentArr] = useRecoilState(studentArrState);
+  const [studentNote, setStudentNote] = useRecoilState(noteState);
+  const [studentResult, setStudentResult] = useRecoilState(resultState);
+  //const nameInputRef = useRef(null);
+  const telInputRef = useRef(null);
+  const parentInputRef = useRef(null);
+
+  // const [family, setFamily] = useRecoilState("");
+  //형제관계 입력칸이 변할 배열들 다룸.
+
+  // const value = useRecoilValue(valueState);
+  //const result = useRecoilValue(resultState);
+
+  const handleTel1 = (event) => {
+    setTel1(event.target.value);
+  };
+
+  const handleTel2 = (event) => {
+    setTel2(event.target.value);
+  };
+
+  const handleTel3 = (event) => {
+    setTel3(event.target.value);
+  };
+  const handleParent1 = (e) => {
+    setParent1(e.target.value);
+  };
+  const handleParent2 = (e) => {
+    setParent2(e.target.value);
+  };
+  const handleParent3 = (e) => {
+    setParent3(e.target.value);
+  };
+  const checkValue = (e) => {
+    console.log(family);
+    setFamily(e.target.value);
+  };
+  const onSubmit = (e) => {
+    e.preventDefault();
+    if (family === "") {
+      return;
+    }
+    setArr((currentArr) => [family, ...currentArr]);
+    setFamily("");
+  };
+
   const handleSaveClick = () => {
     if (name === "") {
-      alert("학생의 이름을 입력해주세요");
-      nameInputRef.current.focus(); // 이름 입력 필드에 포커스를 이동시킴
+      alert("학생 정보를 입력해주세요");
+      // 이름 입력 필드에 포커스를 이동시킴
       return;
     } else if (birth === "") {
-      alert("학생의 생년월일을 입력해주세요");
-    } else if (!selectedValue) {
-      alert("학생의 성별을 선택해주세요");
+      alert("학생 정보를 입력해주세요");
+    } else if (!gender) {
+      alert("학생 정보를 입력해주세요");
     } else if (school === "") {
-      alert("학생의 학교를 입력해주세요");
-    } else if (tel === "") {
+      alert("학생 정보를 입력해주세요");
+    } else if (tel1 === "" || tel2 === "" || tel3 === "") {
       alert("전화번호를 입력해주세요");
-    } else if (parent === "") {
+      telInputRef.current.focus();
+    } else if (parent1 === "" || parent2 === "" || parent3 === "") {
       alert("학부모 정보를 입력해주세요");
-    } else if (value.length === 0) {
+      parentInputRef.current.focus();
+    } else if (arr.length === 0) {
       alert("가족관계 정보를 입력해주세요");
     } else if (result.length === 0) {
       alert("학생의 수강과목 또는 분반을 선택해주세요");
     } else {
+      const newStudent = {
+        id: Date.now(), //일단 등록한 시간으로 학생 정보 구분해놓음.
+        이름: name,
+        학교: school,
+        생년월일: birth,
+        학년: grade,
+        분반: result,
+        // 원생: `${tel1}-${tel2}-${tel3}`,
+        원생: {
+          tel1: tel1,
+          tel2: tel2,
+          tel3: tel3,
+        },
+
+        학부모: {
+          parent1: parent1,
+          parent2: parent2,
+          parent3: parent3,
+        },
+        가족관계: arr,
+        //수강과목분반: result,
+        기타특이사항: note,
+      };
+
+      //학생 정보를 등록하면 기존 studentList에 추가됨.
+      setStudentList((prevStudentList) => [...prevStudentList, newStudent]);
+
+      // Recoil 상태 업데이트
+      setStudentName(name);
+      setStudentBirth(birth);
+      setStudentSchool(school);
+      setStudentGrade(grade);
+      setStudentTel1(tel1);
+      setStudentTel2(tel2);
+      setStudentTel3(tel3);
+      setParentTel1(parent1);
+      setParentTel2(parent2);
+      setParentTel3(parent3);
+      setStudentFamily(family);
+      setStudentArr(arr);
+      setStudentNote(note);
+      setStudentResult(result);
+
       // 유효성 검사를 모두 통과한 경우에만 다음 경로로 이동
       router.push("/AcademyManagement/StudentManagement/acamember");
+
+      // 입력 필드 초기화
+      setName("");
+      setBirth("");
+      setSchool("");
+      setGender("");
+      setGrade("");
+      setTel1("");
+      setTel2("");
+      setTel3("");
+      setParent1("");
+      setParent2("");
+      setParent3("");
     }
   };
+  //console.log("배열", arr);
   const handleSelectChange = (e) => {
-    setSelectedValue(e.target.value);
+    setGender(e.target.value);
     if (!e.target.value) {
       setErrorMessage("학생의 성별을 선택해주세요");
     }
     setErrorMessage("");
   };
 
+  const handleSubjectChange = (e) => {
+    setChoice(e.target.value);
+  };
+  const handleTeacherChange = (e) => {
+    setTeacher(e.target.value);
+  };
+
+  const handleNote = (e) => {
+    setNote(e.target.value);
+  };
+  const onSubmit1 = (e) => {
+    e.preventDefault();
+    if (choice && teacher) {
+      setResult((currentArr) => [`${choice},${teacher}`, ...currentArr]);
+      setChoice("");
+      setTeacher("");
+      setNote("");
+    }
+  };
   return (
     <Container>
       <p>
-        원생관리 {">"} 학생관리 {">"} 수강생 관리 {">"} 이름
+        원생관리 {">"} 학생관리 {">"} 수강생 관리 {">"} 학생등록
       </p>
       <Row>
-        <Tab1 onClick={() => router.push("/AcademyManagement/attendance")}>
-          출결관리
-        </Tab1>
-        <Tab2>학생관리</Tab2>
+        <AMBtn />
+        <SMBtn />
       </Row>
       <Body>
         <Left>
@@ -168,14 +403,13 @@ const register = () => {
 
           <Label htmlFor="profileImg">이미지 추가</Label>
           <br />
-          {/* <ProfileCard nameInputRef={nameInputRef} /> */}
+
           <Row4>
             <InputName
               type="text"
               id="name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              ref={nameInputRef}
             />
             <Select
               style
@@ -184,7 +418,7 @@ const register = () => {
                 { value: "woman", label: "여" },
                 { value: "man", label: "남" },
               ]}
-              value={selectedValue}
+              value={gender}
               onChange={handleSelectChange}
             ></Select>
           </Row4>
@@ -229,21 +463,21 @@ const register = () => {
             <p style={{ fontWeight: "500" }}>학년 |</p>
             <SelectBox
               options={[
-                { value: "ele", label: "1학년" },
-                { value: "ele", label: "2학년" },
-                { value: "ele", label: "3학년" },
-                { value: "ele", label: "4학년" },
-                { value: "ele", label: "5학년" },
-                { value: "ele", label: "6학년" },
-                { value: "mid", label: "중1" },
-                { value: "mid", label: "중2" },
-                { value: "mid", label: "중3" },
-                { value: "high", label: "고1" },
-                { value: "high", label: "고2" },
-                { value: "high", label: "고3" },
+                { value: "1학년", label: "1학년" },
+                { value: "2학년", label: "2학년" },
+                { value: "3학년", label: "3학년" },
+                { value: "4학년", label: "4학년" },
+                { value: "5학년", label: "5학년" },
+                { value: "6학년", label: "6학년" },
+                { value: "중1", label: "중1" },
+                { value: "중2", label: "중2" },
+                { value: "중3", label: "중3" },
+                { value: "고1", label: "고1" },
+                { value: "고2", label: "고2" },
+                { value: "고3", label: "고3" },
               ]}
-              value={selectedValue}
-              onChange={(e) => setSelectedValue(e.target.value)}
+              value={grade}
+              onChange={(e) => setGrade(e.target.value)}
             />
           </Row4>
         </Left>
@@ -260,10 +494,151 @@ const register = () => {
             <Button onClick={handleSaveClick}>저장</Button>
           </Row2>
           <Row3>
-            <TableInput />
+            <TableContainer>
+              <tbody>
+                <Tr>
+                  <FirstTd>원생</FirstTd>
+                  <SecondTd>
+                    <TelInput
+                      type="text"
+                      maxLength={3}
+                      placeholder="010"
+                      value={tel1}
+                      onChange={handleTel1}
+                      ref={telInputRef}
+                    ></TelInput>{" "}
+                    -
+                    <TelInput
+                      type="text"
+                      id="tel"
+                      maxLength={4}
+                      value={tel2}
+                      onChange={handleTel2}
+                    ></TelInput>{" "}
+                    -
+                    <TelInput
+                      type="text"
+                      maxLength={4}
+                      value={tel3}
+                      onChange={handleTel3}
+                    ></TelInput>
+                  </SecondTd>
+                </Tr>
+
+                <Tr>
+                  <FirstTd>학부모</FirstTd>
+                  <SecondTd>
+                    <TelInput
+                      type="text"
+                      maxLength={3}
+                      placeholder="010"
+                      value={parent1}
+                      onChange={handleParent1}
+                      ref={parentInputRef}
+                    ></TelInput>{" "}
+                    -
+                    <TelInput
+                      type="text"
+                      maxLength={4}
+                      value={parent2}
+                      onChange={handleParent2}
+                    ></TelInput>{" "}
+                    -
+                    <TelInput
+                      type="text"
+                      maxLength={4}
+                      value={parent3}
+                      onChange={handleParent3}
+                    ></TelInput>
+                  </SecondTd>
+                </Tr>
+                <Tr>
+                  <FirstTd>가족관계</FirstTd>
+                  <SecondTd>
+                    <form onSubmit={onSubmit}>
+                      <Inp
+                        type="text"
+                        placeholder="형제 자매 정보를 입력해주세요"
+                        onChange={checkValue}
+                        value={family}
+                        // ref={familyInputRef}
+                      />
+                      <Btn>+</Btn>
+                      <p>
+                        {arr.map((item, index) => (
+                          <Li key={index}>{item}</Li>
+                        ))}
+                      </p>
+                    </form>
+                  </SecondTd>
+                </Tr>
+              </tbody>
+            </TableContainer>
+            {/* <TableInput
+              parentInputRef={parentInputRef}
+              telInputRef={telInputRef}
+            /> */}
             <br />
             <br />
-            <SugangTable />
+            {/* <SugangTable /> */}
+            <TableContainer2>
+              <tbody>
+                <Tr>
+                  <FirstTd>수강 과목 및 분반</FirstTd>
+                </Tr>
+                <Tr>
+                  <ThirdTd>
+                    <Row5>
+                      <form onSubmit={onSubmit1}>
+                        <Select
+                          options={[
+                            {
+                              value: "국어",
+                              label: "국어",
+                            },
+                            {
+                              value: "영어",
+                              label: "영어",
+                            },
+                            { value: "수학", label: "수학" },
+                          ]}
+                          onChange={handleSubjectChange}
+                        />{" "}
+                        <Select
+                          options={[
+                            {
+                              value: "국어 김은진A",
+                              label: "국어 김은진A",
+                            },
+                            {
+                              value: "영어 김무무A",
+                              label: "영어 김무무A",
+                            },
+                            { value: "수학 김아개", label: "수학 김아개" },
+                          ]}
+                          onChange={handleTeacherChange}
+                          value={result}
+                        />
+                        <Btn>+</Btn>
+                      </form>
+                    </Row5>
+                    <Result>
+                      {result.map((item, index) => (
+                        <li key={index}>{item}</li>
+                      ))}
+                    </Result>
+                  </ThirdTd>
+                </Tr>
+                <Tr>
+                  <FirstTd>기타 특이 사항</FirstTd>
+                </Tr>
+                <Tr>
+                  <ThirdTd>
+                    <Textarea value={note} onChange={handleNote} />
+                  </ThirdTd>
+                </Tr>
+              </tbody>
+            </TableContainer2>
           </Row3>
         </Right>
       </Body>
