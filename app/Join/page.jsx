@@ -108,7 +108,8 @@ const JoinPage = () => {
   const onSubmitHandler = async (data) => {
     const { name, email, pwd, confirm, sub, tel1, tel2, tel3 } = data;
 
-    const tel = `${tel1} ${tel2} ${tel3}`;
+    const emails = `${email}@${selectedValue}`;
+    const tel = `${tel1}-${tel2}-${tel3}`;
     if (pwd !== confirm) {
       setError("confirm", {
         message: "비밀번호가 일치하지 않습니다.",
@@ -127,7 +128,7 @@ const JoinPage = () => {
     });
     const JoinStudent = {
       user_name: name, // name을 바로 사용
-      user_email: email, // email을 바로 사용
+      user_email: emails, // email을 바로 사용
       user_pwd: pwd, // pwd를 바로 사용
       user_phone: tel, // tel을 사용
       user_major: selectedSubject, // sub를 사용
@@ -137,6 +138,7 @@ const JoinPage = () => {
       .post(`http://localhost:8080/user/signup`, JoinStudent)
       .then(function (response) {
         console.log("회원가입 성공", response.data);
+        sessionStorage.setItem("userId", response.data);
         router.push("/AcademyManagement/StudentManagement/acamember");
       })
       .catch(function (error) {
@@ -188,9 +190,9 @@ const JoinPage = () => {
             <SelectBox
               style={{ height: "30px" }}
               options={[
-                { value: "naver", label: "naver.com" },
-                { value: "google", label: "google.ac.kr" },
-                { value: "gmail", label: "gmail.com" },
+                { value: "naver.com", label: "naver.com" },
+                { value: "google.ac.kr", label: "google.ac.kr" },
+                { value: "gmail.com", label: "gmail.com" },
               ]}
               value={selectedValue}
               onChange={(e) => setSelectedValue(e.target.value)}
@@ -295,7 +297,6 @@ const JoinPage = () => {
               // value={selectedValue}
               value={selectedSubject}
               onChange={(e) => {
-                setSelectedValue(e.target.value);
                 setSelectedSubject(e.target.value);
               }}
             ></SelectBox>
