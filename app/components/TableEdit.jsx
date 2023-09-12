@@ -1,7 +1,7 @@
 import Select from "./Select";
 import styled from "styled-components";
 import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useRecoilState } from "recoil";
 //import { formDataState } from "@/recoil/atom";
 import { numState, emailState } from "@/recoil/atom";
@@ -41,12 +41,12 @@ const TableEdit = ({
   formData,
   setFormData,
   telInputRef,
-  num1,
-  num2,
-  num3,
-  setNum1,
-  setNum2,
-  setNum3,
+  tel1,
+  tel2,
+  tel3,
+  setTel1,
+  setTel2,
+  setTel3,
 }) => {
   const router = useRouter();
 
@@ -59,7 +59,7 @@ const TableEdit = ({
   // const [emailValue, setEmailValue] = useRecoilState(emailState);
 
   const handleTel1Change = (e) => {
-    setNum1(e.target.value);
+    setTel1(e.target.value);
     //formData.tel1(e.target.value);
     //setTelNum(e.target.value);
   };
@@ -78,6 +78,11 @@ const TableEdit = ({
     setFormData(updateFormData);
   };
 
+  useEffect(() => {
+    setTel1(tel1 || ""); // tel1 값이 있으면 사용, 없으면 빈 문자열
+    setTel2(tel2 || ""); // tel2 값이 있으면 사용, 없으면 빈 문자열
+    setTel3(tel3 || ""); // tel3 값이 있으면 사용, 없으면 빈 문자열
+  }, [tel1, tel2, tel3]);
   return (
     <>
       <TableContainer>
@@ -89,22 +94,22 @@ const TableEdit = ({
                 type="text"
                 maxLength={3}
                 ref={telInputRef}
-                value={num1}
+                value={tel1}
                 onChange={handleTel1Change}
               ></Input>{" "}
               -
               <Input
                 type="text"
                 maxLength={4}
-                value={num2}
-                onChange={(e) => setNum2(e.target.value)}
+                value={tel2}
+                onChange={(e) => setTel2(e.target.value)}
               ></Input>{" "}
               -{" "}
               <Input
                 type="text"
                 maxLength={4}
-                value={num3}
-                onChange={(e) => setNum3(e.target.value)}
+                value={tel3}
+                onChange={(e) => setTel3(e.target.value)}
               ></Input>
             </SecondTd>
           </Tr>
