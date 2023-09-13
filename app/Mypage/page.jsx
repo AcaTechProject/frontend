@@ -2,9 +2,17 @@
 import ProfileImage from "../components/ProfileImage";
 import styled from "styled-components";
 import Table from "../components/Table";
-import { useRouter } from "next/navigation";
-import ProfileEmpty from "../components/ProfileEmpty";
-
+//import { useRouter } from "next/router";
+import Link from "next/link";
+//import ProfileImage from "../components/ProfileImage";
+//import Button from "../components/Button";
+import { useRecoilValue } from "recoil";
+import {
+  formDataState,
+  selectedSubjectState,
+  clsState,
+  gradeState,
+} from "@/recoil/atom";
 const Container = styled.div`
   padding: 116px 70px 55px 85px;
 `;
@@ -34,47 +42,47 @@ const P = styled.p`
   font-size: 18px;
 `;
 const Row = styled.div``;
-const Button = styled.button`
-  border-radius: 5px;
-  color: white;
-  background: #6956e5;
-  width: 110px;
-  height: 33px;
-  border: 0;
-`;
+
 const Name = styled.p`
   margin-left: 150px;
   font-size: 18px;
   font-weight: 700;
 `;
 const MyPage = () => {
-  const router = useRouter();
+  // const router = useRouter();
+  const formData = useRecoilValue(formDataState);
+  const selectedSubject = useRecoilValue(selectedSubjectState);
+
+  //const content = useRecoilValue(editedTextState);
+  //const textArea = useRecoilValue(textareaState);
+  const cls = useRecoilValue(clsState);
+  const grade = useRecoilValue(gradeState);
   const tableData1 = [
     {
       title: "전화번호",
-      value: "010-0000-0000",
+      value: formData.tel,
     },
     {
       title: "이메일",
-      value: "email@naver.com",
+      value: formData.email,
     },
   ];
   const tableData2 = [
     {
       title: "담당 과목",
-      value: "국어",
+      value: selectedSubject,
     },
   ];
   const tableData3 = [
     {
       title: "담당 수업",
-      value: "국어 김은진 A",
+      value: cls,
     },
   ];
   const tableData4 = [
     {
       title: "담당 학년",
-      value: "1학년(초등부),3학년(초등부)",
+      value: grade,
     },
   ];
   return (
@@ -84,7 +92,7 @@ const MyPage = () => {
         <Body>
           <Left>
             <ProfileImage />
-            <Name>학생명</Name>
+            <Name>{formData.name}</Name>
           </Left>
 
           <Right>
@@ -104,9 +112,9 @@ const MyPage = () => {
               <h3>담당 학년</h3>
               <Table data={tableData4}></Table>
             </Row>
-            <Button onClick={() => router.push("/Mypage/Edit")}>
-              정보수정
-            </Button>
+            <Link href="/Mypage/Edit">
+              <button type="button"> 정보수정</button>
+            </Link>
           </Right>
         </Body>
       </Container>

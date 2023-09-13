@@ -2,6 +2,8 @@
 import styled from "styled-components";
 import { useState } from "react";
 import Popup from "./Popup";
+import { resultState, noteState } from "@/recoil/atom";
+import { useRecoilValue } from "recoil";
 
 const TableContainer = styled.table`
   border: 1px solid #d3d2d2;
@@ -37,8 +39,11 @@ const Row = styled.div`
   justify-content: center;
   gap: 40px;
 `;
-const attendTable = () => {
+const attendTable = ({ matchData }) => {
   //const [isMessagePopupOpen, setMessagePopupOpen] = useState(false);
+  //수강과목 및 분반 state
+  const studentResult = useRecoilValue(resultState);
+  const studentNote = useRecoilValue(noteState);
   const [isPopupOpen, setPopupOpen] = useState(false);
 
   const openPopup = () => {
@@ -53,16 +58,16 @@ const attendTable = () => {
     console.log("Sending message:", message);
     // 여기에서 실제
   };
-  const tableData = [
-    {
-      title: "수강 과목 및 분반",
-      value: "국어 / 국어 A",
-    },
-    {
-      title: "기타 특이 사항 ",
-      value: "",
-    },
-  ];
+  // const tableData = [
+  //   {
+  //     title: "수강 과목 및 분반",
+  //     value: result,
+  //   },
+  //   {
+  //     title: "기타 특이 사항 ",
+  //     value: note,
+  //   },
+
   return (
     <>
       <TableContainer>
@@ -90,13 +95,13 @@ const attendTable = () => {
             <FirstTd>수강과목 및 분반</FirstTd>
           </Tr>
           <Tr>
-            <SecondTd>국어 / 국어A</SecondTd>
+            <SecondTd>{matchData?.분반}</SecondTd>
           </Tr>
           <Tr>
             <FirstTd>기타 특이 사항</FirstTd>
           </Tr>
           <Tr>
-            <ThirdTd>국어 / 국어A</ThirdTd>
+            <ThirdTd>{matchData?.기타특이사항}</ThirdTd>
           </Tr>
         </tbody>
       </TableContainer>

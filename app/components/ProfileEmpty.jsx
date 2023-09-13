@@ -1,24 +1,20 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
+import {
+  studentNameState,
+  studentBirthState,
+  studentSchoolState,
+  studentGradeState,
+  studentListState,
+  // ... 나머지 Recoil 상태도 가져오기
+} from "@/recoil/atom";
+import { useRecoilValue } from "recoil";
 import SelectBox from "../components/Select";
-//import { Image } from "next/image";
-// import React from "react";
-// import axios from "axios";
 
 import styled from "styled-components";
 import Image from "next/image";
 
-const Label = styled.label`
-  color: #0095f6;
-  font-weight: bold;
-  font-size: 13px;
-  cursor: pointer;
-  display: block;
-  margin-top: 10px;
-  text-align: center;
-  margin-bottom: 10px;
-`;
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -26,12 +22,6 @@ const Container = styled.div`
   width: 350px;
   align-items: center;
   justify-content: center;
-`;
-const InputName = styled.input`
-  width: 180px;
-  height: 30px;
-  border-radius: 5px;
-  border: 1px solid #d3d2d2;
 `;
 const Row = styled.div`
   display: flex;
@@ -58,14 +48,17 @@ const InputImg = styled.input`
   display: none;
 `;
 
-const ProfileEmpty = () => {
+const ProfileEmpty = ({ matchData }) => {
   const [img, setImg] = useState("");
-  const [name, setName] = useState("");
 
-  const nameInputRef = useRef(null);
+  //const nameInputRef = useRef(null);
 
   const imgRef = useRef();
-  const [selectedValue, setSelectedValue] = useState("");
+
+  const studentName = useRecoilValue(studentNameState);
+  const studentBirth = useRecoilValue(studentBirthState);
+  const studentSchool = useRecoilValue(studentSchoolState);
+  const studentGrade = useRecoilValue(studentGradeState);
 
   const handlePick = () => {
     const file = imgRef.current.files[0];
@@ -76,6 +69,10 @@ const ProfileEmpty = () => {
     };
   };
 
+  //console.log("name", studentName);
+
+  //console.log("설마", studentName);
+  //console.log("matchdata", matchData);
   return (
     <Container>
       <Image
@@ -94,18 +91,19 @@ const ProfileEmpty = () => {
         onChange={handlePick}
         ref={imgRef}
       />
-      <h2>이름 (여)</h2>
+      <h2>{matchData?.이름}</h2>
+
       <Row>
         <P>생년월일 |</P>
-        <p style={{ lineHeight: "28px" }}>2000/00/00</p>
+        <p style={{ lineHeight: "28px" }}>{matchData?.생년월일}</p>
       </Row>
-      <Row style={{ marginLeft: "15px" }}>
+      <Row style={{ marginRight: "10px" }}>
         <P>학교 |</P>
-        <p style={{ lineHeight: "28px" }}>00초등학교</p>
+        <p style={{ lineHeight: "28px" }}>{matchData?.학교}</p>
       </Row>
-      <Row style={{ marginRight: "20px" }}>
+      <Row style={{ marginLeft: "8px" }}>
         <P>학년 |</P>
-        <p style={{ lineHeight: "28px" }}>3학년</p>
+        <p style={{ lineHeight: "28px" }}>{matchData?.학년}</p>
       </Row>
     </Container>
   );

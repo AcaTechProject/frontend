@@ -1,5 +1,12 @@
 import React from "react";
+import { useRouter } from "next/navigation";
+import { useRecoilValue } from "recoil";
 import styled from "styled-components";
+import {
+  studentNameState,
+  studentBirthState,
+  studentSchoolState,
+} from "@/recoil/atom";
 
 const TableContainer = styled.table`
   border-collapse: collapse;
@@ -31,7 +38,12 @@ const EmptyRow = styled.tr`
   height: 54px;
 `;
 
-const List = ({ data, headers }) => {
+const StudentList = ({ data, headers, handleStudentInfo }) => {
+  const router = useRouter();
+  const { push, pathname, query } = router;
+  // const studentName = useRecoilValue(studentNameState);
+  // const studentBirth = useRecoilValue(studentBirthState);
+  // const studentSchool = useRecoilValue(studentSchoolState);
   const totalItems = data.length;
   if (totalItems === 0) {
     return (
@@ -53,6 +65,15 @@ const List = ({ data, headers }) => {
       </TableContainer>
     );
   }
+
+  const onTdClick = (id) => {
+    //const id = "1234";
+    router.push(
+      `/AcademyManagement/StudentManagement/acamember/StudentInfo?id=${id.id}`
+    );
+    //  console.log("id", id);
+  };
+
   return (
     <TableContainer>
       <thead>
@@ -65,7 +86,7 @@ const List = ({ data, headers }) => {
       <tbody>
         {data.map((row, index) => (
           <Tr key={index}>
-            <Td>{index + 1}</Td>
+            <Td onClick={() => onTdClick(row)}>{index + 1}</Td>
             {headers.slice(1).map((header, columnIndex) => (
               <Td key={columnIndex}>{row[header]}</Td>
             ))}
@@ -76,4 +97,4 @@ const List = ({ data, headers }) => {
   );
 };
 
-export default List;
+export default StudentList;
