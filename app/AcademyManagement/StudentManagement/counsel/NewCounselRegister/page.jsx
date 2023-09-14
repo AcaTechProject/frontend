@@ -6,23 +6,25 @@ import Button from "@/app/components/Button";
 import Modal from "@/app/components/Modal";
 
 function NewCounselRegister() {
+  const [form, setForm] = useState({
+    st_name: "",
+    st_gender: "female",
+    st_birth: "",
+    st_school: "",
+    st_grade: "1학년",
+    st_paPhone: "",
+    st_phone1: "",
+    st_phone2: "",
+    st_phone3: "",
+    st_paPhone1: "",
+    st_paPhone2: "",
+    st_paPhone3: "",
+    st_className: "국어",
+    st_content: "",
+    st_etc: "",
+  });
+
   const [isOpen, setIsOpen] = useState(false);
-  const [name, setName] = useState("");
-  const [gender, setGender] = useState("female");
-  const [birth, setBirth] = useState("");
-  const [school, setSchool] = useState("");
-  const [grade, setGrade] = useState("");
-  const [className, setClassName] = useState("");
-  const [content, setContent] = useState("");
-  const [etc, setEtc] = useState("");
-
-  const [phone1, setPhone1] = useState("");
-  const [phone2, setPhone2] = useState("");
-  const [phone3, setPhone3] = useState("");
-
-  const [paPhone1, setPaPhone1] = useState("");
-  const [paPhone2, setPaPhone2] = useState("");
-  const [paPhone3, setPaPhone3] = useState("");
 
   const options = {
     method: "GET",
@@ -42,71 +44,40 @@ function NewCounselRegister() {
     fetchData();
   }, []);
 
-  const handleSelectGrade = (e) => {
-    setGrade(e.target.value);
-    console.log(e.target.value);
-  };
+  const handleChange = (e) => {
+    const { name, value } = e.target;
 
-  const handleSelectClass = (e) => {
-    setClassName(e.target.value);
-    console.log(e.target.value);
+    setForm({ ...form, [name]: value });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const phoneNum = `${phone1},${phone2}${phone3}`;
-    const paPhoneNum = `${paPhone1},${paPhone2}${paPhone3}`;
+    const phoneNum = `${form.st_phone1}${form.st_phone2}${form.st_phone3}`;
+    const paPhoneNum = `${form.st_paPhone1}${form.st_paPhone2}${form.st_paPhone3}`;
 
-    fetch(`http://localhost:8080/newconsulting`, {
+    const postOptions = {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        st_name: name,
-        st_gender: gender,
-        st_birth: birth,
-        st_school: school,
-        st_grade: grade,
+        st_name: form.st_name,
+        st_gender: form.st_gender,
+        st_birth: form.st_birth,
+        st_school: form.st_school,
+        st_grade: form.st_grade,
         st_pa_phone: paPhoneNum,
         st_phone: phoneNum,
-        st_class: className,
-        st_content: content,
-        st_etc: etc,
+        st_class: form.st_className,
+        st_content: form.st_content,
+        st_etc: form.st_etc,
       }),
-    })
+    };
+
+    fetch(`http://localhost:8080/newconsulting`, postOptions)
       .then((response) => response.json())
       .then((data) => console.log(data));
-  };
-
-  const handleSelectGender = (e) => {
-    setGender(e.target.value);
-    console.log(gender);
-  };
-
-  const handlePhone1Change = (e) => {
-    setPhone1(e.target.value);
-  };
-
-  const handlePhone2Change = (e) => {
-    setPhone2(e.target.value);
-  };
-
-  const handlePhone3Change = (e) => {
-    setPhone3(e.target.value);
-  };
-
-  const handlePaPhone1Change = (e) => {
-    setPaPhone1(e.target.value);
-  };
-
-  const handlePaPhone2Change = (e) => {
-    setPaPhone2(e.target.value);
-  };
-
-  const handlePaPhone3Change = (e) => {
-    setPaPhone3(e.target.value);
   };
 
   return (
@@ -165,8 +136,8 @@ function NewCounselRegister() {
                     border: "1px solid #d3d2d2",
                     borderRadius: "10px",
                   }}
-                  onChange={(e) => setName(e.target.value)}
-                  value={name}
+                  onChange={handleChange}
+                  value={form.st_name}
                 />
                 <select
                   name="st_gender"
@@ -178,8 +149,8 @@ function NewCounselRegister() {
                     padding: "10px",
                     marginLeft: "10px",
                   }}
-                  onChange={handleSelectGender}
-                  value={gender}
+                  onChange={handleChange}
+                  value={form.st_gender}
                 >
                   <option value="female">여</option>
                   <option value="male">남</option>
@@ -203,8 +174,8 @@ function NewCounselRegister() {
                     paddingLeft: "10px",
                     marginLeft: "20px",
                   }}
-                  onChange={(e) => setBirth(e.target.value)}
-                  value={birth}
+                  onChange={handleChange}
+                  value={form.st_birth}
                 />
               </div>
               <div
@@ -226,8 +197,8 @@ function NewCounselRegister() {
                     paddingLeft: "10px",
                     marginLeft: "20px",
                   }}
-                  onChange={(e) => setSchool(e.target.value)}
-                  value={school}
+                  onChange={handleChange}
+                  value={form.st_school}
                 />
               </div>
               <div
@@ -239,7 +210,7 @@ function NewCounselRegister() {
               >
                 <select
                   name="st_grade"
-                  onChange={handleSelectGrade}
+                  onChange={handleChange}
                   style={{
                     width: "150px",
                     height: "30px",
@@ -247,7 +218,7 @@ function NewCounselRegister() {
                     borderRadius: "10px",
                     padding: "0 10px",
                   }}
-                  value={grade}
+                  value={form.st_grade}
                 >
                   <option value="1학년">1학년</option>
                   <option value="2학년">2학년</option>
@@ -268,25 +239,25 @@ function NewCounselRegister() {
                       <TInput
                         type="text"
                         name="st_phone1"
-                        maxLength={4}
-                        onChange={handlePhone1Change}
-                        value={phone1}
+                        maxLength={3}
+                        onChange={handleChange}
+                        value={form.st_phone1}
                       />
                       <hr style={{ width: "10px", height: "1px" }} />
                       <TInput
                         type="text"
                         name="st_phone2"
                         maxLength={4}
-                        onChange={handlePhone2Change}
-                        value={phone2}
+                        onChange={handleChange}
+                        value={form.st_phone2}
                       />
                       <hr style={{ width: "10px", height: "1px" }} />
                       <TInput
                         type="text"
                         name="st_phone3"
                         maxLength={4}
-                        onChange={handlePhone3Change}
-                        value={phone3}
+                        onChange={handleChange}
+                        value={form.st_phone3}
                       />
                     </Td>
                   </Tr>
@@ -296,23 +267,26 @@ function NewCounselRegister() {
                     <Td>
                       <TInput
                         type="text"
-                        name="st_pa_phone1"
-                        onChange={handlePaPhone1Change}
-                        value={paPhone1}
+                        name="st_paPhone1"
+                        maxLength={3}
+                        onChange={handleChange}
+                        value={form.st_paPhone1}
                       />
                       <hr style={{ width: "10px", height: "1px" }} />
                       <TInput
                         type="text"
-                        name="st_pa_phone2"
-                        onChange={handlePaPhone2Change}
-                        value={paPhone2}
+                        name="st_paPhone2"
+                        maxLength={4}
+                        onChange={handleChange}
+                        value={form.st_paPhone2}
                       />
                       <hr style={{ width: "10px", height: "1px" }} />
                       <TInput
                         type="text"
-                        name="st_pa_phone3"
-                        onChange={handlePaPhone3Change}
-                        value={paPhone3}
+                        name="st_paPhone3"
+                        maxLength={4}
+                        onChange={handleChange}
+                        value={form.st_paPhone3}
                       />
                     </Td>
                   </Tr>
@@ -330,7 +304,7 @@ function NewCounselRegister() {
                     <Td>
                       <select
                         name="st_class"
-                        onChange={handleSelectClass}
+                        onChange={handleChange}
                         style={{
                           margin: "0 auto",
                           width: "89px",
@@ -341,7 +315,7 @@ function NewCounselRegister() {
                           border: "1px solid #d3d2d2",
                           borderRadius: "10px",
                         }}
-                        value={className}
+                        value={form.st_className}
                       >
                         <option value="국어">국어</option>
                         <option value="영어">영어</option>
@@ -360,7 +334,7 @@ function NewCounselRegister() {
                   <Tr>
                     <Td>
                       <textarea
-                        name="etc"
+                        name="st_etc"
                         style={{
                           width: "100%",
                           height: "100%",
@@ -369,8 +343,8 @@ function NewCounselRegister() {
                           paddingLeft: "10px",
                           overflow: "hidden",
                         }}
-                        onChange={(e) => setEtc(e.target.value)}
-                        value={etc}
+                        onChange={handleChange}
+                        value={form.st_etc}
                       ></textarea>
                     </Td>
                   </Tr>
@@ -391,10 +365,10 @@ function NewCounselRegister() {
             >
               상담내용
             </span>
-            {/* 상담내용 서버 처리 방법 논의 */}
             <NewRegisterTextarea
-              onChange={(e) => setContent(e.target.value)}
-              value={content}
+              name="st_content"
+              onChange={handleChange}
+              value={form.st_content}
             ></NewRegisterTextarea>
           </div>
         </form>
