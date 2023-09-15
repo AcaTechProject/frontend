@@ -36,8 +36,9 @@ const ReasonBox = styled.input`
   width: 100px;
 `;
 
-const List = ({ data, onParentClick }) => {
+const List = ({ data = [], onParentClick }) => {
   const [selectedReasonIndex, setSelectedReasonIndex] = useState(null);
+  const [reasonInput, setReasonInput] = useState('');
 
   return (
     <TableContainer>
@@ -52,8 +53,8 @@ const List = ({ data, onParentClick }) => {
       <tbody>
         {data.map((row, index) => (
           <Tr key={index}>
-            <Td>{row.이름}</Td>
-            <Td>{row.분반}</Td>
+            <Td>{row.name}</Td>
+            <Td>{row.className}</Td>
             <Td>
               <button onClick={() => onParentClick(row)}>학부모</button>
             </Td>
@@ -76,7 +77,11 @@ const List = ({ data, onParentClick }) => {
                 기타
               </label>
               {selectedReasonIndex === index && (
-                <ReasonBox placeholder="사유 입력" />
+                <ReasonBox
+                  placeholder="사유 입력"
+                  value={reasonInput}
+                  onChange={(e) => setReasonInput(e.target.value)}
+                />
               )}
             </Td>
           </Tr>
