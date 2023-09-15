@@ -43,8 +43,9 @@ const Nav = () => {
   };
 
   useEffect(() => {
+    const userId = sessionStorage.getItem("userId");
     axios
-      .get(`http://localhost:8080/user/22`)
+      .get(`http://localhost:8080/user/${userId}`)
       .then((response) => {
         setUserData(response.data);
         console.log("success!!", response);
