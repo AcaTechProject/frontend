@@ -17,6 +17,7 @@ import {
   clsState,
   gradeState,
 } from "@/recoil/atom";
+import axios from "axios";
 
 const Container = styled.div`
   padding: 116px 70px 55px 85px;
@@ -97,6 +98,9 @@ const Edit = () => {
   const [formData, setFormData] = useRecoilState(formDataState);
   const [selectedSubject, setSelectedSubject] =
     useRecoilState(selectedSubjectState);
+  const [userData, setUserData] = useState({});
+  // const [userPhone, setUserPhone] = useState({});
+  // const [userEmail, setUserEmail] = useState("");
 
   const telInputRef = useRef(null);
   const clsRef = useRef(null);
@@ -127,25 +131,35 @@ const Edit = () => {
   //     router.push("/Mypage");
   //   }
   // };
+
   const tableData2 = [
     {
       title: "담당 과목",
-      value: selectedSubject,
+      // value: selectedSubject,
+      value: userData.user_major,
     },
   ];
   const handleClick = () => {
     alert("수정이 취소되었습니다");
     router.push("/Mypage");
   };
-  const [num1, setNum1] = useRecoilState(numStateA);
-  const [num2, setNum2] = useRecoilState(numStateB);
-  const [num3, setNum3] = useRecoilState(numStateC);
+  // const [num1, setNum1] = useRecoilState(numStateA);
+  // const [num2, setNum2] = useRecoilState(numStateB);
+  // const [num3, setNum3] = useRecoilState(numStateC);
   const [cls, setCls] = useRecoilState(clsState);
   const [grade, setGrade] = useRecoilState(gradeState);
+
+  const [tel1, setTel1] = useState("");
+  const [tel2, setTel2] = useState("");
+  const [tel3, setTel3] = useState("");
+  const [email, setEmail] = useState("");
+  const [img, setImg] = useState("");
+
   //const text = useRecoilState(editedTextState);
 
   const handleComplete = () => {
-    if (num1 === "" || num2 === "" || num3 === "") {
+    const userId = sessionStorage.getItem("userId");
+    if (tel1 === "" || tel2 === "" || tel3 === "") {
       alert("전화번호를 모두 입력해주세요");
       telInputRef.current.focus();
       //   // 비어있는 입력 필드를 찾아 해당 입력 필드에 초점을 맞춥니다
@@ -153,19 +167,75 @@ const Edit = () => {
       alert("담당수업의 정보를 예시와 같이 입력해주세요.");
       clsRef.current.focus();
     } else {
-      router.push("/Mypage");
+      //router.push("/Mypage");
     }
-    //setContent(content);
-    setFormData(formData);
+
     setSelectedSubject(selectedSubject);
+
+    axios
+      .patch(`http://localhost:8080/user/${userId}`, {
+        // 수정할 데이터를 전달
+        // tel1, tel2, tel3, email 등을 보내면 서버에서 이에 맞게 처리
+        user_phone: `${tel1}-${tel2}-${tel3}`,
+        user_email: email,
+        // user_class: cls,
+        user_grade: grade,
+        user_image: "김경령_수정.jpg",
+        user_class: cls,
+      })
+      .then((response) => {
+        console.log("수정 요청 성공");
+        // 수정 요청 성공 시 처리
+        router.push("/Mypage"); // 수정 완료 후 페이지 이동
+        setTel1(tel1);
+        setTel2(tel2);
+        setTel3(tel3);
+        setEmail(userData.user_email);
+        setCls(userData.user_class);
+        setGrade(userData.user_grade);
+      })
+      .catch((error) => {
+        console.log("수정 요청 실패", error);
+        // 수정 요청 실패 시 처리
+      });
   };
+  //입력한 정보 get 하기
+  useEffect(() => {
+    const userId = sessionStorage.getItem("userId");
+    axios
+      .get(`http://localhost:8080/user/${userId}`)
+      .then((response) => {
+        setUserData(response.data);
+        const userPhone = response.data.user_phone;
+        const [tel1, tel2, tel3] = userPhone.split("-");
+
+        // setUserEmail(userData.user_email);
+
+        setFormData({
+          ...formData,
+
+          email: response.data.user_email,
+        });
+
+        // 추가로 전화번호 데이터 업데이트
+        setTel1(tel1);
+        setTel2(tel2);
+        setTel3(tel3);
+        setEmail(userData.user_email);
+        setCls(userData.user_class);
+        setGrade(userData.user_grade);
+      })
+      .catch((error) => {
+        console.log("수정 요청 실패", error);
+      });
+  }, []);
 
   return (
     <Container>
       <Title>마이 페이지</Title>
       <Body>
         <Left>
-          <ProfileImage />
+          <ProfileImage img={img} />
           <Label htmlFor="profileImg">이미지 추가</Label>
         </Left>
 
@@ -176,12 +246,14 @@ const Edit = () => {
               formData={formData}
               setFormData={setFormData}
               telInputRef={telInputRef}
-              num1={num1}
-              num2={num2}
-              num3={num3}
-              setNum1={setNum1}
-              setNum2={setNum2}
-              setNum3={setNum3}
+              tel1={tel1}
+              tel2={tel2}
+              tel3={tel3}
+              setTel1={setTel1}
+              setTel2={setTel2}
+              setTel3={setTel3}
+              email={email}
+              setEmail={setEmail}
             />
             {/* <TableEdit telInput={telInput}></TableEdit> */}
             {/* <TableEdit telInput={telInput} emailInput={emailInput} />
@@ -217,7 +289,6 @@ const Edit = () => {
                   <FirstTd>담당 학년</FirstTd>
                   <SecondTd>
                     <SubjectIn
-                      placeholder="ex) [국어 김oo A] 괄호 안의 내용과 같이 입력해주세요 "
                       value={grade}
                       onChange={(e) => setGrade(e.target.value)}
                     />
