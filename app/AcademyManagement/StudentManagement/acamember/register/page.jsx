@@ -28,6 +28,8 @@ import {
   noteState,
 } from "@/recoil/atom";
 import { useRecoilValue, useRecoilState } from "recoil";
+import axios from "axios";
+
 const Container = styled.div`
   padding: 116px 70px 55px 85px;
 `;
@@ -239,6 +241,25 @@ const register = () => {
   const telInputRef = useRef(null);
   const parentInputRef = useRef(null);
 
+  //axios state
+  // const [studentInfo,setStudentInfo]=useState({
+  //     st_name:'',
+  //     st_gender:'',
+  //     st_birth:'',
+  //     st_school:'',
+  //     st_grade:'',
+  //     st_phone:'',
+  //     st_etc:'',
+  //     st_image:'',
+  //     pa_phone:'',
+  //     student_family:[]
+  //   }),
+  //   const [message,setMessage]=useState('');
+  //   const [error,setError]=useState(false);
+  //  const [isLoading,setIsLoading]=useState(false);
+
+  // }
+
   // const [family, setFamily] = useRecoilState("");
   //형제관계 입력칸이 변할 배열들 다룸.
 
@@ -278,7 +299,40 @@ const register = () => {
     setFamily("");
   };
 
-  const handleSaveClick = () => {
+  const handleSaveClick = async () => {
+    const newStudentInfo = {
+      name: name,
+      birth: birth,
+      gender: gender,
+      school: school,
+      grade: grade,
+      phone: `${tel1}-${tel2}-${tel3}`,
+      etc: note,
+      image: "image_url",
+      teacher: family,
+      parentPhone: `${parent1}-${parent2}-${parent3}`,
+      st_write: "첫번째",
+      st_update_write: "두번째",
+      familyInfos: arr.map((familyName) => ({
+        fa_name: familyName,
+        fa_memo: "가족 메모",
+      })),
+
+      classInfos: [
+        {
+          class_name: result[0],
+        },
+      ],
+    };
+    axios
+      .post("http://localhost:8080/student", newStudentInfo)
+      .then(function (response) {
+        console.log("성공", response.data);
+      })
+      .catch(function (error) {
+        console.log("error", error);
+      });
+
     if (name === "") {
       alert("학생 정보를 입력해주세요");
       // 이름 입력 필드에 포커스를 이동시킴
@@ -304,6 +358,7 @@ const register = () => {
         id: Date.now(), //일단 등록한 시간으로 학생 정보 구분해놓음.
         이름: name,
         학교: school,
+        성별: gender,
         생년월일: birth,
         학년: grade,
         분반: result,

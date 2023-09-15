@@ -2,7 +2,8 @@ import styled from "styled-components";
 import { useRouter } from "next/navigation";
 import { Link } from "next/link";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 const NavParent = styled.div`
   flex-grow: 1;
@@ -35,10 +36,24 @@ const Container = styled.div`
 const Nav = () => {
   const router = useRouter();
   const [img, setImg] = useState("");
+  const [userData, setUserData] = useState("");
 
   const handleLogin = () => {
     router.push("/Login");
   };
+
+  useEffect(() => {
+    const userId = sessionStorage.getItem("userId");
+    axios
+      .get(`http://localhost:8080/user/${userId}`)
+      .then((response) => {
+        setUserData(response.data);
+        console.log("success!!", response);
+      })
+      .catch((error) => {
+        console.log("요청 실패", error);
+      });
+  }, []);
 
   return (
     <>
@@ -54,7 +69,7 @@ const Nav = () => {
             onClick={() => router.push("/Mypage")}
           />
 
-          <NavUser onClick={handleLogin}>김하늘님</NavUser>
+          <NavUser onClick={handleLogin}>{userData.user_name}님</NavUser>
         </Container>
       </NavParent>
     </>
