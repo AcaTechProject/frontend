@@ -68,7 +68,7 @@ const Attendance = () => {
   const [selectedClass, setSelectedClass] = useState("");
   
   
-
+  const [apiData, setApiData] = useState([]); 
   const [attendanceData, setAttendanceData] = useState([]); // 출결 데이터를 저장할 상태
   const [classId, setClassId] = useState(3); // 클래스 ID 상태
   const handleClassChange = (selectedOption) => {
@@ -108,7 +108,18 @@ const Attendance = () => {
 
   // 나머지 컴포넌트 렌더링 및 이벤트 핸들러 등
   
-  
+  useEffect(() => {
+    // API 호출
+    Axios.get(`http://localhost:8080/user/${classId}/prevclass`)
+      .then((response) => {
+        // API 요청이 성공하면 데이터를 상태에 설정
+        setApiData(response.data);
+      })
+      .catch((error) => {
+        // API 요청이 실패하면 에러 처리
+        console.error("API 호출 중 오류 발생:", error);
+      });
+  }, [classId]); // classId가 변경될 때마다 API 호출
   
   
 
@@ -214,10 +225,10 @@ const Attendance = () => {
 
       {showPastAttendance ? (
   <PastAttendanceList
-    data={attendanceData} // 수정: dummyData 대신에 attendanceData를 사용
+    data={apiData} // API에서 가져온 데이터를 사용
     onRowClick={handlePastAttendanceRowClick}
     currentPage={currentPage}
-    totalPages={Math.ceil(attendanceData.length / itemsPerPage)}
+    totalPages={Math.ceil(apiData.length / itemsPerPage)}
     onPageChange={handlePageChange}
     itemsPerPage={itemsPerPage}
   />
