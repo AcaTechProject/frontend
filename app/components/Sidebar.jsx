@@ -5,7 +5,7 @@ import { useState } from "react";
 import { Menu, SubMenu, MenuItem, Sidebar } from "react-pro-sidebar";
 import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-
+import axios from "axios";
 //css
 const SidebarParent = styled.div`
   margin: 1px 4px 0 0;
@@ -54,14 +54,36 @@ const StyledMenuItem = styled(MenuItem)`
       font-weight: bold;
     `}
 `;
-
 //메뉴 data 배열
 
 const sidebar = () => {
   const router = useRouter();
 
   const [selectedMenu, setSelectedMenu] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  // const [userData,setUserData]=useState("");
+  const handleLogout = () => {
+    axios
+      .get("http://localhost:8080/logout")
+      .then((response) => {
+        console.log("로그아웃 성공", response);
+        sessionStorage.removeItem("userId");
+        router.push("/Login");
+        // sessionStorage.removeItem("userId", response.data);
+
+        // 이후 로그아웃에 따른 필요한 작업을 수행할 수 있습니다.
+      })
+      .catch((error) => {
+        // 로그아웃 실패 처리
+        console.error("로그아웃 실패", error);
+        // 에러 처리 로직을 추가할 수 있습니다.
+      });
+    setIsLoggedIn(true);
+  };
+  const handleLogin = () => {
+    router.push("/Login ");
+  };
   return (
     <>
       <SidebarParent>
@@ -156,8 +178,19 @@ const sidebar = () => {
             </Menu>
           </Sidebar>
         </Body>
-        <Logout>
-          {/* <MdLogout size="20" /> */}
+        {/* {isLoggedIn ? (
+          <Logout onClick={handleLogout}> */}
+        {/* <MdLogout size="20" /> */}
+        {/* <p>로그아웃</p>
+          </Logout>
+        ) : ( */}
+        {/* //no 로그인 */}
+        {/* <Logout onClick={handleLogin}> */}
+        {/* <MdLogout size="20" /> */}
+        {/* <p>로그인</p>
+          </Logout>
+        )} */}
+        <Logout onClick={handleLogout}>
           <p>로그아웃</p>
         </Logout>
       </SidebarParent>
