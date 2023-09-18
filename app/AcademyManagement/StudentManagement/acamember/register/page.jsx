@@ -437,11 +437,17 @@ const register = () => {
   const onSubmit1 = (e) => {
     e.preventDefault();
     if (choice && teacher) {
-      setResult((currentArr) => [`${choice},${teacher}`, ...currentArr]);
+      setResult((currentArr) => [`${teacher}`, ...currentArr]);
       setChoice("");
       setTeacher("");
       setNote("");
     }
+  };
+
+  const handleDelete = (indexToDelete) => {
+    setResult((prevResult) =>
+      prevResult.filter((_, index) => index !== indexToDelete)
+    );
   };
   return (
     <Container>
@@ -662,14 +668,14 @@ const register = () => {
                         <Select
                           options={[
                             {
-                              value: "국어 김은진A",
-                              label: "국어 김은진A",
+                              value: "국어 김민지 A",
+                              label: "국어 김민지 A",
                             },
                             {
-                              value: "영어 김무무A",
-                              label: "영어 김무무A",
+                              value: "영어 김민지 A",
+                              label: "영어 김민지 A",
                             },
-                            { value: "수학 김아개", label: "수학 김아개" },
+                            { value: "수학 김민지 A", label: "수학 김민지 A" },
                           ]}
                           onChange={handleTeacherChange}
                           value={result}
@@ -679,7 +685,13 @@ const register = () => {
                     </Row5>
                     <Result>
                       {result.map((item, index) => (
-                        <li key={index}>{item}</li>
+                        <div
+                          style={{ display: "flex", marginLeft: "40%" }}
+                          key={index}
+                        >
+                          <li>{item}</li>
+                          <Btn onClick={() => handleDelete(index)}>Delete</Btn>
+                        </div>
                       ))}
                     </Result>
                   </ThirdTd>
