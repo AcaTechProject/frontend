@@ -1,11 +1,24 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
 import Select from "../../../components/Select";
 import MessagePopup from "@/app/components/MessagePopup";
 import StudentList from "@/app/components/StudentList";
+import AMBtn from "@/app/components/AMBtn";
+import SMBtn from "@/app/components/SMBtn";
+import { studentListState } from "@/recoil/atom";
+//api 호출
+import axios from "axios";
+
+import {
+  resultState,
+  studentNameState,
+  studentSchoolState,
+} from "@/recoil/atom";
+import { useRecoilValue } from "recoil";
+
 const Container = styled.section`
   padding: 116px 70px 55px 85px;
 `;
@@ -68,36 +81,47 @@ const acamember = () => {
   const router = useRouter();
   const [selectedValue, setSelectedValue] = useState("");
   const [isMessagePopupOpen, setMessagePopupOpen] = useState(false);
+  const result = useRecoilValue(resultState);
+  const studentName = useRecoilValue(studentNameState);
+  const studentSchool = useRecoilValue(studentSchoolState);
 
-  const data = [
-    { 이름: "김길동", 분반: "국어 김은진A", 학교: "코딩초" },
-    { 이름: "김동", 분반: "국어 김은진A", 학교: "코딩초" },
-    { 이름: "길동", 분반: "국어 김은진A", 학교: "코딩초" },
-    { 이름: "김길동", 분반: "국어 김은진A", 학교: "코딩초" },
-    { 이름: "김동", 분반: "국어 김은진A", 학교: "코딩초" },
-    { 이름: "길동", 분반: "국어 김은진A", 학교: "코딩초" },
-    { 이름: "김길동", 분반: "국어 김은진A", 학교: "코딩초" },
-    { 이름: "김동", 분반: "국어 김은진A", 학교: "코딩초" },
-    { 이름: "길동", 분반: "국어 김은진A", 학교: "코딩초" },
-    { 이름: "김길동", 분반: "국어 김은진A", 학교: "코딩초" },
-    { 이름: "김동", 분반: "국어 김은진A", 학교: "코딩초" },
-    { 이름: "길동", 분반: "국어 김은진A", 학교: "코딩초" },
-    { 이름: "김길동", 분반: "국어 김은진A", 학교: "코딩초" },
-    { 이름: "김동", 분반: "국어 김은진A", 학교: "코딩초" },
-    { 이름: "길동", 분반: "국어 김은진A", 학교: "코딩초" },
-    { 이름: "김길동", 분반: "국어 김은진A", 학교: "코딩초" },
-    { 이름: "김동", 분반: "국어 김은진A", 학교: "코딩초" },
-    { 이름: "길동", 분반: "국어 김은진A", 학교: "코딩초" },
-    { 이름: "김길동", 분반: "국어 김은진A", 학교: "코딩초" },
-    { 이름: "김동", 분반: "국어 김은진A", 학교: "코딩초" },
-    { 이름: "길동", 분반: "국어 김은진A", 학교: "코딩초" },
-    { 이름: "김길동", 분반: "국어 김은진A", 학교: "코딩초" },
-    { 이름: "김동", 분반: "국어 김은진A", 학교: "코딩초" },
-    { 이름: "길동", 분반: "국어 김은진A", 학교: "코딩초" },
-    { 이름: "김길동", 분반: "국어 김은진A", 학교: "코딩초" },
-    { 이름: "김동", 분반: "국어 김은진A", 학교: "코딩초" },
-    { 이름: "길동", 분반: "국어 김은진A", 학교: "코딩초" },
-  ];
+  const studentList = useRecoilValue(studentListState);
+  // 학생 정보를 추가하는 함수
+
+  const data = studentList.map((student) => ({
+    id: studentList.id,
+    이름: studentList.studentName,
+    분반: studentList.result,
+    학교: studentList.studentSchool,
+  }));
+
+  const [jsonData, setJsonData] = useState(null);
+  //class_name"을 저장하는 배열을 나타내는 상태
+  const [classList, setClassList] = useState([]);
+
+  const getJsonData = async () => {
+    try {
+      const resp = await axios.get("http://localhost:8080/student/byClass/5");
+      setJsonData(resp.data);
+    } catch (error) {
+      console.error("Error", error);
+    }
+  };
+
+  useEffect(() => {
+    getJsonData();
+  }, []);
+  useEffect(() => {
+    //jsonData가 변경될때마다 렌더링.
+    if (jsonData) {
+      const classNames = jsonData
+        .map((student) => student.classInfos.map((info) => info.class_name))
+        .flat();
+      setClassList(classNames);
+    }
+    //console.log(jsonData);
+  }, [jsonData]);
+
   const headers = ["No", "이름", "분반", "학교"];
 
   const openMessagePopup = () => {
@@ -115,24 +139,42 @@ const acamember = () => {
   const handleSelectChange = (e) => {
     setSelectedValue(e.target.value);
   };
+  const handleStudentInfo = (id) => {
+    router.push("/AcademyManagement/StudentManagement/acamember/StudentInfo");
+    //console.log("id", id);
+  };
+
   return (
     <Container>
-      <p>원생관리 - 학생관리 - 신규상담</p>
+      <p>
+        원생관리 {">"} 학생관리 {">"} 수강생 관리
+      </p>
       <D>
-        <Button>출결관리</Button>
-        <Button>학생관리</Button>
+        <AMBtn />
+        <SMBtn />
       </D>
       <D>
-        <Tab>수강생 관리</Tab>
-        <Tab>신규상담</Tab>
+        <Tab
+          onClick={() =>
+            router.push("/AcademyManagement/StudentManagement/acamember")
+          }
+        >
+          수강생 관리
+        </Tab>
+        <Tab
+          onClick={() =>
+            router.push("/AcademyManagement/StudentManagement/counsel")
+          }
+        >
+          신규상담
+        </Tab>
       </D>
       <Div>
         <Select
-          options={[
-            { value: "kor", label: "국어 김은진A" },
-            { value: "kor", label: "국어 김은진A" },
-            { value: "kor", label: "국어 김은진A" },
-          ]}
+          options={classList.map((className) => ({
+            value: className,
+            label: className,
+          }))}
           value={selectedValue}
           onChange={handleSelectChange}
         />
@@ -144,13 +186,15 @@ const acamember = () => {
         </div>
 
         <div style={{ marginLeft: "62%" }}>
-          <Btn onClick={openMessagePopup}>메시지 발송</Btn>
-          {isMessagePopupOpen && (
-            <MessagePopup
-              onClose={closeMessagePopup}
-              onSend={handleSendMessage}
-            />
-          )}
+          <Btn
+            onClick={() =>
+              router.push(
+                "/AcademyManagement/StudentManagement/acamember/Message/Send"
+              )
+            }
+          >
+            메시지 발송
+          </Btn>
 
           <Btn
             onClick={() =>
@@ -163,15 +207,13 @@ const acamember = () => {
           </Btn>
         </div>
       </Div>
-      <button
-        onClick={() =>
-          router.push(
-            "/AcademyManagement/StudentManagement/acamember/StudentInfo"
-          )
-        }
-      ></button>
+
       {/* 표 넣을 곳 */}
-      <StudentList data={data} headers={headers}></StudentList>
+      <StudentList
+        data={studentList}
+        headers={headers}
+        onTdClick={handleStudentInfo}
+      ></StudentList>
     </Container>
   );
 };

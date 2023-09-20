@@ -16,6 +16,10 @@ const Container = styled.div`
 display: flex,
 flex-direction:column
 `;
+const Wrapper = styled.div`
+  flex: 1;
+  margin-left: 248px;
+`;
 // metadata를 컴포넌트 밖으로 이동시켜서 따로 export
 const metadata = {
   title: "Create Next App",
@@ -33,7 +37,7 @@ export default function RootLayout({ children }) {
             {!hideSidebar && <Sidebar />}
             <Container>
               <Nav />
-              <div style={{ flex: 1, marginLeft: 248 }}>{children}</div>
+              <Wrapper>{children}</Wrapper>
             </Container>
           </RecoilRoot>
         </StyledComponentsRegistry>

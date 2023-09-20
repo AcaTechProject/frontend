@@ -14,6 +14,7 @@ const SidebarParent = styled.div`
   background-color: rgba(236, 234, 254, 0.47);
   height: 100%;
   width: 248px;
+  z-index: 3;
 `;
 
 const Logo = styled.div`
@@ -116,7 +117,7 @@ const sidebar = () => {
                         );
                       }}
                     >
-                      상담 관리
+                      신규 상담
                     </StyledMenuItem>
                   </SubMenu>
                 </SubMenu>

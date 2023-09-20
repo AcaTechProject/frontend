@@ -1,7 +1,7 @@
 import styled, { css } from "styled-components";
 
 const Button = styled.button`
-  border-radius: 10px;
+  border-radius: 7px;
   font-weight: 700;
   width: ${(props) => props.$width};
   height: ${(props) => props.$height};
@@ -12,6 +12,10 @@ const Button = styled.button`
       height: 41px;
       font-weight: 700;
       font-size: 14px;
+      &:hover {
+        color: white;
+        background: #8146ff;
+      }
     `}
   ${(props) =>
     props.$medium &&

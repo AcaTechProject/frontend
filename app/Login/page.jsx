@@ -1,6 +1,7 @@
 "use client";
 import LoginLayout from "./layout";
 import styled from "styled-components";
+import axios from "axios";
 import { useRouter } from "next/navigation";
 import DataTable from "../components/Table";
 import Table2 from "../components/TableInput";
@@ -72,6 +73,23 @@ const LoginPage = () => {
     const { email, pwd } = data;
 
     console.log(data);
+    const LoginStudent = {
+      user_email: email,
+      user_pwd: pwd,
+    };
+
+    axios
+      .post("http://localhost:8080/user/login", LoginStudent)
+      .then(function (response) {
+        console.log("로그인 성공", response.data);
+
+        sessionStorage.setItem("userId", response.data);
+
+        router.push("/AcademyManagement/StudentManagement/acamember");
+      })
+      .catch(function (error) {
+        console.log("error", error);
+      });
   };
   const onErrorHandler = (error) => {
     console.log(error, "error");
@@ -80,6 +98,7 @@ const LoginPage = () => {
   const handleJoin = () => {
     router.push("/Join");
   };
+
   return (
     <LoginBody>
       <h1>prama 로그인</h1>
