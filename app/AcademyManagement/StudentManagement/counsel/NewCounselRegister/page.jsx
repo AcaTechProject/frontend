@@ -8,7 +8,7 @@ import Modal from "@/app/components/Modal";
 function NewCounselRegister() {
   const [form, setForm] = useState({
     st_name: "",
-    st_gender: "female",
+    st_gender: "여",
     st_birth: "",
     st_school: "",
     st_grade: "1학년",
@@ -83,21 +83,28 @@ function NewCounselRegister() {
   return (
     <PageContainer>
       <NewRegisterContainer>
+        <p>
+          원생관리 {">"} 학생관리 {">"} 신규상담 {">"} 상담등록
+        </p>
         <form onSubmit={handleSubmit}>
-          <p>
-            원생관리 {">"} 학생관리 {">"} 신규상담 {">"} 상담등록
-          </p>
           <NewRegisterHeader>
             <NewRegisterBtnWrapper>
-              <Button $secondary $large style={{ marginRight: "25px" }}>
+              <Button
+                type="button"
+                $secondary
+                $large
+                style={{ marginRight: "25px" }}
+              >
                 출결관리
               </Button>
-              <Button $primary $large>
+              <Button type="button" $primary $large>
                 학생관리
               </Button>
             </NewRegisterBtnWrapper>
+
             <NewRegisterBtnWrapper>
               <Button
+                type="button"
                 $tertiary
                 $medium
                 style={{ marginRight: "30px" }}
@@ -105,7 +112,7 @@ function NewCounselRegister() {
               >
                 취소
               </Button>
-              <Button $tertiary $medium onSubmit={handleSubmit}>
+              <Button $tertiary $medium>
                 등록
               </Button>
               {isOpen ? (
@@ -119,6 +126,7 @@ function NewCounselRegister() {
               ) : null}
             </NewRegisterBtnWrapper>
           </NewRegisterHeader>
+
           <NewRegisterBody>
             <NewRegisterInfoLeft>
               <div
@@ -152,8 +160,8 @@ function NewCounselRegister() {
                   onChange={handleChange}
                   value={form.st_gender}
                 >
-                  <option value="female">여</option>
-                  <option value="male">남</option>
+                  <option value="여">여</option>
+                  <option value="남">남</option>
                 </select>
               </div>
               <div
