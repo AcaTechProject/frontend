@@ -38,7 +38,7 @@ const PageNumber = styled.span`
 
 const itemsPerPage = 5; // 페이지당 보여줄 항목 수
 
-const PastAttendanceList = ({ data, onRowClick, currentPage, totalPages, onPageChange }) => {
+const PastAttendanceList = ({data, onRowClick, currentPage, totalPages, onPageChange}) => {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const displayedData = data.slice(startIndex, endIndex);
@@ -48,21 +48,17 @@ const PastAttendanceList = ({ data, onRowClick, currentPage, totalPages, onPageC
       <TableContainer>
         <thead>
           <TableRow>
-            <TableHeader>이름</TableHeader>
-            <TableHeader>일시</TableHeader>
+            <TableHeader>일자</TableHeader>
             <TableHeader>분반</TableHeader>
-            <TableHeader>출결정보</TableHeader>
+            <TableHeader>출결 정보</TableHeader>
           </TableRow>
         </thead>
         <tbody>
-          {displayedData.map((row, index) => (
+          {data.map((row, index) => (
             <TableRow key={index} onClick={() => onRowClick(index)}>
-              <TableData>{row.이름}</TableData>
-              <TableData>{row.일시}</TableData>
-              <TableData>{row.분반}</TableData>
-              <TableData>
-                출석{row.출석} 지각{row.지각} 결석{row.결석} 기타{row.기타}
-              </TableData>
+              <TableData>{row.dateTime}</TableData>
+              <TableData>{row.className}</TableData>
+              <TableData>{row.attendanceInfo}</TableData>
             </TableRow>
           ))}
         </tbody>
@@ -83,5 +79,4 @@ const PastAttendanceList = ({ data, onRowClick, currentPage, totalPages, onPageC
     </div>
   );
 };
-
 export default PastAttendanceList;
