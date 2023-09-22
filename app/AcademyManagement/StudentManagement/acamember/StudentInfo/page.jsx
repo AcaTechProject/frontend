@@ -14,29 +14,19 @@ import MessagePopup from "@/app/components/MessagePopup";
 import Modal from "@/app/components/Modal";
 import SMBtn from "@/app/components/SMBtn";
 import AMBtn from "@/app/components/AMBtn";
+import axios from "axios";
 import { useRecoilValue, useRecoilState, useSetRecoilState } from "recoil";
 
 import {
-  valueState,
   studentNameState,
-  tel1State,
-  tel2State,
-  tel3State,
-  studentTel1State,
-  studentTel2State,
-  studentTel3State,
-  parentTel1State,
-  parentTel2State,
-  parentTel3State,
   studentListState,
-  studentFamilyState,
-  studentArrState,
   studentBirthState,
   studentSchoolState,
   studentGradeState,
 } from "@/recoil/atom";
 
 import Image from "next/image";
+// import { useParams } from "react-router-dom";
 
 const Containe = styled.div`
   display: flex;
@@ -168,27 +158,13 @@ const StudentInfo = () => {
   const router = useRouter();
 
   const studentList = useRecoilValue(studentListState);
-  const [id, setId] = useState("");
+  //const [id, setId] = useState("");
+  const [userData, setUserData] = useState({}); // 빈 객체로 초기화
   const [matchData, setMatchData] = useState();
 
-  //const [studentName, setStudentName] = useRecoilState(studentNameState);
-
-  //const [btn, setBtn] = useState("수강생 관리");
   const [isMessagePopupOpen, setMessagePopupOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
-  const tel1 = useRecoilValue(studentTel1State);
-  const tel2 = useRecoilValue(studentTel2State);
-  const tel3 = useRecoilValue(studentTel3State);
-  const parent1 = useRecoilValue(parentTel1State);
-  const parent2 = useRecoilValue(parentTel2State);
-  const parent3 = useRecoilValue(parentTel3State);
-  const family = useRecoilValue(studentFamilyState);
-  const arr = useRecoilValue(studentArrState);
-  const setStudentName = useSetRecoilState(studentNameState);
-  //const result = useRecoilValue(resultState);
-  //console.log("tel1", tel1);
-  //const studentName = useRecoilValue(studentNameState);
 
   const handleModal = (message) => {
     setModalMessage(message);
@@ -202,6 +178,17 @@ const StudentInfo = () => {
     setIsModalOpen(false);
   };
 
+  const handleDelete = () => {
+    axios
+      .delete(`http://localhost:8080/student/${studentId}`)
+      .then((response) => {
+        console.log("삭제 성공", response.data);
+        router.push("/AcademyManagement/StudentManagement/acamember");
+      })
+      .catch((error) => {
+        console.log("삭제 실패", error);
+      });
+  };
   const openMessagePopup = () => {
     setMessagePopupOpen(true);
   };
@@ -212,38 +199,43 @@ const StudentInfo = () => {
     console.log("sending", message);
   };
 
+  const [familyInfos, setFamilyInfos] = useState([]);
+  const [familyName, setFamilyName] = useState("");
+
+  const url = window.location.href;
+  const urlParts = url.replace("?id=", "");
+  const studentId = urlParts[urlParts.length - 1];
+
   useEffect(() => {
-    const params = window.location.search;
-
-    if (typeof params !== "undefined") {
-      const result = params.replace("?id=", "");
-      const matchedData = studentList.find(
-        (data) => data.id === Number(result)
-      );
-      setId(result);
-      setMatchData(matchedData);
-    }
-  }, [id, matchData, studentList]);
-
-  // console.log("id", id);
-  //console.log("다시한번", matchData?.이름);
-  //console.log("이값임???", setStudentName);
-  //console.log("studentList", studentList);
+    axios
+      .get(`http://localhost:8080/student/${studentId}`)
+      .then((response) => {
+        setUserData(response.data);
+        setFamilyInfos(response.data.familyInfos);
+        setFamilyName(response.data.familyInfos[0].fa_name);
+        console.log("가족", response.data.familyInfos[0].fa_name);
+        console.log("data", response.data);
+      })
+      .catch((error) => {
+        console.log("오류", error);
+      });
+  }, []);
 
   const formattedPhoneNumber = `${matchData?.원생.tel1}-${matchData?.원생.tel2}-${matchData?.원생.tel3}`;
   const formattedParentNumber = `${matchData?.학부모.parent1}-${matchData?.학부모.parent2}-${matchData?.학부모.parent3}`;
+
   const tableData = [
     {
       title: "원생",
-      value: formattedPhoneNumber,
+      value: userData.phone,
     },
     {
       title: "학부모",
-      value: formattedParentNumber,
+      value: userData.parentPhone,
     },
     {
       title: "가족관계",
-      value: matchData?.가족관계,
+      value: familyName,
     },
   ];
 
@@ -266,15 +258,19 @@ const StudentInfo = () => {
       setImg(reader.result);
     };
   };
-  //console.log("원생", formattedParentNumber);
-  //console.log("name", studentName);
-  // console.log("match", matchData);
-  // console.log("stu".studentList);
 
+  const handleMemEdit = () => {
+    const url = window.location.href;
+    const urlParts = url.replace("?id=", "");
+    const studentId = urlParts[urlParts.length - 1];
+    router.push(
+      `/AcademyManagement/StudentManagement/acamember/MemberEdit?id=${studentId}`
+    );
+  };
   return (
     <Container>
       <p>
-        원생관리 {">"} 학생관리 {">"} 수강생 관리 {">"} {matchData?.이름}
+        원생관리 {">"} 학생관리 {">"} 수강생 관리 {">"} {userData.name}
       </p>
       <Rows>
         <AMBtn />
@@ -300,19 +296,19 @@ const StudentInfo = () => {
               onChange={handlePick}
               ref={imgRef}
             />
-            <h2>{matchData?.이름}</h2>
+            <h2>{userData.name}</h2>
 
             <Row>
               <P>생년월일 |</P>
-              <p style={{ lineHeight: "28px" }}>{matchData?.생년월일}</p>
+              <p style={{ lineHeight: "28px" }}>{userData.birth}</p>
             </Row>
             <Row style={{ marginRight: "10px" }}>
               <P>학교 |</P>
-              <p style={{ lineHeight: "28px" }}>{matchData?.학교}</p>
+              <p style={{ lineHeight: "28px" }}>{userData.school}</p>
             </Row>
             <Row style={{ marginLeft: "8px" }}>
               <P>학년 |</P>
-              <p style={{ lineHeight: "28px" }}>{matchData?.학년}</p>
+              <p style={{ lineHeight: "28px" }}>{userData.grade}</p>
             </Row>
           </Containe>
         </Left>
@@ -325,27 +321,22 @@ const StudentInfo = () => {
                 onSend={handleSendMessage}
               />
             )}
-
-            <Button
-              onClick={() =>
-                router.push(
-                  `/AcademyManagement/StudentManagement/acamember/MemberEdit?id=${id}`
-                )
-              }
-            >
-              정보 수정
-            </Button>
+            <Button onClick={handleMemEdit}>정보수정</Button>
 
             <Button onClick={() => handleModal("정말 삭제하시겠습니까?")}>
               학생 삭제
             </Button>
             {isModalOpen && (
-              <Modal onClose={closeModal} message={modalMessage} />
+              <Modal
+                onClose={closeModal}
+                onCheck={handleDelete}
+                message={modalMessage}
+              />
             )}
           </Row2>
           <Row3>
             <Table data={tableData} />
-            <AttendTable matchData={matchData} />
+            <AttendTable />
             <Menu>
               <SubTable>
                 <tbody>
@@ -382,14 +373,14 @@ const StudentInfo = () => {
                         size="25"
                         onClick={() =>
                           router.push(
-                            `/AcademyManagement/StudentManagement/counsel/CounselHistory?id=${id}`
+                            `/AcademyManagement/StudentManagement/counsel/CounselHistory?id=${studentId}`
                           )
                         }
                       />
                       <span
                         onClick={() =>
                           router.push(
-                            `/AcademyManagement/StudentManagement/counsel/CounselHistory?id=${id}`
+                            `/AcademyManagement/StudentManagement/counsel/CounselHistory?id=${studentId}`
                           )
                         }
                       >
