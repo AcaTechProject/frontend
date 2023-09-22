@@ -81,47 +81,69 @@ const acamember = () => {
   const router = useRouter();
   const [selectedValue, setSelectedValue] = useState("");
   const [isMessagePopupOpen, setMessagePopupOpen] = useState(false);
-  const result = useRecoilValue(resultState);
-  const studentName = useRecoilValue(studentNameState);
-  const studentSchool = useRecoilValue(studentSchoolState);
+  const userId = sessionStorage.getItem("userId");
+  let userData = []; // userData를 선언
 
-  const studentList = useRecoilValue(studentListState);
-  // 학생 정보를 추가하는 함수
-
-  const data = studentList.map((student) => ({
-    id: studentList.id,
-    이름: studentList.studentName,
-    분반: studentList.result,
-    학교: studentList.studentSchool,
-  }));
-
-  const [jsonData, setJsonData] = useState(null);
   //class_name"을 저장하는 배열을 나타내는 상태
   const [classList, setClassList] = useState([]);
-
-  const getJsonData = async () => {
-    try {
-      const resp = await axios.get("http://localhost:8080/student/byClass/5");
-      setJsonData(resp.data);
-    } catch (error) {
-      console.error("Error", error);
-    }
-  };
+  //const [userClasses, setUserClasses] = useState([]);
+  // const [selectedClass, setSelectedClass] = useState("");
+  const [userClass, setUserClass] = useState(""); // 사용자의 담당수업 정보
+  const [stuList, setStuList] = useState([]); //학생 이름,분반.학교 정보가 들어있음.
+  const [data, setData] = useState([]);
+  const [userClassId, setUserClassId] = useState(null);
 
   useEffect(() => {
-    getJsonData();
-  }, []);
-  useEffect(() => {
-    //jsonData가 변경될때마다 렌더링.
-    if (jsonData) {
-      const classNames = jsonData
-        .map((student) => student.classInfos.map((info) => info.class_name))
-        .flat();
-      setClassList(classNames);
-    }
-    //console.log(jsonData);
-  }, [jsonData]);
+    //select 부분-> 유저의 담당수업이 불러와짐.
+    axios
+      .get(`http://localhost:8080/user/class/${userId}`)
+      .then((response) => {
+        userData = response.data; // userData에 데이터 저장
+        const classList = [
+          ...new Set(userData.map((student) => student.className)),
+        ];
+        setUserClass(classList[0]); // 기본적으로 첫 번째 수업을 선택하도록 설정
+        setClassList(classList);
+        setSelectedValue(classList[0]); // 기본적으로 첫 번째 수업을 선택하도록 설정
+        console.log("사용자 정보: ", userData);
+        const firstUserClassId = userData[0].classId; // 클래스의 ID를 가져옴
+        setUserClassId(firstUserClassId); // 클래스의 ID를 설정,첫번째 id 받아옴.
+        console.log("id", firstUserClassId);
 
+        const studentsInSelectedClass = userData.filter(
+          (student) => student.classId === firstUserClassId
+        );
+
+        setStuList(studentsInSelectedClass);
+      })
+      .catch((error) => {
+        console.log("요청 실패", error);
+      });
+  }, [userId, userClass]);
+
+  useEffect(() => {
+    if (userClassId !== null) {
+      axios
+        .get(`http://localhost:8080/student/byClass/${userClassId}`)
+        .then((response) => {
+          //setStuList(response.data);
+          // const classId = response.data.classId;
+          const extractedData = response.data.map((student) => ({
+            No: student.no,
+            id: student.studentId,
+            이름: student.name,
+            분반: userClass,
+
+            학교: student.school,
+          }));
+          setStuList(extractedData); // 데이터 업데이트
+          console.log("수업", response.data);
+        })
+        .catch((error) => {
+          console.log("수업 요청 실패", error);
+        });
+    }
+  }, [userClassId]);
   const headers = ["No", "이름", "분반", "학교"];
 
   const openMessagePopup = () => {
@@ -137,11 +159,23 @@ const acamember = () => {
   };
 
   const handleSelectChange = (e) => {
-    setSelectedValue(e.target.value);
+    const selectedClassName = e.target.value;
+    setSelectedValue(selectedClassName);
+
+    // const selectedClassId = classList.find(
+    //   (classItem) => classItem === e.target.value
+    // );
+
+    const studentsInSelectedClass = userData.filter(
+      //   // userData 사용
+      (student) => student.className === selectedClassName
+    );
+    setStuList(studentsInSelectedClass);
   };
-  const handleStudentInfo = (id) => {
-    router.push("/AcademyManagement/StudentManagement/acamember/StudentInfo");
-    //console.log("id", id);
+  const handleStudentInfo = (studentId) => {
+    router.push(
+      `/AcademyManagement/StudentManagement/acamember/StudentInfo?id=${studentId}`
+    );
   };
 
   return (
@@ -171,9 +205,9 @@ const acamember = () => {
       </D>
       <Div>
         <Select
-          options={classList.map((className) => ({
-            value: className,
-            label: className,
+          options={classList.map((userClass) => ({
+            value: userClass,
+            label: userClass,
           }))}
           value={selectedValue}
           onChange={handleSelectChange}
@@ -181,7 +215,7 @@ const acamember = () => {
         <div style={{ display: "flex" }}>
           <Total />
           <p style={{ fontSize: "13px", color: "#787486", marginTop: "22px" }}>
-            총 {data.length}명
+            총 {stuList.length}명
           </p>
         </div>
 
@@ -210,7 +244,7 @@ const acamember = () => {
 
       {/* 표 넣을 곳 */}
       <StudentList
-        data={studentList}
+        data={stuList}
         headers={headers}
         onTdClick={handleStudentInfo}
       ></StudentList>
