@@ -62,11 +62,11 @@ const PageRegister = () => {
   const [studentList, setStudentList] = useRecoilState(studentListState);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
-  const [sangdam, setSangdam] = useRecoilState(sangdamState);
-  const [daesang, setDaesang] = useRecoilState(daesangState);
+  const [userData, setUserData] = useState({});
+  const [sangdam, setSangdam] = useState("");
+  const [daesang, setDaesang] = useState("");
   const [content, setContent] = useRecoilState(contentState);
-  //const [counsel, setCounsel] = useRecoilState(counselListState);
-  //const [content, setContent] = useRecoilState(contentState);
+  const [counsel, setCounsel] = useRecoilState(counselListState);
 
   // const sangdamRef = useRef(null);
   // const daesangRef = useRef(null);
@@ -117,21 +117,21 @@ const PageRegister = () => {
   };
 
   useEffect(() => {
-    const params = window.location.search;
+    axios
+      .get(`http://localhost:8080/student/${studentId}`)
+      .then((response) => {
+        setUserData(response.data);
 
-    if (typeof params !== "undefined") {
-      const result = params.replace("?id=", "");
-      const matchedData = studentList.find(
-        (data) => data.id === Number(result)
-      );
-      setId(result);
-      setMatchData(matchedData);
-    }
-  }, [id, matchData, studentList]);
+        console.log("data", response.data);
+      })
+      .catch((error) => {
+        console.log("오류", error);
+      });
+  }, []);
   return (
     <Container>
       <p>
-        원생관리 {">"} 학생관리 {">"} 수강생 관리 {">"} {matchData?.이름}
+        원생관리 {">"} 학생관리 {">"} 수강생 관리 {">"} {userData.name}
         {">"} 상담관리 {">"} 상담등록
       </p>
 
