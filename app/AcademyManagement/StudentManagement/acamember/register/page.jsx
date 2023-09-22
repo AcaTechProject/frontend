@@ -3,31 +3,11 @@ import React from "react";
 import ProfileImage from "@/app/components/ProfileImage";
 import styled from "styled-components";
 import { useState, useEffect, useRef } from "react";
-import SugangTable from "@/app/components/SugangTable";
 import { useRouter } from "next/navigation";
 import SelectBox from "@/app/components/LongSelect";
 import Select from "@/app/components/Select";
 import SMBtn from "@/app/components/SMBtn";
 import AMBtn from "@/app/components/AMBtn";
-import {
-  studentNameState,
-  studentBirthState,
-  studentSchoolState,
-  studentGradeState,
-  studentListState,
-  studentTel1State,
-  studentTel2State,
-  studentTel3State,
-  parentTel1State,
-  parentTel2State,
-  parentTel3State,
-  studentFamilyState,
-  studentArrState,
-  familyState,
-  resultState,
-  noteState,
-} from "@/recoil/atom";
-import { useRecoilValue, useRecoilState } from "recoil";
 import axios from "axios";
 
 const Container = styled.div`
@@ -221,50 +201,9 @@ const register = () => {
   const [note, setNote] = useState("");
   const [result, setResult] = useState([]);
 
-  //recoil 상태 사용하기!
-  const [studentName, setStudentName] = useRecoilState(studentNameState);
-  const [studentBirth, setStudentBirth] = useRecoilState(studentBirthState);
-  const [studentSchool, setStudentSchool] = useRecoilState(studentSchoolState);
-  const [studentGrade, setStudentGrade] = useRecoilState(studentGradeState);
-  const [studentList, setStudentList] = useRecoilState(studentListState);
-  const [studentTel1, setStudentTel1] = useRecoilState(studentTel1State);
-  const [studentTel2, setStudentTel2] = useRecoilState(studentTel2State);
-  const [studentTel3, setStudentTel3] = useRecoilState(studentTel3State);
-  const [parentTel1, setParentTel1] = useRecoilState(parentTel1State);
-  const [parentTel2, setParentTel2] = useRecoilState(parentTel2State);
-  const [parentTel3, setParentTel3] = useRecoilState(parentTel3State);
-  const [studentFamily, setStudentFamily] = useRecoilState(studentFamilyState);
-  const [studentArr, setStudentArr] = useRecoilState(studentArrState);
-  const [studentNote, setStudentNote] = useRecoilState(noteState);
-  const [studentResult, setStudentResult] = useRecoilState(resultState);
   //const nameInputRef = useRef(null);
   const telInputRef = useRef(null);
   const parentInputRef = useRef(null);
-
-  //axios state
-  // const [studentInfo,setStudentInfo]=useState({
-  //     st_name:'',
-  //     st_gender:'',
-  //     st_birth:'',
-  //     st_school:'',
-  //     st_grade:'',
-  //     st_phone:'',
-  //     st_etc:'',
-  //     st_image:'',
-  //     pa_phone:'',
-  //     student_family:[]
-  //   }),
-  //   const [message,setMessage]=useState('');
-  //   const [error,setError]=useState(false);
-  //  const [isLoading,setIsLoading]=useState(false);
-
-  // }
-
-  // const [family, setFamily] = useRecoilState("");
-  //형제관계 입력칸이 변할 배열들 다룸.
-
-  // const value = useRecoilValue(valueState);
-  //const result = useRecoilValue(resultState);
 
   const handleTel1 = (event) => {
     setTel1(event.target.value);
@@ -382,22 +321,6 @@ const register = () => {
       //학생 정보를 등록하면 기존 studentList에 추가됨.
       setStudentList((prevStudentList) => [...prevStudentList, newStudent]);
 
-      // Recoil 상태 업데이트
-      setStudentName(name);
-      setStudentBirth(birth);
-      setStudentSchool(school);
-      setStudentGrade(grade);
-      setStudentTel1(tel1);
-      setStudentTel2(tel2);
-      setStudentTel3(tel3);
-      setParentTel1(parent1);
-      setParentTel2(parent2);
-      setParentTel3(parent3);
-      setStudentFamily(family);
-      setStudentArr(arr);
-      setStudentNote(note);
-      setStudentResult(result);
-
       // 유효성 검사를 모두 통과한 경우에만 다음 경로로 이동
       router.push("/AcademyManagement/StudentManagement/acamember");
 
@@ -443,6 +366,7 @@ const register = () => {
       setNote("");
     }
   };
+  console.log("array", currentArr);
 
   const handleDelete = (indexToDelete) => {
     setResult((prevResult) =>
@@ -476,8 +400,8 @@ const register = () => {
               style
               id="gender"
               options={[
-                { value: "woman", label: "여" },
-                { value: "man", label: "남" },
+                { value: "여", label: "여" },
+                { value: "남", label: "남" },
               ]}
               value={gender}
               onChange={handleSelectChange}
@@ -635,13 +559,9 @@ const register = () => {
                 </Tr>
               </tbody>
             </TableContainer>
-            {/* <TableInput
-              parentInputRef={parentInputRef}
-              telInputRef={telInputRef}
-            /> */}
+
             <br />
             <br />
-            {/* <SugangTable /> */}
             <TableContainer2>
               <tbody>
                 <Tr>
