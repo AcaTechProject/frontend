@@ -1,9 +1,10 @@
 //가로 표
 import styled from "styled-components";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Popup from "./Popup";
 import { resultState, noteState } from "@/recoil/atom";
 import { useRecoilValue } from "recoil";
+import axios from "axios";
 
 const TableContainer = styled.table`
   border: 1px solid #d3d2d2;
@@ -39,12 +40,15 @@ const Row = styled.div`
   justify-content: center;
   gap: 40px;
 `;
-const attendTable = ({ matchData }) => {
+const attendTable = () => {
   //const [isMessagePopupOpen, setMessagePopupOpen] = useState(false);
   //수강과목 및 분반 state
   const studentResult = useRecoilValue(resultState);
   const studentNote = useRecoilValue(noteState);
   const [isPopupOpen, setPopupOpen] = useState(false);
+  const [userData, setUserData] = useState({}); // 빈 객체로 초기화
+  const [classInfos, setClassInfos] = useState([]);
+  const [className, setClassName] = useState("");
 
   const openPopup = () => {
     setPopupOpen(true);
@@ -67,6 +71,23 @@ const attendTable = ({ matchData }) => {
   //     title: "기타 특이 사항 ",
   //     value: note,
   //   },
+  useEffect(() => {
+    const url = window.location.href;
+    const urlParts = url.replace("?id=", "");
+    const studentId = urlParts[urlParts.length - 1];
+    axios
+      .get(`http://localhost:8080/student/${studentId}`)
+
+      .then((response) => {
+        setUserData(response.data);
+        setClassInfos(response.data.classInfos);
+        setClassName(response.data.classInfos[0].class_name);
+        console.log("data", response.data);
+      })
+      .catch((error) => {
+        console.log("오류", error);
+      });
+  }, []);
 
   return (
     <>
@@ -95,13 +116,13 @@ const attendTable = ({ matchData }) => {
             <FirstTd>수강과목 및 분반</FirstTd>
           </Tr>
           <Tr>
-            <SecondTd>{matchData?.분반}</SecondTd>
+            <SecondTd>{className}</SecondTd>
           </Tr>
           <Tr>
             <FirstTd>기타 특이 사항</FirstTd>
           </Tr>
           <Tr>
-            <ThirdTd>{matchData?.기타특이사항}</ThirdTd>
+            <ThirdTd>{userData.etc}</ThirdTd>
           </Tr>
         </tbody>
       </TableContainer>
