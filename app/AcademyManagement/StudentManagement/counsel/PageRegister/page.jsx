@@ -8,14 +8,7 @@ import { useRouter } from "next/navigation";
 import LongSelect from "@/app/components/LongSelect";
 import Modal from "@/app/components/Modal";
 import Table from "@/app/components/Table";
-import { useRecoilState, useRecoilValue } from "recoil";
-import {
-  daesangState,
-  sangdamState,
-  contentState,
-  counselListState,
-  studentListState,
-} from "@/recoil/atom";
+import axios from "axios";
 
 import Button from "@/app/components/Button";
 const Container = styled.div`
@@ -58,19 +51,22 @@ const Textarea = styled.textarea`
 const PageRegister = () => {
   const router = useRouter();
   const [id, setId] = useState("");
-  const [matchData, setMatchData] = useState("");
-  const [studentList, setStudentList] = useRecoilState(studentListState);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const [userData, setUserData] = useState({});
   const [sangdam, setSangdam] = useState("");
   const [daesang, setDaesang] = useState("");
-  const [content, setContent] = useRecoilState(contentState);
-  const [counsel, setCounsel] = useRecoilState(counselListState);
+  const [content, setContent] = useState("");
+  const [counsel, setCounsel] = useState("");
 
-  // const sangdamRef = useRef(null);
-  // const daesangRef = useRef(null);
-  // const contentRef = useRef(null);
+  const sangdamRef = useRef(null);
+  const daesangRef = useRef(null);
+  const contentRef = useRef(null);
+
+  const url = window.location.href;
+  const urlParts = url.replace("?id=", "");
+  const studentId = urlParts[urlParts.length - 1];
 
   const handleModal = (message) => {
     setIsModalOpen(true);
@@ -89,22 +85,6 @@ const PageRegister = () => {
     );
   };
 
-  const handleRegister = () => {
-    if (sangdam === "") {
-      alert("상담과목을 선택해주세요");
-
-      return;
-    } else if (daesang === "") {
-      alert("상담대상을 선택해주세요");
-    } else if (content === "") {
-      alert("상담 내용을 입력해주세요");
-      // contentRef.current.focus();
-    } else {
-      router.push(
-        `/AcademyManagement/StudentManagement/counsel/CounselDetail?id=${id}`
-      );
-    }
-  };
   const handleSubject = (e) => {
     setSangdam(e.target.value);
   };
@@ -128,6 +108,42 @@ const PageRegister = () => {
         console.log("오류", error);
       });
   }, []);
+
+  const handleRegister = () => {
+    if (sangdam === "") {
+      alert("상담과목을 선택해주세요");
+    } else if (daesang === "") {
+      alert("상담대상을 선택해주세요");
+    } else if (content === "") {
+      alert("상담 내용을 입력해주세요");
+    } else {
+      router.push(
+        `/AcademyManagement/StudentManagement/counsel/CounselDetail?id=${studentId}`
+      );
+    }
+
+    const counselInfo = {
+      user: {
+        id: studentId,
+      },
+      con_class: sangdam,
+      con_content: content,
+      con_teacher: userData.name,
+      con_who: daesang,
+    };
+    axios
+      .post(
+        `http://localhost:8080/student/${studentId}/consulting`,
+        counselInfo
+      )
+      .then((response) => {
+        console.log("상담 정보 저장성공", response.data);
+      })
+      .catch(function (error) {
+        console.log("error", error);
+      });
+  };
+
   return (
     <Container>
       <p>
@@ -137,8 +153,7 @@ const PageRegister = () => {
 
       <Body>
         <Left>
-          {/* <input type="text" value={input} onChange={handleInput}></input> */}
-          <ProfileEmpty matchData={matchData} />
+          <ProfileEmpty />
         </Left>
         <Right>
           <Row2>
@@ -174,7 +189,6 @@ const PageRegister = () => {
               { value: "수학", label: "수학" },
             ]}
             value={sangdam}
-            // ref={sangdamRef}
             onChange={handleSubject}
           />
           <p>상담 대상</p>
@@ -185,7 +199,6 @@ const PageRegister = () => {
               { value: "학부모", label: "학부모" },
             ]}
             value={daesang}
-            // ref={daesangRef}
             onChange={handleDaesang}
           />
           <p>상담 내용</p>
