@@ -1,19 +1,11 @@
 "use client";
 
-import { useState, useRef } from "react";
-import {
-  studentNameState,
-  studentBirthState,
-  studentSchoolState,
-  studentGradeState,
-  studentListState,
-  // ... 나머지 Recoil 상태도 가져오기
-} from "@/recoil/atom";
-import { useRecoilValue } from "recoil";
+import { useState, useRef, useEffect } from "react";
 import SelectBox from "../components/Select";
 
 import styled from "styled-components";
 import Image from "next/image";
+import axios from "axios";
 
 const Container = styled.div`
   display: flex;
@@ -50,15 +42,13 @@ const InputImg = styled.input`
 
 const ProfileEmpty = ({ matchData }) => {
   const [img, setImg] = useState("");
+  const [userData, setUserData] = useState({});
 
   //const nameInputRef = useRef(null);
-
   const imgRef = useRef();
-
-  const studentName = useRecoilValue(studentNameState);
-  const studentBirth = useRecoilValue(studentBirthState);
-  const studentSchool = useRecoilValue(studentSchoolState);
-  const studentGrade = useRecoilValue(studentGradeState);
+  const url = window.location.href;
+  const urlParts = url.replace("?id=", "");
+  const studentId = urlParts[urlParts.length - 1];
 
   const handlePick = () => {
     const file = imgRef.current.files[0];
@@ -69,10 +59,16 @@ const ProfileEmpty = ({ matchData }) => {
     };
   };
 
-  //console.log("name", studentName);
-
-  //console.log("설마", studentName);
-  //console.log("matchdata", matchData);
+  useEffect(() => {
+    axios
+      .get(`http://localhost:8080/student/${studentId}`)
+      .then((response) => {
+        setUserData(response.data);
+      })
+      .catch((error) => {
+        console.log("오류", error);
+      });
+  }, []);
   return (
     <Container>
       <Image
@@ -91,19 +87,19 @@ const ProfileEmpty = ({ matchData }) => {
         onChange={handlePick}
         ref={imgRef}
       />
-      <h2>{matchData?.이름}</h2>
+      <h2>{userData.name}</h2>
 
       <Row>
         <P>생년월일 |</P>
-        <p style={{ lineHeight: "28px" }}>{matchData?.생년월일}</p>
+        <p style={{ lineHeight: "28px" }}>{userData.birth}</p>
       </Row>
       <Row style={{ marginRight: "10px" }}>
         <P>학교 |</P>
-        <p style={{ lineHeight: "28px" }}>{matchData?.학교}</p>
+        <p style={{ lineHeight: "28px" }}>{userData.school}</p>
       </Row>
-      <Row style={{ marginLeft: "8px" }}>
+      <Row style={{ marginRight: "28px" }}>
         <P>학년 |</P>
-        <p style={{ lineHeight: "28px" }}>{matchData?.학년}</p>
+        <p style={{ lineHeight: "28px" }}>{userData.grade}</p>
       </Row>
     </Container>
   );
