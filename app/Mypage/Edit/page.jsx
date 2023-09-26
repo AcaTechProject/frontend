@@ -146,7 +146,7 @@ const Edit = () => {
   // const [num1, setNum1] = useRecoilState(numStateA);
   // const [num2, setNum2] = useRecoilState(numStateB);
   // const [num3, setNum3] = useRecoilState(numStateC);
-  const [cls, setCls] = useRecoilState(clsState);
+  const [cls, setCls] = useState("");
   const [grade, setGrade] = useRecoilState(gradeState);
 
   const [tel1, setTel1] = useState("");
@@ -155,10 +155,11 @@ const Edit = () => {
   const [email, setEmail] = useState("");
   const [img, setImg] = useState("");
 
-  //const text = useRecoilState(editedTextState);
-
   const handleComplete = () => {
     const userId = sessionStorage.getItem("userId");
+    const formData = new FormData();
+    //formData.append("image", selectedFile);
+
     if (tel1 === "" || tel2 === "" || tel3 === "") {
       alert("전화번호를 모두 입력해주세요");
       telInputRef.current.focus();
@@ -167,7 +168,7 @@ const Edit = () => {
       alert("담당수업의 정보를 예시와 같이 입력해주세요.");
       clsRef.current.focus();
     } else {
-      //router.push("/Mypage");
+      router.push("/Mypage");
     }
 
     setSelectedSubject(selectedSubject);
@@ -178,7 +179,7 @@ const Edit = () => {
         // tel1, tel2, tel3, email 등을 보내면 서버에서 이에 맞게 처리
         user_phone: `${tel1}-${tel2}-${tel3}`,
         user_email: email,
-        // user_class: cls,
+
         user_grade: grade,
         user_image: "김경령_수정.jpg",
         user_class: cls,
@@ -186,19 +187,21 @@ const Edit = () => {
       .then((response) => {
         console.log("수정 요청 성공");
         // 수정 요청 성공 시 처리
-        router.push("/Mypage"); // 수정 완료 후 페이지 이동
+        // router.push("/Mypage"); // 수정 완료 후 페이지 이동
         setTel1(tel1);
         setTel2(tel2);
         setTel3(tel3);
         setEmail(userData.user_email);
         setCls(userData.user_class);
         setGrade(userData.user_grade);
+        console.log("수업", userData.user_class);
       })
       .catch((error) => {
         console.log("수정 요청 실패", error);
         // 수정 요청 실패 시 처리
       });
   };
+
   //입력한 정보 get 하기
   useEffect(() => {
     const userId = sessionStorage.getItem("userId");
@@ -226,7 +229,7 @@ const Edit = () => {
         setGrade(userData.user_grade);
       })
       .catch((error) => {
-        console.log("수정 요청 실패", error);
+        console.log("오류", error);
       });
   }, []);
 
