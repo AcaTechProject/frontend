@@ -1,6 +1,8 @@
-import React from "react";
+"use client";
+import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useRecoilValue } from "recoil";
+
 import styled from "styled-components";
 import {
   studentNameState,
@@ -40,11 +42,20 @@ const EmptyRow = styled.tr`
 
 const StudentList = ({ data, headers, handleStudentInfo }) => {
   const router = useRouter();
+  // const [currentPage, setCurrentPage] = useState(5);
+  // const itemsPerPage = 6;
+
+  // const startIndex = (currentPage - 1) * itemsPerPage;
+  // const endIndex = startIndex + itemsPerPage;
+  // const displayedData = data.slice(startIndex, endIndex);
+
   const { push, pathname, query } = router;
-  // const studentName = useRecoilValue(studentNameState);
-  // const studentBirth = useRecoilValue(studentBirthState);
-  // const studentSchool = useRecoilValue(studentSchoolState);
   const totalItems = data.length;
+
+  const url = window.location.href;
+  const urlParts = url.replace("?id=", "");
+  const studentId = urlParts[urlParts.length - 1];
+
   if (totalItems === 0) {
     return (
       <TableContainer>
@@ -68,9 +79,11 @@ const StudentList = ({ data, headers, handleStudentInfo }) => {
 
   const onTdClick = (id) => {
     //const id = "1234";
+
     router.push(
-      `/AcademyManagement/StudentManagement/acamember/StudentInfo?id=${id.id}`
+      `/AcademyManagement/StudentManagement/acamember/StudentInfo?id=${studentId}`
     );
+
     //  console.log("id", id);
   };
 
