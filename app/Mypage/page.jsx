@@ -54,11 +54,6 @@ const Name = styled.p`
 const MyPage = () => {
   const router = useRouter();
 
-  const formData = useRecoilValue(formDataState);
-  const selectedSubject = useRecoilValue(selectedSubjectState);
-  const cls = useRecoilValue(clsState);
-  const grade = useRecoilValue(gradeState);
-
   const [userData, setUserData] = useState({}); // 빈 객체로 초기화
   const [url2, setUrl2] = useState();
 
@@ -70,6 +65,7 @@ const MyPage = () => {
       .get(`http://localhost:8080/user/${userId}`)
       .then((response1) => {
         setUserData(response1.data);
+        console.log("여기에?", response1.data);
       })
       .catch((error) => console.log("요청 실패", error));
 
@@ -102,7 +98,8 @@ const MyPage = () => {
   const tableData3 = [
     {
       title: "담당 수업",
-      value: setUrl2.className,
+      // value: setUrl2.classData,
+      value: url2,
     },
   ];
   const tableData4 = [
