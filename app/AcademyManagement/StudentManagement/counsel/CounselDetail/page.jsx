@@ -5,16 +5,8 @@ import styled from "styled-components";
 import { useState, useEffect } from "react";
 
 import { useRouter } from "next/navigation";
-
+import axios from "axios";
 import Modal from "@/app/components/Modal";
-import { useRecoilState, useRecoilValue } from "recoil";
-import {
-  inputAtom,
-  sangdamState,
-  daesangState,
-  contentState,
-  studentListState,
-} from "@/recoil/atom";
 
 const Container = styled.div`
   padding: 116px 70px 55px 85px;
@@ -81,19 +73,10 @@ const Content = styled.div`
 const CounselDetail = () => {
   const router = useRouter();
   const [id, setId] = useState("");
-  const [matchData, setMatchData] = useState("");
-  const [studentList, setStudentList] = useRecoilState(studentListState);
+  const [userData, setUserData] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
-
-  const content = useRecoilValue(inputAtom);
-
-  const selectSubject = useRecoilValue(sangdamState);
-  const selectDaesang = useRecoilValue(daesangState);
-
-  const selectContent = useRecoilValue(contentState);
-  //const [input, setInput] = useRecoilState(inputAtom);
-
+  const [consultInfo, setConsultInfo] = useState({});
   const handleModal = (message) => {
     setModalMessage(message);
     setIsModalOpen(true);
@@ -105,41 +88,51 @@ const CounselDetail = () => {
   const closeModal = () => {
     setIsModalOpen(false);
   };
-  //   const handleContent = (e) => {
-  //     setContent(e.target.value);
-  //   };
+
+  const url = window.location.href;
+  const urlParts = url.replace("?id=", "");
+  const studentId = urlParts[urlParts.length - 1];
+
   const handleSaveClick = () => {};
-  useEffect(() => {}, [selectSubject]);
+
   useEffect(() => {
-    const params = window.location.search;
-
-    if (typeof params !== "undefined") {
-      const result = params.replace("?id=", "");
-      const matchedData = studentList.find(
-        (data) => data.id === Number(result)
-      );
-      setId(result);
-      setMatchData(matchedData);
-    }
-  }, [id, matchData, studentList]);
-
+    axios
+      .get(`http://localhost:8080/student/${studentId}`)
+      .then((response) => {
+        setUserData(response.data);
+      })
+      .catch((error) => {
+        console.log("오류", error);
+      });
+  }, []);
+  useEffect(() => {
+    axios
+      .get(`http://localhost:8080/student/${studentId}/consulting/32`)
+      .then((response) => {
+        setConsultInfo(response.data);
+        console.log("상담 불러오기 성공", response.data);
+      })
+      .catch((error) => {
+        console.log("오류", error);
+      });
+  });
   return (
     <Container>
       <p>
         원생관리 {">"} 학생관리 {">"} 수강생 관리 {">"}
-        {matchData?.이름} {">"} 상담관리 {">"} 상담내역
+        {userData.name} {">"} 상담관리 {">"} 상담내역
       </p>
 
       <Body>
         <Left>
-          <ProfileEmpty matchData={matchData} />
+          <ProfileEmpty />
         </Left>
         <Right>
           <Row2>
             <Button
               onClick={() =>
                 router.push(
-                  `/AcademyManagement/StudentManagement/counsel/CounselEdit?id=${id}`
+                  `/AcademyManagement/StudentManagement/counsel/CounselEdit?id=${studentId}`
                 )
               }
             >
@@ -155,7 +148,7 @@ const CounselDetail = () => {
             <Button
               onClick={() =>
                 router.push(
-                  `/AcademyManagement/StudentManagement/counsel/CounselHistory?id=${id}`
+                  `/AcademyManagement/StudentManagement/counsel/CounselHistory?id=${studentId}`
                 )
               }
             >
@@ -164,16 +157,16 @@ const CounselDetail = () => {
           </Row2>
           <Row>
             <P>상담 과목</P>
-            <p style={{ color: "#6B7280" }}>{selectSubject}</p>
+            <p style={{ color: "#6B7280" }}>{consultInfo.con_class}</p>
           </Row>
           <Row>
             {" "}
             <P>상담 대상</P>
-            <p style={{ color: "#6B7280" }}>{selectDaesang}</p>
+            <p style={{ color: "#6B7280" }}>{consultInfo.con_teacher}</p>
           </Row>
 
           <P>상담 내용</P>
-          <Content>{selectContent}</Content>
+          <Content>{consultInfo.con_content}</Content>
         </Right>
       </Body>
     </Container>
