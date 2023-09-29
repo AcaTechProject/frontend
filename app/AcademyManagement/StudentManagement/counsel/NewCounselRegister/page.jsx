@@ -1,11 +1,13 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { styled } from "styled-components";
 import Button from "@/app/components/Button";
 import Modal from "@/app/components/Modal";
 
 function NewCounselRegister() {
+  const router = useRouter();
   const [form, setForm] = useState({
     st_name: "",
     st_gender: "여",
@@ -25,24 +27,6 @@ function NewCounselRegister() {
   });
 
   const [isOpen, setIsOpen] = useState(false);
-
-  const options = {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(),
-  };
-
-  const fetchData = async () => {
-    const resp = await fetch(`http://localhost:8080/newconsulting`, options);
-    const studentsInfo = await resp.json();
-    return console.log(studentsInfo);
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -77,7 +61,12 @@ function NewCounselRegister() {
 
     fetch(`http://localhost:8080/newconsulting`, postOptions)
       .then((response) => response.json())
-      .then((data) => console.log(data));
+      .then((result) => {
+        router.push(
+          `/AcademyManagement/StudentManagement/counsel/NewCounselRegister/${result}`
+        );
+        router.refresh();
+      });
   };
 
   return (
