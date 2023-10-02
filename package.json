@@ -1,0 +1,33 @@
+{
+  "name": "fresh",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.14.3",
+    "@mui/material": "^5.14.5",
+    "axios": "^1.5.0",
+    "axois": "^0.0.1-security",
+    "next": "^13.2.4",
+    "react": "^18.2.0",
+    "react-calendar": "^4.6.0",
+    "react-dom": "^18.2.0",
+    "react-hook-form": "^7.45.4",
+    "react-icons": "^4.10.1",
+    "react-minimal-side-navigation": "^1.9.2",
+    "react-pro-sidebar": "^1.1.0-alpha.1",
+    "react-router-dom": "^6.15.0",
+    "react-sidebar": "^3.0.2",
+    "recharts": "^2.7.2",
+    "recoil": "^0.7.7",
+    "styled-components": "^6.0.7"
+  },
+  "proxy": "http://localhost:8080"
+}

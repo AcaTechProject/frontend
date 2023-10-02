@@ -1,0 +1,12 @@
+body {
+  position: relative;
+  display: flex;
+  height: 748px;
+  flex-direction: column;
+}
+html,
+body {
+  margin: 0;
+  height: 100%;
+  min-height: 730px;
+}
