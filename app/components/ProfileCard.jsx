@@ -163,18 +163,12 @@ const ProfileCard = ({ nameInputRef }) => {
         <p style={{ fontWeight: "500" }}>학년 |</p>
         <Select
           options={[
-            { value: "ele", label: "1학년" },
-            { value: "ele", label: "2학년" },
-            { value: "ele", label: "3학년" },
-            { value: "ele", label: "4학년" },
-            { value: "ele", label: "5학년" },
-            { value: "ele", label: "6학년" },
-            { value: "mid", label: "중1" },
-            { value: "mid", label: "중2" },
-            { value: "mid", label: "중3" },
-            { value: "high", label: "고1" },
-            { value: "high", label: "고2" },
-            { value: "high", label: "고3" },
+            { value: "1학년", label: "1학년" },
+            { value: "2학년", label: "2학년" },
+            { value: "3학년", label: "3학년" },
+            { value: "4학년", label: "4학년" },
+            { value: "5학년", label: "5학년" },
+            { value: "6학년", label: "6학년" },
           ]}
           value={selectedValue}
           onChange={(e) => setSelectedValue(e.target.value)}
