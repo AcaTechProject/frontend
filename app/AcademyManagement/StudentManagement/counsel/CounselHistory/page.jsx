@@ -4,7 +4,7 @@ import Button from "@/app/components/Button";
 import styled from "styled-components";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import StudentList from "@/app/components/StudentList";
+import SangdamList from "@/app/components/SangdamList";
 import axios from "axios";
 
 import Link from "next/link";
@@ -21,9 +21,10 @@ const Row = styled.div`
 
 const CounselHistory = () => {
   const router = useRouter();
-  const [id, setId] = useState("");
+  const [conId, setConId] = useState([]);
   const [userData, setUserData] = useState({});
   const [consultInfo, setConsulInfo] = useState([]);
+  const [conIds, setConIds] = useState("");
 
   const url = window.location.href;
   const urlParts = url.replace("?id=", "");
@@ -54,7 +55,10 @@ const CounselHistory = () => {
       .get(`http://localhost:8080/student/${studentId}/consulting`)
       .then((response1) => {
         setConsulInfo(response1.data);
+        const conIds = response1.data.map((item) => item.con_id);
         console.log("상담 불러오기 성공!", response1.data);
+        console.log("conIds", conIds);
+        setConIds(conIds);
       })
       .catch((error) => {
         console.log("오류", error);
@@ -92,7 +96,7 @@ const CounselHistory = () => {
           등록
         </Button>
       </Row>
-      <StudentList data={data} headers={headers} />
+      <SangdamList data={data} headers={headers} />
     </Container>
   );
 };
