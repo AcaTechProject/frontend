@@ -8,16 +8,9 @@ import MessagePopup from "@/app/components/MessagePopup";
 import StudentList from "@/app/components/StudentList";
 import AMBtn from "@/app/components/AMBtn";
 import SMBtn from "@/app/components/SMBtn";
-import { studentListState } from "@/recoil/atom";
+
 //api 호출
 import axios from "axios";
-
-import {
-  resultState,
-  studentNameState,
-  studentSchoolState,
-} from "@/recoil/atom";
-import { useRecoilValue } from "recoil";
 
 const Container = styled.section`
   padding: 116px 70px 55px 85px;
@@ -98,52 +91,46 @@ const acamember = () => {
     axios
       .get(`http://localhost:8080/user/class/${userId}`)
       .then((response) => {
-        userData = response.data; // userData에 데이터 저장
+        const userData = response.data; // userData에 데이터 저장
         const classList = [
           ...new Set(userData.map((student) => student.className)),
         ];
-        setUserClass(classList[0]); // 기본적으로 첫 번째 수업을 선택하도록 설정
+        //setUserClass(classList[0]); // 기본적으로 첫 번째 수업을 선택하도록 설정
         setClassList(classList);
         setSelectedValue(classList[0]); // 기본적으로 첫 번째 수업을 선택하도록 설정
+        setUserClass(classList.className);
         console.log("사용자 정보: ", userData);
-        const firstUserClassId = userData[0].classId; // 클래스의 ID를 가져옴
-        setUserClassId(firstUserClassId); // 클래스의 ID를 설정,첫번째 id 받아옴.
-        console.log("id", firstUserClassId);
 
-        const studentsInSelectedClass = userData.filter(
-          (student) => student.classId === firstUserClassId
-        );
-
-        setStuList(studentsInSelectedClass);
+        setUserClassId(userData[0].classId); // 클래스의 ID를 설정,첫번째 id 받아옴.
+        console.log("id", userData[0].classId);
       })
       .catch((error) => {
         console.log("요청 실패", error);
       });
-  }, [userId, userClass]);
+  }, [userId]);
 
   useEffect(() => {
     if (userClassId !== null) {
       axios
         .get(`http://localhost:8080/student/byClass/${userClassId}`)
-        .then((response) => {
+        .then((res) => {
           //setStuList(response.data);
           // const classId = response.data.classId;
-          const extractedData = response.data.map((student) => ({
+          const extractedData = res.data.data.map((student) => ({
             No: student.no,
             id: student.studentId,
             이름: student.name,
-            분반: userClass,
-
+            분반: student.classInfos[0].class_name,
             학교: student.school,
           }));
           setStuList(extractedData); // 데이터 업데이트
-          console.log("수업", response.data);
+          console.log("수업", res.data);
         })
         .catch((error) => {
           console.log("수업 요청 실패", error);
         });
     }
-  }, [userClassId]);
+  }, [userClassId, userClass]);
   const headers = ["No", "이름", "분반", "학교"];
 
   const openMessagePopup = () => {
@@ -162,15 +149,14 @@ const acamember = () => {
     const selectedClassName = e.target.value;
     setSelectedValue(selectedClassName);
 
+    const studentsInSelectedClass = userData.filter(
+      (student) => student.classId === userClassId
+    );
+
+    setStuList(studentsInSelectedClass);
     // const selectedClassId = classList.find(
     //   (classItem) => classItem === e.target.value
     // );
-
-    const studentsInSelectedClass = userData.filter(
-      //   // userData 사용
-      (student) => student.className === selectedClassName
-    );
-    setStuList(studentsInSelectedClass);
   };
   const handleStudentInfo = (studentId) => {
     router.push(
