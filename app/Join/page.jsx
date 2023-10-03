@@ -89,9 +89,7 @@ const P = styled.p`
 const JoinPage = () => {
   const router = useRouter();
   const [selectedValue, setSelectedValue] = useState("");
-  const [selectedSubject, setSelectedSubject] =
-    useRecoilState(selectedSubjectState);
-  const [formData, setFormData] = useRecoilState(formDataState);
+  const [selectedSubject, setSelectedSubject] = useState("");
   const [code, setCode] = useState("");
 
   const {
@@ -100,10 +98,6 @@ const JoinPage = () => {
     formState: { errors },
     setError,
   } = useForm();
-
-  const handleAuth = (e) => {
-    alert("이메일 인증이 완료되었습니다");
-  };
 
   const onSubmitHandler = async (data) => {
     const { name, email, pwd, confirm, sub, tel1, tel2, tel3 } = data;
@@ -117,15 +111,6 @@ const JoinPage = () => {
       return;
     }
 
-    //폼 데이터를 recoil에 저장
-    setFormData({
-      name,
-      email,
-      pwd,
-      confirm,
-      tel,
-      sub,
-    });
     const JoinStudent = {
       user_name: name, // name을 바로 사용
       user_email: emails, // email을 바로 사용
@@ -134,12 +119,31 @@ const JoinPage = () => {
       user_major: selectedSubject, // sub를 사용
       user_code: code,
     };
+
     axios
       .post(`http://localhost:8080/user/signup`, JoinStudent)
       .then(function (response) {
         console.log("회원가입 성공", response.data);
         sessionStorage.setItem("userId", response.data);
         router.push("/AcademyManagement/StudentManagement/acamember");
+      })
+      .catch(function (error) {
+        console.log("정보 수정 error", error);
+      });
+  };
+
+  const handleAuth = (data) => {
+    const emails = data.emails;
+    console.log("emails,", data.emails);
+    //console.log("email", selectedValue);
+    const userEmail = {
+      email: emails,
+    };
+    axios
+      .get(`http://localhost:8080/user/signUpConfirm`, userEmail)
+      .then((response) => {
+        console.log("이메일 인증 완료", response.data);
+        alert("이메일 인증이 완료되었습니다");
       })
       .catch(function (error) {
         console.log("정보 수정 error", error);
@@ -179,6 +183,7 @@ const JoinPage = () => {
               type="text"
               id="email"
               placeholder="id"
+              name="emailValue"
               {...register("email", {
                 required: {
                   value: true,
