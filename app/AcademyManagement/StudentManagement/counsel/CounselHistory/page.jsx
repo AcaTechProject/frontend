@@ -89,7 +89,7 @@ const CounselHistory = () => {
           $primary
           onClick={() =>
             router.push(
-              `/AcademyManagement/StudentManagement/counsel/PageRegister?id=${studentId}`
+              `/AcademyManagement/StudentManagement/counsel/PageRegister?id=${studentId}&conId=${conId}`
             )
           }
         >
