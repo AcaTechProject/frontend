@@ -215,7 +215,7 @@ const CounselDetail = () => {
             <Button
               onClick={() =>
                 router.push(
-                  `/AcademyManagement/StudentManagement/counsel/CounselEdit?id=${studentId}`
+                  `/AcademyManagement/StudentManagement/counsel/CounselEdit?id=${studentId}&conId=${conId}`
                 )
               }
             >
