@@ -80,18 +80,16 @@ const CounselEdit = () => {
 
   const handleComplete = () => {
     const editConsult = {
-      con_class: selectDaesang,
+      con_class: selectSubject,
       con_content: selectContent,
-      con_who: selectSubject,
+      con_who: selectDaesang,
     };
     axios
-      .put(
-        `http://localhost:8080/student/consulting?conId=${conId}`,
-        editConsult
-      )
+      .put(`http://localhost:8080/student/consulting/${conId}`, editConsult)
       .then((response) => {
         alert("수정이 완료되었습니다");
         console.log("수정 완료", response.data);
+
         router.push(
           `/AcademyManagement/StudentManagement/counsel/CounselDetail?id=${studentId}&conId=${conId}`
         );
