@@ -56,21 +56,16 @@ const CounselEdit = () => {
   const [userData, setUserData] = useState({});
 
   const url = window.location.href;
-  const urlParts = url.replace("?id=", "");
-  const studentId = urlParts[urlParts.length - 1];
+  const urlParts = url.split("?");
+
+  const queryParams = new URLSearchParams(urlParts[1]);
+  const studentId = queryParams.get("id"); // "id" 매개변수에서 studentId 가져오기
+  const conId = queryParams.get("conId");
 
   const handleSub = (e) => {
-    // const newValue = e.target.value;
-    // setChangeSub(newValue);
-    // // 이전 페이지에서 사용한 sangdamState도 업데이트
-    // setSangdam(newValue);
     setSelectSubject(e.target.value);
   };
   const handleDae = (e) => {
-    // const newValue = e.target.value;
-    // setChangeDae(newValue);
-    // // 이전 페이지에서 사용한 daesangState도 업데이트
-    // setDaesang(newValue);
     setSelectDaesang(e.target.value);
   };
   const handleContent = (e) => {
@@ -79,7 +74,7 @@ const CounselEdit = () => {
   const handleCancel = () => {
     alert("수정이 취소되었습니다");
     router.push(
-      `/AcademyManagement/StudentManagement/counsel/CounselDetail?id=${studentId}`
+      `/AcademyManagement/StudentManagement/counsel/CounselDetail?id=${studentId}&conId=${conId}`
     );
   };
 
@@ -90,12 +85,15 @@ const CounselEdit = () => {
       con_who: selectSubject,
     };
     axios
-      .put("http://localhost:8080/student/consulting/32", editConsult)
+      .put(
+        `http://localhost:8080/student/consulting?conId=${conId}`,
+        editConsult
+      )
       .then((response) => {
         alert("수정이 완료되었습니다");
         console.log("수정 완료", response.data);
         router.push(
-          `/AcademyManagement/StudentManagement/counsel/CounselDetail?id=${studentId}`
+          `/AcademyManagement/StudentManagement/counsel/CounselDetail?id=${studentId}&conId=${conId}`
         );
       })
       .catch((error) => {
@@ -106,13 +104,14 @@ const CounselEdit = () => {
   useEffect(() => {
     axios
       .get(`http://localhost:8080/student/${studentId}`)
-      .then((response) => {
-        setUserData(response.data);
+      .then((response1) => {
+        setUserData(response1.data);
       })
       .catch((error) => {
         console.log("오류", error);
       });
   }, []);
+
   return (
     <Container>
       <p>
