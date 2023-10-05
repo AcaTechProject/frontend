@@ -252,11 +252,16 @@ const register = () => {
       parentPhone: `${parent1}-${parent2}-${parent3}`,
       st_write: "첫번째",
       st_update_write: "두번째",
-      familyInfos: arr.map((familyName) => ({
-        fa_name: familyName,
-        fa_memo: "가족 메모",
-      })),
-
+      // familyInfos: arr.map((familyName) => ({
+      //   fa_name: familyName,
+      //   fa_memo: "가족 메모",
+      // })),
+      familyInfos: [
+        {
+          fa_name: arr[0],
+          fa_memo: "가족메모",
+        },
+      ],
       classInfos: [
         {
           class_name: result[0],
@@ -319,7 +324,7 @@ const register = () => {
       };
 
       //학생 정보를 등록하면 기존 studentList에 추가됨.
-      setStudentList((prevStudentList) => [...prevStudentList, newStudent]);
+      //setStudentList((prevStudentList) => [...prevStudentList, newStudent]);
 
       // 유효성 검사를 모두 통과한 경우에만 다음 경로로 이동
       router.push("/AcademyManagement/StudentManagement/acamember");
@@ -366,7 +371,6 @@ const register = () => {
       setNote("");
     }
   };
-  console.log("array", currentArr);
 
   const handleDelete = (indexToDelete) => {
     setResult((prevResult) =>
@@ -454,12 +458,6 @@ const register = () => {
                 { value: "4학년", label: "4학년" },
                 { value: "5학년", label: "5학년" },
                 { value: "6학년", label: "6학년" },
-                { value: "중1", label: "중1" },
-                { value: "중2", label: "중2" },
-                { value: "중3", label: "중3" },
-                { value: "고1", label: "고1" },
-                { value: "고2", label: "고2" },
-                { value: "고3", label: "고3" },
               ]}
               value={grade}
               onChange={(e) => setGrade(e.target.value)}
@@ -596,6 +594,15 @@ const register = () => {
                               label: "영어 김민지 A",
                             },
                             { value: "수학 김민지 A", label: "수학 김민지 A" },
+                            {
+                              value: "국어 김민지 B",
+                              label: "국어 김민지 B",
+                            },
+                            {
+                              value: "영어 김민지 B",
+                              label: "영어 김민지 B",
+                            },
+                            { value: "수학 김민지 B", label: "수학 김민지 B" },
                           ]}
                           onChange={handleTeacherChange}
                           value={result}

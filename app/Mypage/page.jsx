@@ -102,7 +102,7 @@ const MyPage = () => {
   const tableData3 = [
     {
       title: "담당 수업",
-      value: setUrl2.className,
+      value: Array.isArray(url2) ? url2.join(", ") : url2,
     },
   ];
   const tableData4 = [

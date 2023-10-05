@@ -15,15 +15,6 @@ import Modal from "@/app/components/Modal";
 import SMBtn from "@/app/components/SMBtn";
 import AMBtn from "@/app/components/AMBtn";
 import axios from "axios";
-import { useRecoilValue, useRecoilState, useSetRecoilState } from "recoil";
-
-import {
-  studentNameState,
-  studentListState,
-  studentBirthState,
-  studentSchoolState,
-  studentGradeState,
-} from "@/recoil/atom";
 
 import Image from "next/image";
 // import { useParams } from "react-router-dom";
@@ -157,10 +148,8 @@ const StudentInfo = () => {
 
   const router = useRouter();
 
-  const studentList = useRecoilValue(studentListState);
   //const [id, setId] = useState("");
   const [userData, setUserData] = useState({}); // 빈 객체로 초기화
-  const [matchData, setMatchData] = useState();
 
   const [isMessagePopupOpen, setMessagePopupOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -170,9 +159,6 @@ const StudentInfo = () => {
     setModalMessage(message);
     setIsModalOpen(true);
   };
-  // const openModal = () => {
-  //   setIsModalOpen(true);
-  // };
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -199,7 +185,7 @@ const StudentInfo = () => {
     console.log("sending", message);
   };
 
-  const [familyInfos, setFamilyInfos] = useState([]);
+  const [familyInfo, setFamilyInfo] = useState([]);
   const [familyName, setFamilyName] = useState("");
 
   const url = window.location.href;
@@ -209,20 +195,18 @@ const StudentInfo = () => {
   useEffect(() => {
     axios
       .get(`http://localhost:8080/student/${studentId}`)
-      .then((response) => {
-        setUserData(response.data);
-        setFamilyInfos(response.data.familyInfos);
-        setFamilyName(response.data.familyInfos[0].fa_name);
-        console.log("가족", response.data.familyInfos[0].fa_name);
-        console.log("data", response.data);
+      .then((res) => {
+        setUserData(res.data);
+
+        setFamilyInfo(res.data.familyInfos);
+        setFamilyName(familyInfo.fa_name);
+        console.log("family", res.data.familyInfos);
+        console.log("data", res.data);
       })
       .catch((error) => {
         console.log("오류", error);
       });
-  }, []);
-
-  const formattedPhoneNumber = `${matchData?.원생.tel1}-${matchData?.원생.tel2}-${matchData?.원생.tel3}`;
-  const formattedParentNumber = `${matchData?.학부모.parent1}-${matchData?.학부모.parent2}-${matchData?.학부모.parent3}`;
+  }, [studentId]);
 
   const tableData = [
     {
@@ -244,11 +228,6 @@ const StudentInfo = () => {
   //const nameInputRef = useRef(null);
 
   const imgRef = useRef();
-
-  const studentName = useRecoilValue(studentNameState);
-  const studentBirth = useRecoilValue(studentBirthState);
-  const studentSchool = useRecoilValue(studentSchoolState);
-  const studentGrade = useRecoilValue(studentGradeState);
 
   const handlePick = () => {
     const file = imgRef.current.files[0];

@@ -1,20 +1,12 @@
 "use client";
-import React from "react";
-import ProfileEmpty from "@/app/components/ProfileEmpty";
+
+//import ProfileEmpty from "@/app/components/ProfileEmpty";
 import styled from "styled-components";
-import { useState, useEffect } from "react";
-
+import React, { useState, useEffect, useRef } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
-
+import axios from "axios";
 import Modal from "@/app/components/Modal";
-import { useRecoilState, useRecoilValue } from "recoil";
-import {
-  inputAtom,
-  sangdamState,
-  daesangState,
-  contentState,
-  studentListState,
-} from "@/recoil/atom";
 
 const Container = styled.div`
   padding: 116px 70px 55px 85px;
@@ -64,7 +56,7 @@ const Button = styled.button`
   border: 0;
   font-size: 14px;
 `;
-const P = styled.p`
+const P1 = styled.p`
   font-size: 20px;
   font-weight: 700;
 `;
@@ -78,21 +70,50 @@ const Content = styled.div`
   height: 200px;
 `;
 
+//
+const Containers = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 500px;
+  width: 350px;
+  align-items: center;
+  justify-content: center;
+`;
+const Rows = styled.div`
+  display: flex;
+  gap: 20px;
+  width: 350px;
+  justify-content: center;
+`;
+const Input = styled.input`
+  width: 230px;
+  height: 30px;
+  margin: 10px 0 0 5px;
+  border: 1px solid #d3d2d2;
+  border-radius: 10px;
+`;
+const P = styled.p`
+  font-size: 18px;
+  font-weight: 600;
+`;
+const Inputs = styled(Input)`
+  margin: 10px 0 0 30px;
+`;
+//인보이게
+const InputImg = styled.input`
+  display: none;
+`;
+
 const CounselDetail = () => {
   const router = useRouter();
-  const [id, setId] = useState("");
-  const [matchData, setMatchData] = useState("");
-  const [studentList, setStudentList] = useRecoilState(studentListState);
+
+  const [img, setImg] = useState("");
+  const [userData, setUserData] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
+  const [consultInfo, setConsultInfo] = useState({});
 
-  const content = useRecoilValue(inputAtom);
-
-  const selectSubject = useRecoilValue(sangdamState);
-  const selectDaesang = useRecoilValue(daesangState);
-
-  const selectContent = useRecoilValue(contentState);
-  //const [input, setInput] = useRecoilState(inputAtom);
+  const imgRef = useRef();
 
   const handleModal = (message) => {
     setModalMessage(message);
@@ -102,44 +123,99 @@ const CounselDetail = () => {
   const handleCheck = () => {
     router.push("/AcademyManagement/StudentManagement/counsel");
   };
+
+  const handlePick = () => {
+    const file = imgRef.current.files[0];
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      setImg(reader.result);
+    };
+  };
   const closeModal = () => {
     setIsModalOpen(false);
   };
-  //   const handleContent = (e) => {
-  //     setContent(e.target.value);
-  //   };
+
+  const url = window.location.href;
+  const urlParts = url.split("?");
+
+  const queryParams = new URLSearchParams(urlParts[1]);
+  const studentId = queryParams.get("id"); // "id" 매개변수에서 studentId 가져오기
+  const conId = queryParams.get("conId");
+
+  console.log("conId", conId);
   const handleSaveClick = () => {};
-  useEffect(() => {}, [selectSubject]);
+
   useEffect(() => {
-    const params = window.location.search;
-
-    if (typeof params !== "undefined") {
-      const result = params.replace("?id=", "");
-      const matchedData = studentList.find(
-        (data) => data.id === Number(result)
-      );
-      setId(result);
-      setMatchData(matchedData);
-    }
-  }, [id, matchData, studentList]);
-
+    axios
+      .get(`http://localhost:8080/student/${studentId}`)
+      .then((response) => {
+        setUserData(response.data);
+        console.log("학생누구?", response.data);
+      })
+      .catch((error) => {
+        console.log("오류", error);
+      });
+  }, []);
+  useEffect(() => {
+    axios
+      .get(`http://localhost:8080/student/${studentId}/consulting/${conId}`)
+      .then((response) => {
+        setConsultInfo(response.data);
+        console.log("상담 불러오기 성공", response.data);
+      })
+      .catch((error) => {
+        console.log("오류", error);
+      });
+  }, [studentId, conId]);
   return (
     <Container>
       <p>
         원생관리 {">"} 학생관리 {">"} 수강생 관리 {">"}
-        {matchData?.이름} {">"} 상담관리 {">"} 상담내역
+        {userData.name} {">"} 상담관리 {">"} 상담내역
       </p>
 
       <Body>
         <Left>
-          <ProfileEmpty matchData={matchData} />
+          <Containers>
+            <Image
+              src={img ? img : `/default_profile.png`}
+              alt="프로필"
+              width={250}
+              height={250}
+              style={{ borderRadius: "50%" }}
+            />
+
+            <InputImg
+              type="file"
+              accept="image/*"
+              id="profileImg"
+              alt="프로필"
+              onChange={handlePick}
+              ref={imgRef}
+            />
+            <h2>{userData.name}</h2>
+
+            <Rows>
+              <P1>생년월일 |</P1>
+              <p style={{ lineHeight: "28px" }}>{userData.birth}</p>
+            </Rows>
+            <Rows style={{ marginRight: "10px" }}>
+              <P1>학교 |</P1>
+              <p style={{ lineHeight: "28px" }}>{userData.school}</p>
+            </Rows>
+            <Rows style={{ marginRight: "28px" }}>
+              <P1>학년 |</P1>
+              <p style={{ lineHeight: "28px" }}>{userData.grade}</p>
+            </Rows>
+          </Containers>
         </Left>
         <Right>
           <Row2>
             <Button
               onClick={() =>
                 router.push(
-                  `/AcademyManagement/StudentManagement/counsel/CounselEdit?id=${id}`
+                  `/AcademyManagement/StudentManagement/counsel/CounselEdit?id=${studentId}&conId=${conId}`
                 )
               }
             >
@@ -155,7 +231,7 @@ const CounselDetail = () => {
             <Button
               onClick={() =>
                 router.push(
-                  `/AcademyManagement/StudentManagement/counsel/CounselHistory?id=${id}`
+                  `/AcademyManagement/StudentManagement/counsel/CounselHistory?id=${studentId}`
                 )
               }
             >
@@ -164,16 +240,16 @@ const CounselDetail = () => {
           </Row2>
           <Row>
             <P>상담 과목</P>
-            <p style={{ color: "#6B7280" }}>{selectSubject}</p>
+            <p style={{ color: "#6B7280" }}>{consultInfo.con_class}</p>
           </Row>
           <Row>
             {" "}
             <P>상담 대상</P>
-            <p style={{ color: "#6B7280" }}>{selectDaesang}</p>
+            <p style={{ color: "#6B7280" }}>{consultInfo.con_teacher}</p>
           </Row>
 
           <P>상담 내용</P>
-          <Content>{selectContent}</Content>
+          <Content>{consultInfo.con_content}</Content>
         </Right>
       </Body>
     </Container>

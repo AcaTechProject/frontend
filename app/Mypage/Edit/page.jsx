@@ -6,17 +6,6 @@ import TableEdit from "@/app/components/TableEdit";
 import TableText from "@/app/components/TableText";
 import { useRouter } from "next/navigation";
 import { useRef, useState, useEffect } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
-import {
-  numStateA,
-  numStateB,
-  numStateC,
-  emailState,
-  formDataState,
-  selectedSubjectState,
-  clsState,
-  gradeState,
-} from "@/recoil/atom";
 import axios from "axios";
 
 const Container = styled.div`
@@ -95,10 +84,10 @@ const Edit = () => {
   // const [num, setNum] = useRecoilState(numState);
   // const [email, setEmail] = useRecoilState(emailState);
   const router = useRouter();
-  const [formData, setFormData] = useRecoilState(formDataState);
-  const [selectedSubject, setSelectedSubject] =
-    useRecoilState(selectedSubjectState);
+
+  const [selectedSubject, setSelectedSubject] = useState("");
   const [userData, setUserData] = useState({});
+  const [formData, setFormData] = useState({});
   // const [userPhone, setUserPhone] = useState({});
   // const [userEmail, setUserEmail] = useState("");
 
@@ -146,8 +135,8 @@ const Edit = () => {
   // const [num1, setNum1] = useRecoilState(numStateA);
   // const [num2, setNum2] = useRecoilState(numStateB);
   // const [num3, setNum3] = useRecoilState(numStateC);
-  const [cls, setCls] = useRecoilState(clsState);
-  const [grade, setGrade] = useRecoilState(gradeState);
+  const [cls, setCls] = useState("");
+  const [grade, setGrade] = useState("");
 
   const [tel1, setTel1] = useState("");
   const [tel2, setTel2] = useState("");
@@ -208,8 +197,6 @@ const Edit = () => {
         setUserData(response.data);
         const userPhone = response.data.user_phone;
         const [tel1, tel2, tel3] = userPhone.split("-");
-
-        // setUserEmail(userData.user_email);
 
         setFormData({
           ...formData,

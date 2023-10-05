@@ -2,12 +2,10 @@
 import SelectBox from "../components/Select";
 import styled from "styled-components";
 import axios from "axios";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useForm } from "react-hook-form";
-import { useRecoilState } from "recoil";
-import { formDataState, selectedSubjectState } from "@/recoil/atom";
 import { useRouter } from "next/navigation";
-//import Select from "../components/Select";
+
 const JoinBody = styled.div`
   display: flex;
   align-items: center;
@@ -89,10 +87,9 @@ const P = styled.p`
 const JoinPage = () => {
   const router = useRouter();
   const [selectedValue, setSelectedValue] = useState("");
-  const [selectedSubject, setSelectedSubject] =
-    useRecoilState(selectedSubjectState);
-  const [formData, setFormData] = useRecoilState(formDataState);
+  const [selectedSubject, setSelectedSubject] = useState("");
   const [code, setCode] = useState("");
+  const [userEmail, setUserEmail] = useState("");
 
   const {
     register,
@@ -101,14 +98,10 @@ const JoinPage = () => {
     setError,
   } = useForm();
 
-  const handleAuth = (e) => {
-    alert("이메일 인증이 완료되었습니다");
-  };
-
   const onSubmitHandler = async (data) => {
-    const { name, email, pwd, confirm, sub, tel1, tel2, tel3 } = data;
+    const { name, emailValue, pwd, confirm, sub, tel1, tel2, tel3 } = data;
 
-    const emails = `${email}@${selectedValue}`;
+    const totalEmail = `${emailValue}@${selectedValue}`;
     const tel = `${tel1}-${tel2}-${tel3}`;
     if (pwd !== confirm) {
       setError("confirm", {
@@ -117,18 +110,9 @@ const JoinPage = () => {
       return;
     }
 
-    //폼 데이터를 recoil에 저장
-    setFormData({
-      name,
-      email,
-      pwd,
-      confirm,
-      tel,
-      sub,
-    });
     const JoinStudent = {
       user_name: name, // name을 바로 사용
-      user_email: emails, // email을 바로 사용
+      user_email: totalEmail, // email을 바로 사용
       user_pwd: pwd, // pwd를 바로 사용
       user_phone: tel, // tel을 사용
       user_major: selectedSubject, // sub를 사용
@@ -138,10 +122,33 @@ const JoinPage = () => {
       .post(`http://localhost:8080/user/signup`, JoinStudent)
       .then(function (response) {
         console.log("회원가입 성공", response.data);
+        setUserEmail(totalEmail);
         sessionStorage.setItem("userId", response.data);
         router.push("/AcademyManagement/StudentManagement/acamember");
       })
       .catch(function (error) {
+        console.log("정보 수정 error", error);
+      });
+  };
+
+  const handleAuth = (data) => {
+    // const emails = data;
+
+    //console.log("email", selectedValue);
+    const totalEmail = `${data.emailValue}@${selectedValue}`;
+    const userEmails = {
+      user_email: totalEmail,
+    };
+
+    axios
+      .get(`http://localhost:8080/user/signUpConfirm`, userEmails)
+      .then((res) => {
+        console.log("이메일 인증 완료", res.data);
+        alert("이메일 인증이 완료되었습니다");
+        setUserEmail(totalEmail);
+      })
+      .catch(function (error) {
+        console.log("emails,", totalEmail);
         console.log("정보 수정 error", error);
       });
   };
@@ -179,7 +186,8 @@ const JoinPage = () => {
               type="text"
               id="email"
               placeholder="id"
-              {...register("email", {
+              name="emailValue"
+              {...register("emailValue", {
                 required: {
                   value: true,
                   message: "이메일을 입력해주세요",
@@ -290,9 +298,9 @@ const JoinPage = () => {
               id="sub"
               placeholder="담당과목을 선택해주세요"
               options={[
-                { value: "국어", label: "국어A" },
-                { value: "수학", label: "수학A" },
-                { value: "영어", label: "영어A" },
+                { value: "국어", label: "국어" },
+                { value: "수학", label: "수학" },
+                { value: "영어", label: "영어" },
               ]}
               // value={selectedValue}
               value={selectedSubject}

@@ -65,8 +65,11 @@ const PageRegister = () => {
   const contentRef = useRef(null);
 
   const url = window.location.href;
-  const urlParts = url.replace("?id=", "");
-  const studentId = urlParts[urlParts.length - 1];
+  const urlParts = url.split("?");
+
+  const queryParams = new URLSearchParams(urlParts[1]);
+  const studentId = queryParams.get("id"); // "id" 매개변수에서 studentId 가져오기
+  const conId = queryParams.get("conId");
 
   const handleModal = (message) => {
     setIsModalOpen(true);
@@ -81,7 +84,7 @@ const PageRegister = () => {
   };
   const handleCheck = () => {
     router.push(
-      `/AcademyManagement/StudentManagement/counsel/CounselHistory?id=${id}`
+      `/AcademyManagement/StudentManagement/counsel/CounselHistory?id=${id}&conId=${conId}`
     );
   };
 
@@ -118,7 +121,7 @@ const PageRegister = () => {
       alert("상담 내용을 입력해주세요");
     } else {
       router.push(
-        `/AcademyManagement/StudentManagement/counsel/CounselDetail?id=${studentId}`
+        `/AcademyManagement/StudentManagement/counsel/CounselDetail?id=${studentId}&conId=${conId}`
       );
     }
 
