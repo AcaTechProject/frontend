@@ -55,6 +55,7 @@ const PageRegister = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const [userData, setUserData] = useState({});
+  const [teacherData, setTeacherData] = useState({});
   const [sangdam, setSangdam] = useState("");
   const [daesang, setDaesang] = useState("");
   const [content, setContent] = useState("");
@@ -112,6 +113,19 @@ const PageRegister = () => {
       });
   }, []);
 
+  useEffect(() => {
+    const userId = sessionStorage.getItem("userId");
+    axios
+      .get(`http://localhost:8080/user/${userId}`)
+      .then((res) => {
+        setTeacherData(res.data);
+        console.log("success!!", res.data);
+      })
+      .catch((error) => {
+        console.log("요청 실패", error);
+      });
+  }, []);
+
   const handleRegister = () => {
     if (sangdam === "") {
       alert("상담과목을 선택해주세요");
@@ -131,7 +145,7 @@ const PageRegister = () => {
       },
       con_class: sangdam,
       con_content: content,
-      con_teacher: userData.name,
+      con_teacher: teacherData.name,
       con_who: daesang,
     };
     axios
