@@ -82,45 +82,14 @@ const SubjectIn = styled.input`
   border: 1px solid #d3d2d2;
 `;
 const Edit = () => {
-  // const [num, setNum] = useRecoilState(numState);
-  // const [email, setEmail] = useRecoilState(emailState);
   const router = useRouter();
 
   const [selectedSubject, setSelectedSubject] = useState("");
   const [userData, setUserData] = useState({});
   const [formData, setFormData] = useState({});
-  // const [userPhone, setUserPhone] = useState({});
-  // const [userEmail, setUserEmail] = useState("");
 
   const telInputRef = useRef(null);
   const clsRef = useRef(null);
-
-  //   if (num === "") {
-  //     alert("전화번호가 입력되지 않았습니다");
-  //   } else {
-  //     router.push("/Login");
-  //   }
-  //   if (text === "") {
-  //     alert("담당수업의 정보를 입력해주세요");
-  //     //tableTextInputRef.current.focus();
-  //   } else {
-  //     alert("수정 완료");
-  //     router.push("/Mypage");
-  //   }
-  //   if (num === "") {
-  //     alert("전화번호가 입력되지 않았습니다.");
-  //     telInput.current.focus();
-  //   } else if (email === "") {
-  //     alert("이메일이 입력되지 않았습니다.");
-  //     emailInput.current.focus();
-  //   } else if (text === "") {
-  //     alert("담당수업의 정보를 예시와 같이 입력해주세요.");
-  //     textRef.current.focus();
-  //   } else {
-  //     alert("수정이 완료되었습니다");
-  //     router.push("/Mypage");
-  //   }
-  // };
 
   const tableData2 = [
     {
@@ -133,9 +102,7 @@ const Edit = () => {
     alert("수정이 취소되었습니다");
     router.push("/Mypage");
   };
-  // const [num1, setNum1] = useRecoilState(numStateA);
-  // const [num2, setNum2] = useRecoilState(numStateB);
-  // const [num3, setNum3] = useRecoilState(numStateC);
+
   const [cls, setCls] = useState("");
   const [grade, setGrade] = useState("");
 
@@ -145,14 +112,12 @@ const Edit = () => {
   const [email, setEmail] = useState("");
   const [img, setImg] = useState("");
 
-  //const text = useRecoilState(editedTextState);
-
   const handleComplete = () => {
     const userId = sessionStorage.getItem("userId");
     if (tel1 === "" || tel2 === "" || tel3 === "") {
       alert("전화번호를 모두 입력해주세요");
       telInputRef.current.focus();
-      //   // 비어있는 입력 필드를 찾아 해당 입력 필드에 초점을 맞춥니다
+      // 비어있는 입력 필드를 찾아 해당 입력 필드에 초점을 맞춤.
     } else if (cls === "") {
       alert("담당수업의 정보를 예시와 같이 입력해주세요.");
       clsRef.current.focus();
