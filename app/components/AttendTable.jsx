@@ -2,8 +2,6 @@
 import styled from "styled-components";
 import { useState, useEffect } from "react";
 import Popup from "./Popup";
-import { resultState, noteState } from "@/recoil/atom";
-import { useRecoilValue } from "recoil";
 import axios from "axios";
 
 const TableContainer = styled.table`
@@ -34,17 +32,11 @@ const ThirdTd = styled.td`
   width: 606px;
   height: auto;
 `;
-const Row = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 40px;
-`;
+
 const attendTable = () => {
   //const [isMessagePopupOpen, setMessagePopupOpen] = useState(false);
   //수강과목 및 분반 state
-  const studentResult = useRecoilValue(resultState);
-  const studentNote = useRecoilValue(noteState);
+
   const [isPopupOpen, setPopupOpen] = useState(false);
   const [userData, setUserData] = useState({}); // 빈 객체로 초기화
   const [classInfos, setClassInfos] = useState([]);
@@ -60,17 +52,8 @@ const attendTable = () => {
 
   const handleSendMessage = (message) => {
     console.log("Sending message:", message);
-    // 여기에서 실제
   };
-  // const tableData = [
-  //   {
-  //     title: "수강 과목 및 분반",
-  //     value: result,
-  //   },
-  //   {
-  //     title: "기타 특이 사항 ",
-  //     value: note,
-  //   },
+
   useEffect(() => {
     const url = window.location.href;
     const urlParts = url.replace("?id=", "");
@@ -80,9 +63,14 @@ const attendTable = () => {
 
       .then((response) => {
         setUserData(response.data);
-        setClassInfos(response.data.classInfos);
-        setClassName(response.data.classInfos[0].class_name);
-        console.log("data", response.data);
+        const classInfo = response.data.classInfos; // classInfos 객체를 가져옴.
+        if (classInfo && Array.isArray(classInfo)) {
+          const classNames = classInfo.map((classItem) => classItem.class_name);
+          setClassInfos(classNames);
+          console.log(classNames);
+        } else {
+          console.log("class_name을 추출할 수 없습니다.");
+        }
       })
       .catch((error) => {
         console.log("오류", error);
@@ -116,7 +104,7 @@ const attendTable = () => {
             <FirstTd>수강과목 및 분반</FirstTd>
           </Tr>
           <Tr>
-            <SecondTd>{className}</SecondTd>
+            <SecondTd>{classInfos.join(", ")}</SecondTd>
           </Tr>
           <Tr>
             <FirstTd>기타 특이 사항</FirstTd>
