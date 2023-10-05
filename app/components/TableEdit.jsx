@@ -2,9 +2,6 @@ import Select from "./Select";
 import styled from "styled-components";
 import { useRouter } from "next/navigation";
 import { useRef, useState, useEffect } from "react";
-import { useRecoilState } from "recoil";
-//import { formDataState } from "@/recoil/atom";
-import { numState, emailState } from "@/recoil/atom";
 
 const TableContainer = styled.table`
   border: 1px solid #c4c4c4;
@@ -49,14 +46,6 @@ const TableEdit = ({
   setTel3,
 }) => {
   const router = useRouter();
-
-  // const [formData, setFormData] = useRecoilState(formDataState);
-
-  // const [num, setNum] = useRecoilState(numState);
-  // const [email, setEmail] = useRecoilState(emailState);
-
-  //const [telnum, setTelNum] = useRecoilState(numState);
-  // const [emailValue, setEmailValue] = useRecoilState(emailState);
 
   const handleTel1Change = (e) => {
     setTel1(e.target.value);
@@ -119,7 +108,6 @@ const TableEdit = ({
               <Input
                 type="text"
                 placeholder="id"
-                // ref={emailInput}
                 value={formData.email}
                 onChange={handleEmail}
               ></Input>{" "}
