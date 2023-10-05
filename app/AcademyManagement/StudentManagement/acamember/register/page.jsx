@@ -298,31 +298,6 @@ const register = () => {
     } else if (result.length === 0) {
       alert("학생의 수강과목 또는 분반을 선택해주세요");
     } else {
-      const newStudent = {
-        id: Date.now(), //일단 등록한 시간으로 학생 정보 구분해놓음.
-        이름: name,
-        학교: school,
-        성별: gender,
-        생년월일: birth,
-        학년: grade,
-        분반: result,
-        // 원생: `${tel1}-${tel2}-${tel3}`,
-        원생: {
-          tel1: tel1,
-          tel2: tel2,
-          tel3: tel3,
-        },
-
-        학부모: {
-          parent1: parent1,
-          parent2: parent2,
-          parent3: parent3,
-        },
-        가족관계: arr,
-        //수강과목분반: result,
-        기타특이사항: note,
-      };
-
       //학생 정보를 등록하면 기존 studentList에 추가됨.
       //setStudentList((prevStudentList) => [...prevStudentList, newStudent]);
 
