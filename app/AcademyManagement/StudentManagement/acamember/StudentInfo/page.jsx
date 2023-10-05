@@ -185,7 +185,7 @@ const StudentInfo = () => {
     console.log("sending", message);
   };
 
-  const [familyInfos, setFamilyInfos] = useState([]);
+  const [familyInfo, setFamilyInfo] = useState([]);
   const [familyName, setFamilyName] = useState("");
 
   const url = window.location.href;
@@ -198,15 +198,15 @@ const StudentInfo = () => {
       .then((res) => {
         setUserData(res.data);
 
-        setFamilyInfos(res.data.familyInfos);
-        setFamilyName(res.data.familyInfos[0].fa_name);
-        console.log("family", familyName);
+        setFamilyInfo(res.data.familyInfos);
+        setFamilyName(familyInfo.fa_name);
+        console.log("family", res.data.familyInfos);
         console.log("data", res.data);
       })
       .catch((error) => {
         console.log("오류", error);
       });
-  }, []);
+  }, [studentId]);
 
   const tableData = [
     {
