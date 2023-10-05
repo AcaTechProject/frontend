@@ -111,7 +111,7 @@ const ListPopup = ({ data, selectedRowIndex, onClose, onParentClick }) => {
 
         <TableContainer>
           <thead>
-            {/* 테이블 헤더 부분 */}
+           
           </thead>
           <tbody>
             <Tr>
