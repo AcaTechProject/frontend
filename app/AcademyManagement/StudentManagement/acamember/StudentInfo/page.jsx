@@ -185,7 +185,7 @@ const StudentInfo = () => {
     console.log("sending", message);
   };
 
-  const [familyInfo, setFamilyInfo] = useState([]);
+  const [familyInfos, setFamilyInfos] = useState([]);
   const [familyName, setFamilyName] = useState("");
 
   const url = window.location.href;
@@ -197,10 +197,18 @@ const StudentInfo = () => {
       .get(`http://localhost:8080/student/${studentId}`)
       .then((res) => {
         setUserData(res.data);
+        const familyInfo = res.data.familyInfos;
+        // setFamilyName(familyInfo.fa_name);
+        if (familyInfo && Array.isArray(familyInfo)) {
+          const familyNames = familyInfo.map(
+            (familyItem) => familyItem.fa_name
+          );
+          setFamilyInfos(familyNames);
+          console.log(familyNames);
+        } else {
+          console.log("fa_name을 추출할 수 없습니다.");
+        }
 
-        setFamilyInfo(res.data.familyInfos);
-        setFamilyName(familyInfo.fa_name);
-        console.log("family", res.data.familyInfos);
         console.log("data", res.data);
       })
       .catch((error) => {
@@ -219,7 +227,7 @@ const StudentInfo = () => {
     },
     {
       title: "가족관계",
-      value: familyName,
+      value: familyInfos.join(", "),
     },
   ];
 
