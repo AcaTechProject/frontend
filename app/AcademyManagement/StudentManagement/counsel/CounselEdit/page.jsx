@@ -80,9 +80,9 @@ const CounselEdit = () => {
 
   const handleComplete = () => {
     const editConsult = {
-      con_class: selectSubject,
+      con_class: selectDaesang,
       con_content: selectContent,
-      con_who: selectDaesang,
+      con_who: selectSubject,
     };
     axios
       .put(`http://localhost:8080/student/consulting/${conId}`, editConsult)

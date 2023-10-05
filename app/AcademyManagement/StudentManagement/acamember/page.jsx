@@ -114,23 +114,37 @@ const acamember = () => {
       axios
         .get(`http://localhost:8080/student/byClass/${userClassId}`)
         .then((res) => {
-          //setStuList(response.data);
-          // const classId = response.data.classId;
-          const extractedData = res.data.data.map((student) => ({
-            No: student.no,
-            id: student.studentId,
-            이름: student.name,
-            분반: student.classInfos[0].class_name,
-            학교: student.school,
-          }));
-          setStuList(extractedData); // 데이터 업데이트
+          //알고보니 data안에 또 data 였던 거 였음..
+          const extractedData = res.data.data.map((student) => {
+            //학생 데이터의 담당수업이 일치하는지 map으로 확인
+            const matchedClass = student.classInfos.map(
+              (classInfo) => classInfo.class_name
+            );
+            //학생 담당수업이 select에서 고른 수업을 포함하는 변수
+            const isSelectedClass = matchedClass.includes(selectedValue);
+
+            if (isSelectedClass) {
+              return {
+                No: student.no,
+                id: student.studentId,
+                이름: student.name,
+                분반: selectedValue,
+                학교: student.school,
+              };
+            }
+            return null;
+          });
+          // null을 제외한 데이터만 필터링하여 업데이트
+          const filteredData = extractedData.filter((data) => data !== null);
+          setStuList(filteredData);
           console.log("수업", res.data);
         })
         .catch((error) => {
           console.log("수업 요청 실패", error);
         });
     }
-  }, [userClassId, userClass]);
+  }, [userClassId, selectedValue]); // selectedValue 추가
+
   const headers = ["No", "이름", "분반", "학교"];
 
   const openMessagePopup = () => {

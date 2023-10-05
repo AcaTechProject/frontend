@@ -403,10 +403,10 @@ const MemberEdit = () => {
         setUserData(response1.data);
         const [tel1, tel2, tel3] = userPhone.split("-");
         // setFamilyInfos(response.data.familyInfos);
-        setFamilyName(response1.data.familyInfos[0].fa_name);
+        setFamilyName(response1.data.familyInfos.fa_name.arr[0]);
 
         console.log("data", response1.data);
-        console.log("정보 받아오기 성공!!!", response1.data);
+        console.log("정보 받아오기 성공!!!", familyName);
       })
       .catch((error) => {
         console.log("받아오기 오류", error);
