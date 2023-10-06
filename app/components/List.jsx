@@ -56,7 +56,8 @@ const List = ({ data = [], onParentClick }) => {
             <Td>{row.name}</Td>
             <Td>{row.className}</Td>
             <Td>
-              <button onClick={() => onParentClick(row)}>학부모</button>
+            <button onClick={() => onParentClick(row.name)}>학부모</button>
+
             </Td>
             <Td>
               <label>
