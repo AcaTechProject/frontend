@@ -159,6 +159,7 @@ const Input = styled.input`
 `;
 const Result = styled.div`
   margin-top: 15px;
+  margin: 0 auto;
 `;
 const Textarea = styled.textarea`
   width: 500px;
@@ -230,55 +231,6 @@ const MemberEdit = () => {
   const [familyName, setFamilyName] = useState("");
 
   const [isPopupOpen, setPopupOpen] = useState(false);
-
-  const editStudent = () => {
-    const phone = `${tel1}-${tel2}-${tel3}`;
-    const parentPhone = `${parent1}-${parent2}-${parent3}`;
-    axios
-      .put(`http://localhost:8080/student/${studentId}`, {
-        name: name !== "" ? name : userData.name,
-        gender: gender !== "" ? gender : userData.gender,
-        birth: birth !== "" ? birth : userData.birth,
-        school: school !== "" ? school : userData.school,
-        grade: grade !== "" ? grade : userData.grade,
-        phone: phone !== "" ? phone : userData.phone,
-        teacher: userData.name,
-        etc: note !== "" ? note : userData.etc,
-        image: "image_url",
-        parentPhone: parentPhone !== "" ? parentPhone : userData.parentPhone,
-        st_write: "첫번째",
-        st_update_write: "두번째",
-        //familyInfos: familyName !== "" ? familyName : userData.familyName,
-        classInfos: [
-          {
-            class_name: "국어A 김민지",
-            // result.length > 0 ? result : userData.classInfos.class_name,
-          },
-        ],
-        familyInfos: [
-          {
-            fa_name: "형",
-            // familyName !== "" ? familyName : userData.familyInfos[0].fa_name,
-          },
-        ],
-        // classInfos: family!== []?arr:userData.arr,
-      })
-      .then(function (response) {
-        console.log("정보 수정 성공!!!", response.data);
-        setTel1(tel1);
-        setTel2(tel2);
-        setTel3(tel3);
-        setBirth(birth);
-        setGrade(grade);
-        setGender(gender);
-        setSchool(school);
-        setFamily(family);
-        router.push("/AcademyManagement/StudentManagement/acamember");
-      })
-      .catch(function (error) {
-        console.log("정보 수정 error", error);
-      });
-  };
 
   const handleGender = (e) => {
     setGender(e.target.value);
@@ -366,12 +318,80 @@ const MemberEdit = () => {
     console.log("Sending message:", message);
   };
 
+  const handleDelete = (indexToDelete) => {
+    setResult((prevResult) =>
+      prevResult.filter((_, index) => index !== indexToDelete)
+    );
+  };
+
+  //axios  => 호출
+  const editStudent = () => {
+    const phone = `${tel1}-${tel2}-${tel3}`;
+    const parentPhone = `${parent1}-${parent2}-${parent3}`;
+
+    const editedTel =
+      tel1 === "" && tel2 === "" && tel3 === "" ? userData.phone : phone;
+    const editedParent =
+      parent1 === "" && parent2 === "" && parent3 === ""
+        ? userData.parentPhone
+        : parentPhone;
+    axios
+      .put(`http://localhost:8080/student/${studentId}`, {
+        name: name !== "" ? name : userData.name,
+        gender: gender !== "" ? gender : userData.gender,
+        birth: birth !== "" ? birth : userData.birth,
+        school: school !== "" ? school : userData.school,
+        grade: grade !== "" ? grade : userData.grade,
+        phone: editedTel,
+        teacher: userData.name,
+        etc: note !== "" ? note : userData.etc,
+        image: "image_url",
+        parentPhone: editedParent,
+        st_write: "첫번째",
+        st_update_write: "두번째",
+        //familyInfos: familyName !== "" ? familyName : userData.familyName,
+        classInfos: [
+          {
+            class_name: result.join('')
+            // result.length > 0 ? result : userData.classInfos.class_name,
+          },
+        ],
+        familyInfos: [
+          {
+            fa_name: arr[0],
+            fa_memo: "수정된 가족 메모",
+            // familyName !== "" ? familyName : userData.familyInfos[0].fa_name,
+          },
+        ],
+        // classInfos: family!== []?arr:userData.arr,
+      })
+      .then(function (response) {
+        setTel1(tel1);
+        setTel2(tel2);
+        setTel3(tel3);
+        setBirth(birth);
+        setGrade(grade);
+        setGender(gender);
+        setSchool(school);
+        setFamily(arr);
+        console.log("family", arr);
+        console.log("정보 수정 성공!!!", response.data);
+        router.push(
+          `/AcademyManagement/StudentManagement/acamember/StudentInfo?id=${studentId}`
+        );
+      })
+      .catch(function (error) {
+        console.log("정보 수정 error", error);
+      });
+  };
+
   useEffect(() => {
     if (telInputRef.current) {
       telInputRef.current.focus();
     }
   }, []);
 
+  //api 관련
   const url = window.location.href;
   const urlParts = url.replace("?id=", "");
   const studentId = urlParts[urlParts.length - 1];
@@ -379,14 +399,14 @@ const MemberEdit = () => {
   useEffect(() => {
     axios
       .get(`http://localhost:8080/student/${studentId}`)
-      .then((response) => {
-        setUserData(response.data);
+      .then((response1) => {
+        setUserData(response1.data);
         const [tel1, tel2, tel3] = userPhone.split("-");
         // setFamilyInfos(response.data.familyInfos);
-        setFamilyName(response.data.familyInfos[0].fa_name);
+        setFamilyName(response1.data.familyInfos[0].fa_name);
 
-        console.log("data", response.data);
-        console.log("정보 받아오기 성공!!!", response.data);
+        console.log("data", response1.data);
+        console.log("정보 받아오기 성공!!!", response1.data);
       })
       .catch((error) => {
         console.log("받아오기 오류", error);
@@ -413,7 +433,7 @@ const MemberEdit = () => {
             <InputName
               type="text"
               id="name"
-              //수정할 사항이 있다면 새로운 name으로 업뎃 : 수정사항이 없으면 기존이름이 저장되어있는 studentName 으로.
+              //수정할 사항이 있다면 새로운 name으로 업뎃 : 수정사항이 없으면 기존이름이 저장되어있는 userData.name 으로.
               value={name !== "" ? name : userData.name}
               onChange={(e) => setName(e.target.value)}
             />
@@ -421,6 +441,7 @@ const MemberEdit = () => {
               style
               id="gender"
               options={[
+                
                 { value: "woman", label: "여" },
                 { value: "man", label: "남" },
               ]}
@@ -435,7 +456,6 @@ const MemberEdit = () => {
               type="text"
               id="birth"
               value={birth !== "" ? birth : userData.birth}
-              // placeholder={studentBirth}
               onChange={(e) => setBirth(e.target.value)}
             />
           </Row4>
@@ -454,18 +474,12 @@ const MemberEdit = () => {
             <p style={{ fontWeight: "500" }}>학년 |</p>
             <SelectBox
               options={[
-                { value: "ele1", label: "1학년" },
-                { value: "ele2", label: "2학년" },
-                { value: "ele3", label: "3학년" },
-                { value: "ele4", label: "4학년" },
-                { value: "ele5", label: "5학년" },
-                { value: "ele6", label: "6학년" },
-                { value: "mid1", label: "중1" },
-                { value: "mid2", label: "중2" },
-                { value: "mid3", label: "중3" },
-                { value: "high1", label: "고1" },
-                { value: "high2", label: "고2" },
-                { value: "high3", label: "고3" },
+                { value: "1학년", label: "1학년" },
+                { value: "2학년", label: "2학년" },
+                { value: "3학년", label: "3학년" },
+                { value: "4학년", label: "4학년" },
+                { value: "5학년", label: "5학년" },
+                { value: "6학년", label: "6학년" },
               ]}
               value={grade !== "" ? grade : userData.grade}
               onChange={handleGrade}
@@ -488,7 +502,7 @@ const MemberEdit = () => {
                       type="text"
                       maxLength={3}
                       placeholder="010"
-                      value={tel1}
+                      value={tel1 !== "" ? tel1 : userData.tel1}
                       onChange={handleTel1}
                       ref={telInputRef}
                     ></Input>{" "}
@@ -497,14 +511,14 @@ const MemberEdit = () => {
                       type="text"
                       id="tel"
                       maxLength={4}
-                      value={tel2}
+                      value={tel2 !== "" ? tel2 : userData.tel2}
                       onChange={handleTel2}
                     ></Input>{" "}
                     -
                     <Input
                       type="text"
                       maxLength={4}
-                      value={tel3}
+                      value={tel3 !== "" ? tel3 : userData.tel3}
                       onChange={handleTel3}
                     ></Input>
                   </SecondTd>
@@ -517,7 +531,7 @@ const MemberEdit = () => {
                       type="text"
                       maxLength={3}
                       placeholder="010"
-                      value={parent1}
+                      value={parent1 !== "" ? parent1 : userData.parent}
                       onChange={handleParent1}
                       ref={parentInputRef}
                     ></Input>{" "}
@@ -525,14 +539,14 @@ const MemberEdit = () => {
                     <Input
                       type="text"
                       maxLength={4}
-                      value={parent2}
+                      value={parent2 !== "" ? parent2 : userData.parent2}
                       onChange={handleParent2}
                     ></Input>{" "}
                     -
                     <Input
                       type="text"
                       maxLength={4}
-                      value={parent3}
+                      value={parent3 !== "" ? parent3 : userData.parent3}
                       onChange={handleParent3}
                     ></Input>
                   </SecondTd>
@@ -545,7 +559,7 @@ const MemberEdit = () => {
                         type="text"
                         placeholder="형제 자매 정보를 입력해주세요"
                         onChange={checkValue}
-                        value={family !== "" ? family : familyName}
+                        value={family}
                         ref={familyInputRef}
                       />
                       <Btn>+</Btn>
@@ -614,6 +628,15 @@ const MemberEdit = () => {
                               label: "영어 김민지 A",
                             },
                             { value: "수학 김민지 A", label: "수학 김민지 A" },
+                            {
+                              value: "국어 김민지 B",
+                              label: "국어 김민지 B",
+                            },
+                            {
+                              value: "영어 김민지 B",
+                              label: "영어 김민지 B",
+                            },
+                            { value: "수학 김민지 B", label: "수학 김민지 B" },
                           ]}
                           onChange={handleTeacherChange}
                           value={result}
@@ -623,7 +646,13 @@ const MemberEdit = () => {
                     </Rows>
                     <Result>
                       {result.map((item, index) => (
-                        <li key={index}>{item}</li>
+                        <div
+                          style={{ display: "flex", marginLeft: "40%" }}
+                          key={index}
+                        >
+                          <li>{item}</li>
+                          <Btn onClick={() => handleDelete(index)}>Delete</Btn>
+                        </div>
                       ))}
                     </Result>
                   </SecondTd>
