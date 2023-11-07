@@ -61,7 +61,7 @@ const Nav = () => {
         <NavTitle onClick={() => router.push("/")}>Prama Math</NavTitle>
         <Container>
           <Image
-            src={img ? img : `/default_profile.png`}
+          src ={userData.user_image ? `https://acatech.s3.ap-northeast-2.amazonaws.com/${userData.user_image}` : '/default_profile.png'}
             alt="프로필"
             width={50}
             height={50}
