@@ -40,15 +40,17 @@ const InputImg = styled.input`
   display: none;
 `;
 
-const ProfileEmpty = ({ matchData }) => {
+const ProfileEmpty = () => {
   const [img, setImg] = useState("");
   const [userData, setUserData] = useState({});
 
   //const nameInputRef = useRef(null);
   const imgRef = useRef();
   const url = window.location.href;
-  const urlParts = url.replace("?id=", "");
-  const studentId = urlParts[urlParts.length - 1];
+  const urlParts = url.split("?");
+
+  const queryParams = new URLSearchParams(urlParts[1]);
+  const studentId = queryParams.get("id"); // "id" 매개변수에서 studentId 가져오기
 
   const handlePick = () => {
     const file = imgRef.current.files[0];
