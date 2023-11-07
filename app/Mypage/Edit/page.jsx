@@ -1,22 +1,12 @@
 "use client";
 import ProfileImage from "@/app/components/ProfileImage";
 import Table from "../../components/Table";
+import Image from "next/image";
 import styled from "styled-components";
 import TableEdit from "@/app/components/TableEdit";
 import TableText from "@/app/components/TableText";
 import { useRouter } from "next/navigation";
 import { useRef, useState, useEffect } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
-import {
-  numStateA,
-  numStateB,
-  numStateC,
-  emailState,
-  formDataState,
-  selectedSubjectState,
-  clsState,
-  gradeState,
-} from "@/recoil/atom";
 import axios from "axios";
 
 const Container = styled.div`
@@ -91,46 +81,35 @@ const SubjectIn = styled.input`
   border-radius: 5px;
   border: 1px solid #d3d2d2;
 `;
+
+const Containers = styled.div`
+  width: 255px;
+  text-align: center;
+  margin-left: 50px;
+`;
+const Labels = styled.label`
+  color: #0095f6;
+  font-weight: bold;
+  font-size: 13px;
+  cursor: pointer;
+  display: block;
+  margin-top: 10px;
+  text-align: center;
+`;
+const InputImg = styled.input`
+  display: none;
+`;
+
 const Edit = () => {
-  // const [num, setNum] = useRecoilState(numState);
-  // const [email, setEmail] = useRecoilState(emailState);
   const router = useRouter();
-  const [formData, setFormData] = useRecoilState(formDataState);
-  const [selectedSubject, setSelectedSubject] =
-    useRecoilState(selectedSubjectState);
+
+  const [selectedSubject, setSelectedSubject] = useState("");
   const [userData, setUserData] = useState({});
-  // const [userPhone, setUserPhone] = useState({});
-  // const [userEmail, setUserEmail] = useState("");
+  const [formData, setFormData] = useState({});
+  const [uploadImgPath, setUploadImgPath] = useState(""); 
 
   const telInputRef = useRef(null);
   const clsRef = useRef(null);
-
-  //   if (num === "") {
-  //     alert("전화번호가 입력되지 않았습니다");
-  //   } else {
-  //     router.push("/Login");
-  //   }
-  //   if (text === "") {
-  //     alert("담당수업의 정보를 입력해주세요");
-  //     //tableTextInputRef.current.focus();
-  //   } else {
-  //     alert("수정 완료");
-  //     router.push("/Mypage");
-  //   }
-  //   if (num === "") {
-  //     alert("전화번호가 입력되지 않았습니다.");
-  //     telInput.current.focus();
-  //   } else if (email === "") {
-  //     alert("이메일이 입력되지 않았습니다.");
-  //     emailInput.current.focus();
-  //   } else if (text === "") {
-  //     alert("담당수업의 정보를 예시와 같이 입력해주세요.");
-  //     textRef.current.focus();
-  //   } else {
-  //     alert("수정이 완료되었습니다");
-  //     router.push("/Mypage");
-  //   }
-  // };
 
   const tableData2 = [
     {
@@ -143,11 +122,9 @@ const Edit = () => {
     alert("수정이 취소되었습니다");
     router.push("/Mypage");
   };
-  // const [num1, setNum1] = useRecoilState(numStateA);
-  // const [num2, setNum2] = useRecoilState(numStateB);
-  // const [num3, setNum3] = useRecoilState(numStateC);
+
   const [cls, setCls] = useState("");
-  const [grade, setGrade] = useRecoilState(gradeState);
+  const [grade, setGrade] = useState("");
 
   const [tel1, setTel1] = useState("");
   const [tel2, setTel2] = useState("");
@@ -155,21 +132,58 @@ const Edit = () => {
   const [email, setEmail] = useState("");
   const [img, setImg] = useState("");
 
+  //사용자가 이미지를 선택한 후 호출됨.
+  const handlePick = (event) => {
+    const file = event.target.files[0];
+    const imageUrl = URL.createObjectURL(file);
+    setImg(imageUrl);
+
+    if (file) {
+      uploadImage(file);
+    }
+    const reader = new FileReader();
+    
+    reader.onloadend = () => {
+      setImg(reader.result); // 미리보기
+    };
+    
+    reader.readAsDataURL(file); // 파일을 URL로 읽어옴
+  
+  };
+  
+  
+
+  const uploadImage = (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+  
+    axios
+      .post(`http://localhost:8080/upload`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((response) => {
+        console.log("formData",formData);
+        console.log("이미지 업로드 성공", response.data);
+        setUploadImgPath(response.data.path);
+        console.log("path",response.data.path);
+      })
+      .catch((error) => {
+        console.log("이미지 업로드 실패", error);
+      });
+  };
+
   const handleComplete = () => {
     const userId = sessionStorage.getItem("userId");
-    const formData = new FormData();
-    //formData.append("image", selectedFile);
-
     if (tel1 === "" || tel2 === "" || tel3 === "") {
       alert("전화번호를 모두 입력해주세요");
       telInputRef.current.focus();
-      //   // 비어있는 입력 필드를 찾아 해당 입력 필드에 초점을 맞춥니다
+      // 비어있는 입력 필드를 찾아 해당 입력 필드에 초점을 맞춤.
     } else if (cls === "") {
       alert("담당수업의 정보를 예시와 같이 입력해주세요.");
       clsRef.current.focus();
-    } else {
-      router.push("/Mypage");
-    }
+    } 
 
     setSelectedSubject(selectedSubject);
 
@@ -179,29 +193,38 @@ const Edit = () => {
         // tel1, tel2, tel3, email 등을 보내면 서버에서 이에 맞게 처리
         user_phone: `${tel1}-${tel2}-${tel3}`,
         user_email: email,
-
+        // user_class: cls,
         user_grade: grade,
-        user_image: "김경령_수정.jpg",
+        user_image: uploadImgPath,
         user_class: cls,
       })
       .then((response) => {
         console.log("수정 요청 성공");
-        // 수정 요청 성공 시 처리
-        // router.push("/Mypage"); // 수정 완료 후 페이지 이동
+
+        const finalUploadImgFile = document.getElementById("profileImg").files[0];
+
+        // 이미지 업로드 요청
+      if (finalUploadImgFile) {
+        uploadImage(finalUploadImgFile);
+        router.push("/Mypage");
+      } else {
+        // 이미지가 없을 경우에는 바로 마이페이지로 이동
+        router.push("/Mypage");
         setTel1(tel1);
         setTel2(tel2);
         setTel3(tel3);
         setEmail(userData.user_email);
         setCls(userData.user_class);
         setGrade(userData.user_grade);
-        console.log("수업", userData.user_class);
+        setImg(userData.user_image)
+        
+      }
       })
       .catch((error) => {
         console.log("수정 요청 실패", error);
         // 수정 요청 실패 시 처리
       });
   };
-
   //입력한 정보 get 하기
   useEffect(() => {
     const userId = sessionStorage.getItem("userId");
@@ -211,8 +234,6 @@ const Edit = () => {
         setUserData(response.data);
         const userPhone = response.data.user_phone;
         const [tel1, tel2, tel3] = userPhone.split("-");
-
-        // setUserEmail(userData.user_email);
 
         setFormData({
           ...formData,
@@ -229,17 +250,37 @@ const Edit = () => {
         setGrade(userData.user_grade);
       })
       .catch((error) => {
-        console.log("오류", error);
+        console.log("수정 요청 실패", error);
       });
   }, []);
+  
+
 
   return (
     <Container>
       <Title>마이 페이지</Title>
       <Body>
         <Left>
-          <ProfileImage img={img} />
-          <Label htmlFor="profileImg">이미지 추가</Label>
+          {/* <ProfileImage img={img} /> */}
+          <Containers>
+      <Image
+        src="https://acatech.s3.ap-northeast-2.amazonaws.com//{user_image}"
+        alt="프로필"
+        width={250}
+        height={250}
+        style={{ borderRadius: "50%", textAlign: "center" }}
+      />
+      <Labels htmlFor="profileImg">이미지 추가</Labels>
+      <InputImg
+        type="file"
+        accept="image/*"
+        id="profileImg"
+        alt="프로필"
+        onChange={handlePick}
+        // ref={imgRef}
+      />
+    </Containers>
+          {/* <Label htmlFor="profileImg">이미지 추가</Label> */}
         </Left>
 
         <Right>
@@ -309,5 +350,4 @@ const Edit = () => {
     </Container>
   );
 };
-
 export default Edit;
