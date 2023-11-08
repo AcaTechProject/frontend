@@ -293,7 +293,7 @@ const MemberEdit = () => {
     if (family === "") {
       return;
     }
-    setArr((currentArr) => [family, ...currentArr]);
+    setArr((prevArr) => [...prevArr,family]);
     setFamily("");
   };
 
@@ -335,6 +335,7 @@ const MemberEdit = () => {
       parent1 === "" && parent2 === "" && parent3 === ""
         ? userData.parentPhone
         : parentPhone;
+    const editedClassInfos = result.length > 0 ? result.join(''):userData.classInfos[0].class_name;
     axios
       .put(`http://localhost:8080/student/${studentId}`, {
         name: name !== "" ? name : userData.name,
@@ -352,18 +353,17 @@ const MemberEdit = () => {
         //familyInfos: familyName !== "" ? familyName : userData.familyName,
         classInfos: [
           {
-            class_name: result.join('')
-            // result.length > 0 ? result : userData.classInfos.class_name,
+            class_name: editedClassInfos
+            
           },
         ],
         familyInfos: [
           {
-            fa_name: arr[0],
+            fa_name: arr.join(''),
             fa_memo: "수정된 가족 메모",
             // familyName !== "" ? familyName : userData.familyInfos[0].fa_name,
           },
         ],
-        // classInfos: family!== []?arr:userData.arr,
       })
       .then(function (response) {
         setTel1(tel1);
@@ -374,6 +374,7 @@ const MemberEdit = () => {
         setGender(gender);
         setSchool(school);
         setFamily(arr);
+        setResult(result);
         console.log("family", arr);
         console.log("정보 수정 성공!!!", response.data);
         router.push(
@@ -402,9 +403,7 @@ const MemberEdit = () => {
       .then((response1) => {
         setUserData(response1.data);
         const [tel1, tel2, tel3] = userPhone.split("-");
-        // setFamilyInfos(response.data.familyInfos);
         setFamilyName(response1.data.familyInfos[0].fa_name);
-
         console.log("data", response1.data);
         console.log("정보 받아오기 성공!!!", response1.data);
       })
@@ -605,6 +604,10 @@ const MemberEdit = () => {
                       <form onSubmit={onSubmit1}>
                         <Select
                           options={[
+                             {
+                              value: "수강과목",
+                              label: "수강과목",
+                            },
                             {
                               value: "국어",
                               label: "국어",
@@ -619,6 +622,10 @@ const MemberEdit = () => {
                         />{" "}
                         <Select
                           options={[
+                            {
+                              value: "분반",
+                              label: "분반",
+                            },
                             {
                               value: "국어 김민지 A",
                               label: "국어 김민지 A",
